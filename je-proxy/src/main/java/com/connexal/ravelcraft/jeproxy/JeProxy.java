@@ -1,6 +1,7 @@
 package com.connexal.ravelcraft.jeproxy;
 
 import com.connexal.ravelcraft.shared.BuildConstants;
+import com.connexal.ravelcraft.shared.RavelInstance;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.lifecycle.ProxyInitializeEvent;
 import com.velocitypowered.api.event.Subscribe;
@@ -14,6 +15,6 @@ public class JeProxy {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        this.logger.info("Hello, Velocity!");
+        RavelInstance.init(new RavelLoggerImpl(this.logger));
     }
 }
