@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.connexal.ravelmod.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+  ],
+  "client": [
+    "client.MultiplayerScreenMixin",
+    "client.PlayerListEntryMixin",
+    "client.ServerListMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
