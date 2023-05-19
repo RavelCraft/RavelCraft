@@ -1,8 +1,7 @@
-package com.connexal.ravelcraft.jeproxy.messaging;
+package com.connexal.ravelcraft.shared.messaging;
 
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.data.Server;
-import com.connexal.ravelcraft.shared.messaging.MessagingConstants;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -10,9 +9,9 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MessagingServer {
+public class MessagingServer implements Messager {
     private ServerSocket serverSocket;
-    private final Map<Server, MessagingClientData> clients = new HashMap<>();
+    private final Map<Server, ClientData> clients = new HashMap<>();
     private boolean listening = false;
 
     public MessagingServer() {
@@ -28,11 +27,11 @@ public class MessagingServer {
 
     private void listen() {
         while (this.listening) {
-            MessagingClientData client;
+            ClientData client;
 
             try {
                 Socket socket = this.serverSocket.accept();
-                client = new MessagingClientData(socket);
+                client = new ClientData(socket);
             } catch (IOException e) {
                 continue;
             }
@@ -47,7 +46,7 @@ public class MessagingServer {
         }
     }
 
-    private void clientListen(MessagingClientData client) {
+    private void clientListen(ClientData client) {
         DataOutputStream outputStream = client.getOutputStream();
         DataInputStream inputStream = client.getInputStream();
 
@@ -103,25 +102,38 @@ public class MessagingServer {
         }
     }
 
-    private void runCommand(MessagingCommand command, String[] args) throws IOException {
+    @Override
+    public void attemptConnect() {
+        // Do nothing, we can't connect to ourselves
+    }
+
+    @Override
+    public void runCommand(MessagingCommand command, String[] args) {
         switch (command) {
             default: {
-                RavelInstance.getLogger().warning("Unknown command received from server: " + command);
+                RavelInstance.getLogger().warning("Unable to do anything with received command: " + command);
                 break;
             }
         }
     }
 
-    public void sendCommand(Server server, String command, String... args) {
+    @Override
+    public void sendCommand(Server server, MessagingCommand command, String... args) {
+        if (server == RavelInstance.getServer()) {
+            RavelInstance.getLogger().warning("Attempted to send command to self. It went through, but this is probably a mistake.");
+            this.runCommand(command, args);
+            return;
+        }
+
         try {
-            MessagingClientData socket = this.clients.get(server);
+            ClientData socket = this.clients.get(server);
             if (socket == null) {
                 RavelInstance.getLogger().warning("Unable to find socket for server " + server.getName());
                 return;
             }
 
             DataOutputStream outputStream = socket.getOutputStream();
-            outputStream.writeUTF(command);
+            outputStream.writeUTF(command.name());
             outputStream.writeInt(args.length);
             for (String arg : args) {
                 outputStream.writeUTF(arg);
@@ -143,18 +155,18 @@ public class MessagingServer {
             RavelInstance.getLogger().error("Unable to close plugin messaging server socket", e);
         }
 
-        for (MessagingClientData socket : this.clients.values()) {
+        for (ClientData socket : this.clients.values()) {
             socket.close();
         }
         this.clients.clear();
     }
 
-    private static class MessagingClientData {
+    private static class ClientData {
         private final Socket socket;
         private final DataOutputStream outputStream;
         private final DataInputStream inputStream;
 
-        public MessagingClientData(Socket socket) throws IOException {
+        public ClientData(Socket socket) throws IOException {
             this.socket = socket;
 
             this.outputStream = new DataOutputStream(socket.getOutputStream());

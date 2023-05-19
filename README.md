@@ -1,0 +1,72 @@
+# RavelCraft
+
+All the code for RavelCraft
+
+## TODO
+
+- [ ] Commands
+    - [ ] Proxy
+        - [ ] broadcast
+        - [ ] cracked
+        - [ ] info
+        - [ ] language
+        - [ ] lobby (l and hub)
+        - [ ] maintenance
+        - [ ] motd
+        - [ ] rank
+        - [ ] send (send player to server)
+        - [ ] server (tp to server)
+        - [ ] tempban
+        - [ ] kick
+        - [ ] nick
+        - [ ] whitelist
+    - [ ] Server
+        - [ ] home (sethome, home, delhome (user & admin), gethome (admin))
+        - [ ] tpa (tpaccept, tpdeny)
+        - [ ] enderchest (based on rank)
+        - [ ] headitem
+        - [ ] maintenance
+        - [ ] miniblocks
+        - [ ] npc management
+        - [ ] perks
+        - [ ] spawn
+        - [ ] suicide
+- [ ] Internals
+    - [ ] Website
+    - [ ] Custom player list
+    - [ ] Ping messages
+    - [ ] Permissions (based on rank)
+    - [ ] UUID management (Geyser & Java player support)
+    - [ ] 1984
+    - [ ] Cool death messages
+    - [ ] Whitelist
+    - [ ] Cracked players join
+    - [ ] Bedrock players need a "." on their names
+    - [ ] PLAYER INDOCTRINATION: RULES & ANNOUNCEMENTS (:
+    - [ ] Lobby
+        - [ ] Spawn always at spawn, not at leave place
+        - [ ] No take damage
+        - [ ] No entity damage (paintings & whatnot) except if in creative
+        - [ ] No interactions except door & gates except if in creative
+        - [ ] No entity interactions except if in creative
+        - [ ] No block breaking except if in creative
+    - [ ] Edits
+        - [ ] Join and leave messages (not joined game + joined network)
+        - [ ] Invisible item frames (make and unmake invis)
+        - [ ] Crop trampling remove
+        - [ ] Shulker always drop 2 shells
+        - [ ] No drop perks on death (dead and respawn)
+        - [ ] Chat cool looking & stop message reporting
+- [ ] Perks
+    - [ ] Announce arrival
+    - [ ] Arrow trail
+    - [ ] Cape
+    - [ ] Enderchest
+    - [ ] Entity in a bucket
+    - [ ] Firework launcher
+    - [ ] Hats
+    - [ ] Magic stick
+    - [ ] Pet (use real entities?)
+    - [ ] Player picker upper
+    - [ ] Speed boost
+    - [ ] Super (dog or cat)

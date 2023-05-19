@@ -1,4 +1,4 @@
-package com.connexal.ravelcraft.beproxy;
+package com.connexal.ravelcraft.beproxy.util;
 
 import com.connexal.ravelcraft.shared.util.RavelLogger;
 import org.apache.logging.log4j.Logger;

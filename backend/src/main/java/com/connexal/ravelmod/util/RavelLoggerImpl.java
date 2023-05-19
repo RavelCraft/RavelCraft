@@ -1,4 +1,4 @@
-package com.connexal.ravelmod;
+package com.connexal.ravelmod.util;
 
 import com.connexal.ravelcraft.shared.BuildConstants;
 import com.connexal.ravelcraft.shared.util.RavelLogger;

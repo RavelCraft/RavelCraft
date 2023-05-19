@@ -1,4 +1,4 @@
-package com.connexal.ravelcraft.jeproxy;
+package com.connexal.ravelcraft.jeproxy.util;
 
 import com.connexal.ravelcraft.shared.util.RavelLogger;
 import org.slf4j.Logger;
