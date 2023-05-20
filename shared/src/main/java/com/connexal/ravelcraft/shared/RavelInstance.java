@@ -21,6 +21,7 @@ public class RavelInstance {
 
     public static void init(RavelLogger logger, Path dataPath) {
         RavelInstance.logger = logger;
+        RavelInstance.dataPath = dataPath;
         logger.info("RavelCraft is initializing...");
 
         // --- Setup server info ---
@@ -54,6 +55,11 @@ public class RavelInstance {
 
             messager = new MessagingClient(hostname);
         }
+    }
+
+    public static void shutdown() {
+        logger.info("RavelCraft is shutting down...");
+        messager.close();
     }
 
     public static RavelLogger getLogger() {

@@ -27,7 +27,7 @@ public class RavelConfig {
 
         if (!Files.exists(this.file)) {
             try {
-                Files.createDirectory(this.file.getParent());
+                Files.createDirectories(this.file.getParent());
                 Files.createFile(this.file);
             } catch (IOException e) {
                 this.logger.error("Failed to create config file at " + this.file.toAbsolutePath(), e);

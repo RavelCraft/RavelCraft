@@ -9,4 +9,9 @@ public class BeProxy extends Plugin {
     public void onEnable() {
         RavelInstance.init(new RavelLoggerImpl(this.getLogger()), this.getDataFolder().toPath());
     }
+
+    @Override
+    public void onDisable() {
+        RavelInstance.shutdown();
+    }
 }
