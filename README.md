@@ -32,6 +32,7 @@ All the code for RavelCraft
         - [ ] spawn
         - [ ] suicide
 - [ ] Internals
+    - [ ] Centralised user management
     - [ ] Website
     - [ ] Custom player list
     - [ ] Ping messages

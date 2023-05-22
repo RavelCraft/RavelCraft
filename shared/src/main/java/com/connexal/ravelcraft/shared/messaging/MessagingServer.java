@@ -15,10 +15,12 @@ public class MessagingServer implements Messager {
     private boolean listening = false;
 
     public MessagingServer() {
+        RavelInstance.getLogger().info("Starting plugin messaging server on port " + MessagingConstants.PORT + "...");
+
         try {
             this.serverSocket = new ServerSocket(MessagingConstants.PORT);
         } catch (IOException e) {
-            RavelInstance.getLogger().warning("Unable to start plugin messaging on port " + MessagingConstants.PORT);
+            RavelInstance.getLogger().error("Unable to start plugin messaging server!", e);
             return;
         }
 
@@ -26,6 +28,14 @@ public class MessagingServer implements Messager {
     }
 
     private void listen() {
+        if (this.listening) {
+            RavelInstance.getLogger().warning("Plugin messaging socket already open, can't open again!");
+            return;
+        }
+
+        RavelInstance.getLogger().info("Plugin messaging socket open and listening.");
+
+        this.listening = true;
         while (this.listening) {
             ClientData client;
 
@@ -44,6 +54,8 @@ public class MessagingServer implements Messager {
                 this.clientListen(client);
             }).start();
         }
+
+        RavelInstance.getLogger().info("Plugin messaging socket closed.");
     }
 
     private void clientListen(ClientData client) {
@@ -63,6 +75,14 @@ public class MessagingServer implements Messager {
                 server = Server.valueOf(serverName);
             } catch (IllegalArgumentException e) {
                 RavelInstance.getLogger().warning("Unable to find server " + serverName);
+                outputStream.writeBoolean(false);
+                client.close();
+                return;
+            }
+            serverName = server.getName();
+
+            if (this.clients.containsKey(server)) {
+                RavelInstance.getLogger().warning("Server " + serverName + " already connected but tried to connect again!");
                 outputStream.writeBoolean(false);
                 client.close();
                 return;
@@ -93,7 +113,7 @@ public class MessagingServer implements Messager {
             }
         } catch (NullPointerException ignored) {
         } catch (IOException e) {
-            RavelInstance.getLogger().warning("Server disconnected: " + serverName);
+            RavelInstance.getLogger().warning("Server " + serverName + " disconnected: " + e.getMessage());
         }
 
         client.close();

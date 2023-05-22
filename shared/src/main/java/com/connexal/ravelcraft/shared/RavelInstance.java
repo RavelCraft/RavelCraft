@@ -39,6 +39,8 @@ public class RavelInstance {
             throw new RuntimeException("No server name specified in config.yml!");
         }
 
+        logger.info("Server identified as: " + server.name());
+
         // --- Setup messaging ---
         if (server == MessagingConstants.MESSAGING_SERVER) {
             messager = new MessagingServer();
@@ -47,7 +49,7 @@ public class RavelInstance {
             if (config.contains("messaging-server")) {
                 hostname = config.getString("messaging-server");
             } else {
-                config.set("messaging-server-hostname", "server.domain.name");
+                config.set("messaging-server", "server.domain.name");
                 config.save();
 
                 throw new RuntimeException("No messaging server hostname specified in config.yml!");

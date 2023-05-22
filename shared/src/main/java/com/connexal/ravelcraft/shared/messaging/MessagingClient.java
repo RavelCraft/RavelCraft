@@ -25,6 +25,8 @@ public class MessagingClient implements Messager {
             return;
         }
 
+        RavelInstance.getLogger().info("Attempting to connect to plugin messaging server at " + this.serverHostname + "...");
+
         new Thread(() -> {
             this.connected = true;
 
@@ -41,7 +43,7 @@ public class MessagingClient implements Messager {
                 this.input = new DataInputStream(this.socket.getInputStream());
 
                 String magic = this.input.readUTF();
-                if (!magic.equals(MessagingConstants.MAGIC)) {
+                if (!magic.equals(MessagingConstants.MAGIC + "\n")) {
                     this.connected = false;
                     RavelInstance.getLogger().warning("Unable to connect to plugin messaging server at " + this.serverHostname + "! Invalid magic.");
                     return;
