@@ -1,7 +1,7 @@
 package com.connexal.ravelcraft.shared.messaging;
 
 import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.data.Server;
+import com.connexal.ravelcraft.shared.util.RavelServer;
 
 import java.io.*;
 import java.net.Socket;
@@ -100,7 +100,7 @@ public class MessagingClient implements Messager {
     }
 
     @Override
-    public void sendCommand(Server server, MessagingCommand command, String... args) {
+    public void sendCommand(RavelServer server, MessagingCommand command, String... args) {
         try {
             this.output.writeUTF(command.name());
             this.output.writeInt(args.length);
@@ -136,5 +136,10 @@ public class MessagingClient implements Messager {
         }
 
         this.socket = null;
+    }
+
+    @Override
+    public boolean isServer() {
+        return false;
     }
 }

@@ -1,34 +1,44 @@
 package com.connexal.ravelcraft.shared;
 
-import com.connexal.ravelcraft.shared.data.Server;
+import com.connexal.ravelcraft.shared.commands.CommandRegistrar;
+import com.connexal.ravelcraft.shared.util.RavelServer;
 import com.connexal.ravelcraft.shared.messaging.Messager;
 import com.connexal.ravelcraft.shared.messaging.MessagingClient;
 import com.connexal.ravelcraft.shared.messaging.MessagingConstants;
 import com.connexal.ravelcraft.shared.messaging.MessagingServer;
 import com.connexal.ravelcraft.shared.util.RavelConfig;
 import com.connexal.ravelcraft.shared.util.RavelLogger;
+import com.connexal.ravelcraft.shared.util.text.Text;
 
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RavelInstance {
+    private static RavelMain main = null;
     private static Path dataPath = null;
     private static RavelLogger logger = null;
-    private static Server server = null;
+    private static RavelServer server = null;
     private static Messager messager = null;
+    private static CommandRegistrar commandRegistrar = null;
+
     private static final Map<String, RavelConfig> configs = new HashMap<>();
 
-    public static void init(RavelLogger logger, Path dataPath) {
+    public static void init(RavelMain main, RavelLogger logger, CommandRegistrar commandRegistrar, Path dataPath) {
+        RavelInstance.main = main;
         RavelInstance.logger = logger;
+        RavelInstance.commandRegistrar = commandRegistrar;
         RavelInstance.dataPath = dataPath;
         logger.info("RavelCraft is initializing...");
+
+        // --- Setup languages ---
+        Text.init();
 
         // --- Setup server info ---
         RavelConfig config = getConfig();
         if (config.contains("server-name")) {
             try {
-                server = Server.valueOf(config.getString("server-name"));
+                server = RavelServer.valueOf(config.getString("server-name"));
             } catch (IllegalArgumentException e) {
                 throw new RuntimeException("Invalid server name specified in config.yml!");
             }
@@ -42,7 +52,7 @@ public class RavelInstance {
         logger.info("Server identified as: " + server.name());
 
         // --- Setup messaging ---
-        if (server == MessagingConstants.MESSAGING_SERVER) {
+        if (MessagingConstants.isServer()) {
             messager = new MessagingServer();
         } else {
             String hostname;
@@ -57,6 +67,9 @@ public class RavelInstance {
 
             messager = new MessagingClient(hostname);
         }
+
+        // --- Setup commands ---
+        commandRegistrar.register();
     }
 
     public static void shutdown() {
@@ -64,16 +77,24 @@ public class RavelInstance {
         messager.close();
     }
 
+    public static RavelMain getMain() {
+        return main;
+    }
+
     public static RavelLogger getLogger() {
         return logger;
     }
 
-    public static Server getServer() {
+    public static RavelServer getServer() {
         return server;
     }
 
     public static Messager getMessager() {
         return messager;
+    }
+
+    public static CommandRegistrar getCommandRegistrar() {
+        return commandRegistrar;
     }
 
     public static RavelConfig getConfig(String name) {

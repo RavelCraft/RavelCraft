@@ -1,0 +1,4 @@
+name: "${project_name}"
+author: "${project_name}"
+version: "${project_version}"
+main: "com.connexal.ravelcraft.proxy.bedrock.BeProxy"

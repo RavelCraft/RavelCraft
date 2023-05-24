@@ -1,7 +1,7 @@
 package com.connexal.ravelcraft.shared.messaging;
 
 import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.data.Server;
+import com.connexal.ravelcraft.shared.util.RavelServer;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class MessagingServer implements Messager {
     private ServerSocket serverSocket;
-    private final Map<Server, ClientData> clients = new HashMap<>();
+    private final Map<RavelServer, ClientData> clients = new HashMap<>();
     private boolean listening = false;
 
     public MessagingServer() {
@@ -62,7 +62,7 @@ public class MessagingServer implements Messager {
         DataOutputStream outputStream = client.getOutputStream();
         DataInputStream inputStream = client.getInputStream();
 
-        Server server = null;
+        RavelServer server = null;
         String serverName = "Not found";
 
         try {
@@ -72,7 +72,7 @@ public class MessagingServer implements Messager {
 
             serverName = inputStream.readUTF();
             try {
-                server = Server.valueOf(serverName);
+                server = RavelServer.valueOf(serverName);
             } catch (IllegalArgumentException e) {
                 RavelInstance.getLogger().warning("Unable to find server " + serverName);
                 outputStream.writeBoolean(false);
@@ -138,7 +138,7 @@ public class MessagingServer implements Messager {
     }
 
     @Override
-    public void sendCommand(Server server, MessagingCommand command, String... args) {
+    public void sendCommand(RavelServer server, MessagingCommand command, String... args) {
         if (server == RavelInstance.getServer()) {
             RavelInstance.getLogger().warning("Attempted to send command to self. It went through, but this is probably a mistake.");
             this.runCommand(command, args);
@@ -179,6 +179,11 @@ public class MessagingServer implements Messager {
             socket.close();
         }
         this.clients.clear();
+    }
+
+    @Override
+    public boolean isServer() {
+        return true;
     }
 
     private static class ClientData {

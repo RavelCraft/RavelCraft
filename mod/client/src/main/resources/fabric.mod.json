@@ -18,7 +18,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.connexal.ravelcraft.mod.client.RavelMod"
+      "com.connexal.ravelcraft.mod.client.RavelModClient"
     ]
   },
   "mixins": [

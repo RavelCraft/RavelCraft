@@ -23,7 +23,6 @@ dependencies {
 	modCompileOnly("net.fabricmc:fabric-loader:${fabricLoaderVersion}")
 	modCompileOnly("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
 
-	shadow(project(":shared"))
 	shadow(project(":mod-cross"))
 }
 
