@@ -31,10 +31,10 @@ public class RavelInstance {
         RavelInstance.dataPath = dataPath;
         logger.info("RavelCraft is initializing...");
 
-        // --- Setup languages ---
+        //Setup languages
         Text.init();
 
-        // --- Setup server info ---
+        //Setup server info
         RavelConfig config = getConfig();
         if (config.contains("server-name")) {
             try {
@@ -51,7 +51,7 @@ public class RavelInstance {
 
         logger.info("Server identified as: " + server.name());
 
-        // --- Setup messaging ---
+        //Setup messaging
         if (MessagingConstants.isServer()) {
             messager = new MessagingServer();
         } else {
@@ -68,7 +68,7 @@ public class RavelInstance {
             messager = new MessagingClient(hostname);
         }
 
-        // --- Setup commands ---
+        //Setup commands
         commandRegistrar.register();
     }
 

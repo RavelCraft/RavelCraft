@@ -2,6 +2,8 @@ package com.connexal.ravelcraft.shared.util;
 
 import com.connexal.ravelcraft.shared.BuildConstants;
 
+import java.util.Locale;
+
 public enum RavelServer {
     JE_PROXY("JE Proxy", BuildConstants.SERVER_IP, 25565, false, true, false),
     BE_PROXY("BE Proxy", BuildConstants.SERVER_IP, 19132, true, false, false),
@@ -48,12 +50,20 @@ public enum RavelServer {
         return name;
     }
 
+    public String getIdentifier() {
+        return name().toLowerCase(Locale.ROOT);
+    }
+
     public String getAddress() {
         return address;
     }
 
     public int getPort() {
         return port;
+    }
+
+    public boolean isProxy() {
+        return bedrockProxy || javaProxy;
     }
 
     public boolean isBedrockProxy() {

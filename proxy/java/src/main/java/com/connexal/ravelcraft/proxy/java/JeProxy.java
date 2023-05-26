@@ -1,6 +1,8 @@
 package com.connexal.ravelcraft.proxy.java;
 
+import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
 import com.connexal.ravelcraft.proxy.java.commands.CommandRegistrarImpl;
+import com.connexal.ravelcraft.proxy.java.servers.ServerManagerImpl;
 import com.connexal.ravelcraft.proxy.java.util.RavelLoggerImpl;
 import com.connexal.ravelcraft.shared.BuildConstants;
 import com.connexal.ravelcraft.shared.RavelInstance;
@@ -31,6 +33,7 @@ public class JeProxy implements RavelMain {
     @Subscribe
     public void onInitialize(ProxyInitializeEvent event) {
         RavelInstance.init(this, new RavelLoggerImpl(logger), new CommandRegistrarImpl(), Paths.get("plugins/" + BuildConstants.ID));
+        RavelProxyInstance.init(new ServerManagerImpl());
     }
 
     @Subscribe
