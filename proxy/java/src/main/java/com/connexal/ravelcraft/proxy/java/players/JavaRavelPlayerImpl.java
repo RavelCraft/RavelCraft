@@ -1,16 +1,17 @@
 package com.connexal.ravelcraft.proxy.java.players;
 
-import com.connexal.ravelcraft.shared.players.RavelPlayer;
+import com.connexal.ravelcraft.proxy.cross.players.ProxyRavelPlayer;
+import com.connexal.ravelcraft.proxy.cross.servers.ProxyType;
 import com.connexal.ravelcraft.shared.util.text.Text;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.Component;
 
 import java.util.UUID;
 
-public class RavelPlayerImpl implements RavelPlayer {
+public class JavaRavelPlayerImpl implements ProxyRavelPlayer {
     private final Player player;
 
-    public RavelPlayerImpl(Player player) {
+    public JavaRavelPlayerImpl(Player player) {
         this.player = player;
     }
 
@@ -21,11 +22,6 @@ public class RavelPlayerImpl implements RavelPlayer {
     }
 
     @Override
-    public boolean isPlayer() {
-        return true;
-    }
-
-    @Override
     public String getName() {
         return this.player.getUsername();
     }
@@ -33,5 +29,10 @@ public class RavelPlayerImpl implements RavelPlayer {
     @Override
     public UUID getUniqueID() {
         return this.player.getUniqueId();
+    }
+
+    @Override
+    public ProxyType getOwner() {
+        return ProxyType.JAVA;
     }
 }

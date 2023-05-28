@@ -5,7 +5,7 @@ import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
 import com.connexal.ravelcraft.shared.util.text.Text;
 
 public class InfoCommand extends RavelCommand {
-    public InfoCommand(String name) {
+    public InfoCommand() {
         super("info");
     }
 

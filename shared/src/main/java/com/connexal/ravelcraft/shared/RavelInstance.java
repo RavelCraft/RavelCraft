@@ -1,13 +1,15 @@
 package com.connexal.ravelcraft.shared;
 
 import com.connexal.ravelcraft.shared.commands.CommandRegistrar;
-import com.connexal.ravelcraft.shared.util.RavelServer;
 import com.connexal.ravelcraft.shared.messaging.Messager;
 import com.connexal.ravelcraft.shared.messaging.MessagingClient;
 import com.connexal.ravelcraft.shared.messaging.MessagingConstants;
 import com.connexal.ravelcraft.shared.messaging.MessagingServer;
+import com.connexal.ravelcraft.shared.players.PlayerManager;
 import com.connexal.ravelcraft.shared.util.RavelConfig;
 import com.connexal.ravelcraft.shared.util.RavelLogger;
+import com.connexal.ravelcraft.shared.util.RavelServer;
+import com.connexal.ravelcraft.shared.util.UUIDTools;
 import com.connexal.ravelcraft.shared.util.text.Text;
 
 import java.nio.file.Path;
@@ -17,18 +19,22 @@ import java.util.Map;
 public class RavelInstance {
     private static RavelMain main = null;
     private static Path dataPath = null;
+
     private static RavelLogger logger = null;
     private static RavelServer server = null;
     private static Messager messager = null;
-    private static CommandRegistrar commandRegistrar = null;
+    private static UUIDTools uuidTools = null;
+    private static PlayerManager playerManager = null;
 
     private static final Map<String, RavelConfig> configs = new HashMap<>();
 
-    public static void init(RavelMain main, RavelLogger logger, CommandRegistrar commandRegistrar, Path dataPath) {
+    public static void init(RavelMain main, Path dataPath, RavelLogger logger, CommandRegistrar commandRegistrar, PlayerManager playerManager) {
         RavelInstance.main = main;
-        RavelInstance.logger = logger;
-        RavelInstance.commandRegistrar = commandRegistrar;
         RavelInstance.dataPath = dataPath;
+
+        RavelInstance.logger = logger;
+        RavelInstance.playerManager = playerManager;
+
         logger.info("RavelCraft is initializing...");
 
         //Setup languages
@@ -68,6 +74,9 @@ public class RavelInstance {
             messager = new MessagingClient(hostname);
         }
 
+        //Setup UUID tools
+        uuidTools = new UUIDTools();
+
         //Setup commands
         commandRegistrar.register();
     }
@@ -93,8 +102,12 @@ public class RavelInstance {
         return messager;
     }
 
-    public static CommandRegistrar getCommandRegistrar() {
-        return commandRegistrar;
+    public static UUIDTools getUUIDTools() {
+        return uuidTools;
+    }
+
+    public static PlayerManager getPlayerManager() {
+        return playerManager;
     }
 
     public static RavelConfig getConfig(String name) {

@@ -8,8 +8,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
-public class MessagingServer implements Messager {
+public class MessagingServer extends Messager {
     private ServerSocket serverSocket;
     private final Map<RavelServer, ClientData> clients = new HashMap<>();
     private boolean listening = false;
@@ -97,19 +98,7 @@ public class MessagingServer implements Messager {
             //--- Main loop ---
 
             while (this.listening) {
-                String command = inputStream.readUTF();
-                int argumentCount = inputStream.readInt();
-
-                String[] arguments = new String[argumentCount];
-                for (int i = 0; i < argumentCount; i++) {
-                    arguments[i] = inputStream.readUTF();
-                }
-
-                try {
-                    this.runCommand(MessagingCommand.valueOf(command), arguments);
-                } catch (IllegalArgumentException e) {
-                    RavelInstance.getLogger().warning("Unknown command received from server " + serverName + ": " + command);
-                }
+                this.readStream(inputStream);
             }
         } catch (NullPointerException ignored) {
         } catch (IOException e) {
@@ -124,11 +113,20 @@ public class MessagingServer implements Messager {
 
     @Override
     public void attemptConnect() {
-        // Do nothing, we can't connect to ourselves
+        // Do nothing, no need to connect to ourselves
     }
 
     @Override
-    public void runCommand(MessagingCommand command, String[] args) {
+    public DataOutputStream getServerOutputStream(RavelServer server) {
+        if (!this.listening || !this.clients.containsKey(server)) {
+            return null;
+        }
+
+        return this.clients.get(server).getOutputStream();
+    }
+
+    @Override
+    public void runCommand(MessagingCommand command, String[] args, String responseId) {
         switch (command) {
             default: {
                 RavelInstance.getLogger().warning("Unable to do anything with received command: " + command);
@@ -138,34 +136,6 @@ public class MessagingServer implements Messager {
     }
 
     @Override
-    public void sendCommand(RavelServer server, MessagingCommand command, String... args) {
-        if (server == RavelInstance.getServer()) {
-            RavelInstance.getLogger().warning("Attempted to send command to self. It went through, but this is probably a mistake.");
-            this.runCommand(command, args);
-            return;
-        }
-
-        try {
-            ClientData socket = this.clients.get(server);
-            if (socket == null) {
-                RavelInstance.getLogger().warning("Unable to find socket for server " + server.getName());
-                return;
-            }
-
-            DataOutputStream outputStream = socket.getOutputStream();
-            outputStream.writeUTF(command.name());
-            outputStream.writeInt(args.length);
-            for (String arg : args) {
-                outputStream.writeUTF(arg);
-            }
-            outputStream.flush();
-        } catch (NullPointerException e) {
-            RavelInstance.getLogger().warning("Unable to find server to send command to");
-        } catch (IOException e) {
-            RavelInstance.getLogger().warning("Unable to send command to server");
-        }
-    }
-
     public void close() {
         this.listening = false;
 

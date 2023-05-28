@@ -1,9 +1,10 @@
 package com.connexal.ravelcraft.mod.server;
 
 import com.connexal.ravelcraft.mod.server.commands.CommandRegistrarImpl;
+import com.connexal.ravelcraft.mod.server.players.PlayerManagerImpl;
+import com.connexal.ravelcraft.mod.server.util.RavelLoggerImpl;
 import com.connexal.ravelcraft.shared.BuildConstants;
 import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.mod.server.util.RavelLoggerImpl;
 import com.connexal.ravelcraft.shared.RavelMain;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
@@ -21,7 +22,7 @@ public class RavelModServer implements RavelMain, ModInitializer {
 	@Override
 	public void onInitialize() {
 		mod = FabricLoader.getInstance().getModContainer(BuildConstants.ID).orElseThrow();
-		RavelInstance.init(this, new RavelLoggerImpl(), new CommandRegistrarImpl(), FabricLoader.getInstance().getConfigDir().resolve(BuildConstants.ID));
+		RavelInstance.init(this, FabricLoader.getInstance().getConfigDir().resolve(BuildConstants.ID), new RavelLoggerImpl(), new CommandRegistrarImpl(), new PlayerManagerImpl());
 
 		AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> {
 			RavelInstance.shutdown();

@@ -1,5 +1,6 @@
 package com.connexal.ravelcraft.shared.players;
 
+import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
 import com.connexal.ravelcraft.shared.util.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.Language;
@@ -13,38 +14,44 @@ public interface RavelPlayer extends RavelCommandSender {
 
     @Override
     default boolean isOp() {
-        return PlayerManager.getIsOp(this);
+        return RavelInstance.getPlayerManager().getRank(this).isOperator();
     }
 
-    default void setOp(boolean isOp) {
-        PlayerManager.setIsOp(this, isOp);
+    @Override
+    default boolean isPlayer() {
+        return true;
+    }
+
+    @Override
+    default RavelPlayer asPlayer() {
+        return this;
     }
 
     default RavelServer getServer() {
-        return PlayerManager.getServer(this);
+        return RavelInstance.getPlayerManager().getServer(this);
     }
 
     default void sendToServer(RavelServer server) {
-        PlayerManager.setServer(this, server);
+        RavelInstance.getPlayerManager().setServer(this, server);
     }
 
     default Language getLanguage() {
-        return PlayerManager.getLanguage(this);
+        return RavelInstance.getPlayerManager().getLanguage(this);
     }
 
     default void setLanguage(Language language) {
-        PlayerManager.setLanguage(this, language);
+        RavelInstance.getPlayerManager().setLanguage(this, language);
     }
 
     default RavelRank getRank() {
-        return PlayerManager.getRank(this);
+        return RavelInstance.getPlayerManager().getRank(this);
     }
 
     default void setRank(RavelRank rank) {
-        PlayerManager.setRank(this, rank);
+        RavelInstance.getPlayerManager().setRank(this, rank);
     }
 
     default void kick(String reason, boolean network) {
-        PlayerManager.kick(this, reason, network);
+        RavelInstance.getPlayerManager().kick(this, reason, network);
     }
 }

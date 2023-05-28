@@ -20,11 +20,6 @@ public class RavelPlayerImpl implements RavelPlayer {
     }
 
     @Override
-    public boolean isPlayer() {
-        return true;
-    }
-
-    @Override
     public String getName() {
         return this.player.getName().getString();
     }

@@ -12,7 +12,9 @@ public enum RavelRank {
     PARTNER(ChatColor.GREEN + "Partner", false),
     DONATOR_I(ChatColor.DARK_PURPLE + "Donator I", false),
     DONATOR_II(ChatColor.DARK_BLUE + "Donator II", false),
-    DONATOR_III(ChatColor.BLUE + "Donator III", false);
+    DONATOR_III(ChatColor.BLUE + "Donator III", false),
+
+    NONE(null, false);
 
     private final String name;
     private final boolean operator;

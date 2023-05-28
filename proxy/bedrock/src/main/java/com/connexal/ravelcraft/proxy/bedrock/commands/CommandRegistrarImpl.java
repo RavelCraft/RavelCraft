@@ -1,7 +1,7 @@
 package com.connexal.ravelcraft.proxy.bedrock.commands;
 
 import com.connexal.ravelcraft.proxy.bedrock.BeProxy;
-import com.connexal.ravelcraft.proxy.bedrock.players.RavelPlayerImpl;
+import com.connexal.ravelcraft.proxy.bedrock.players.BedrockRavelPlayerImpl;
 import com.connexal.ravelcraft.shared.commands.CommandRegistrar;
 import com.connexal.ravelcraft.shared.commands.RavelCommand;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
@@ -13,7 +13,7 @@ import dev.waterdog.waterdogpe.player.ProxiedPlayer;
 public class CommandRegistrarImpl extends CommandRegistrar {
     private RavelCommandSender getSender(CommandSender sender) {
         if (sender.isPlayer()) {
-            return new RavelPlayerImpl((ProxiedPlayer) sender);
+            return new BedrockRavelPlayerImpl((ProxiedPlayer) sender);
         } else {
             return new ServerCommandSender(sender);
         }

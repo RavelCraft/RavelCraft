@@ -1,6 +1,7 @@
 package com.connexal.ravelcraft.proxy.bedrock;
 
 import com.connexal.ravelcraft.proxy.bedrock.commands.CommandRegistrarImpl;
+import com.connexal.ravelcraft.proxy.bedrock.players.PlayerManagerImpl;
 import com.connexal.ravelcraft.proxy.bedrock.servers.ServerManagerImpl;
 import com.connexal.ravelcraft.proxy.bedrock.util.RavelLoggerImpl;
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
@@ -18,7 +19,7 @@ public class BeProxy extends Plugin implements RavelMain {
     public void onEnable() {
         server = this.getProxy();
 
-        RavelInstance.init(this, new RavelLoggerImpl(this.getLogger()), new CommandRegistrarImpl(), this.getDataFolder().toPath());
+        RavelInstance.init(this, this.getDataFolder().toPath(), new RavelLoggerImpl(this.getLogger()), new CommandRegistrarImpl(), new PlayerManagerImpl());
         RavelProxyInstance.init(new ServerManagerImpl());
     }
 

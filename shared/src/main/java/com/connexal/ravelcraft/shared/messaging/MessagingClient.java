@@ -5,8 +5,11 @@ import com.connexal.ravelcraft.shared.util.RavelServer;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
-public class MessagingClient implements Messager {
+public class MessagingClient extends Messager {
     private final String serverHostname;
 
     private boolean connected = false;
@@ -67,19 +70,7 @@ public class MessagingClient implements Messager {
 
             try {
                 while (this.connected) {
-                    String command = this.input.readUTF();
-                    int argumentCount = this.input.readInt();
-
-                    String[] arguments = new String[argumentCount];
-                    for (int i = 0; i < argumentCount; i++) {
-                        arguments[i] = this.input.readUTF();
-                    }
-
-                    try {
-                        this.runCommand(MessagingCommand.valueOf(command), arguments);
-                    } catch (IllegalArgumentException e) {
-                        RavelInstance.getLogger().warning("Unknown command received from proxy: " + command);
-                    }
+                    this.readStream(this.input);
                 }
             } catch (IOException e) {
                 RavelInstance.getLogger().warning("Got disconnected from plugin messaging server! " + e.getMessage());
@@ -90,27 +81,21 @@ public class MessagingClient implements Messager {
     }
 
     @Override
-    public void runCommand(MessagingCommand command, String[] args) {
+    public DataOutputStream getServerOutputStream(RavelServer server) {
+        if (server != MessagingConstants.MESSAGING_SERVER || !this.connected) {
+            return null;
+        }
+
+        return this.output;
+    }
+
+    @Override
+    public void runCommand(MessagingCommand command, String[] args, String responseId) {
         switch (command) {
             default: {
                 RavelInstance.getLogger().warning("Unable to do anything with received command: " + command);
                 break;
             }
-        }
-    }
-
-    @Override
-    public void sendCommand(RavelServer server, MessagingCommand command, String... args) {
-        try {
-            this.output.writeUTF(command.name());
-            this.output.writeInt(args.length);
-            for (String arg : args) {
-                this.output.writeUTF(arg);
-            }
-
-            this.output.flush();
-        } catch (IOException e) {
-            RavelInstance.getLogger().warning("Unable to send command to server");
         }
     }
 

@@ -1,7 +1,7 @@
 package com.connexal.ravelcraft.proxy.java.commands;
 
 import com.connexal.ravelcraft.proxy.java.JeProxy;
-import com.connexal.ravelcraft.proxy.java.players.RavelPlayerImpl;
+import com.connexal.ravelcraft.proxy.java.players.JavaRavelPlayerImpl;
 import com.connexal.ravelcraft.shared.commands.CommandRegistrar;
 import com.connexal.ravelcraft.shared.commands.RavelCommand;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
@@ -17,7 +17,7 @@ public class CommandRegistrarImpl extends CommandRegistrar {
         if (source instanceof ConsoleCommandSource) {
             return new ServerCommandSender(source);
         } else {
-            return new RavelPlayerImpl((Player) source);
+            return new JavaRavelPlayerImpl((Player) source);
         }
     }
 
