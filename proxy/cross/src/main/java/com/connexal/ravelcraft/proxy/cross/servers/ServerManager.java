@@ -17,7 +17,13 @@ public abstract class ServerManager {
             registered++;
         }
 
+        this.additionalInit();
+
         RavelInstance.getLogger().info("Registered " + registered + " servers!");
+    }
+
+    protected void additionalInit() {
+        //Override this if you need to do anything else
     }
 
     public abstract void registerServer(RavelServer server);

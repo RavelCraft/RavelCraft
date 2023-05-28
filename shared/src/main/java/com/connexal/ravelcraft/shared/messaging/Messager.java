@@ -13,7 +13,6 @@ import java.util.concurrent.CompletableFuture;
 public abstract class Messager {
     private final Map<String, CompletableFuture<String[]>> responseFutures = new HashMap<>();
 
-    //TODO: Add this everywhere
     public boolean attemptConnect() {
         return this.attemptConnect(0);
     }

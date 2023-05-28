@@ -127,7 +127,7 @@ public abstract class PlayerManager {
                 }
             }
 
-            return new PlayerInfo(RavelServer.LOBBY, language, rank);
+            return new PlayerInfo(RavelServer.getLobby(), language, rank);
         } else {
             //TODO: Send a message to the messaging server to get the player info
             return null;

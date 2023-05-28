@@ -33,8 +33,6 @@ public class MessagingClient extends Messager {
             return true;
         }
 
-        RavelInstance.getLogger().info("Attempting to connect to plugin messaging server at " + this.serverHostname + "...");
-
         this.connected = true;
 
         try {

@@ -6,7 +6,7 @@ import java.util.Locale;
 
 public enum RavelServer {
     JE_PROXY("JE Proxy", BuildConstants.SERVER_IP, 25565, false, true, false),
-    BE_PROXY("BE Proxy", BuildConstants.SERVER_IP, 19132, true, false, false),
+    BE_PROXY("BE Proxy", BuildConstants.SERVER_IP, 25565, true, false, false),
 
     LOBBY("Lobby", "lobby", 25565, false, false, true),
     SURVIVAL("Survival", "survival", 25565),
@@ -15,6 +15,17 @@ public enum RavelServer {
 
     CHARLES("Charles", "oracle-carlito.chickenkiller.com", 25565),
     TEST("Test", "backup.hughes123.co.uk", 25566);
+
+    public static RavelServer lobbyServer;
+
+    static {
+        for (RavelServer server : values()) {
+            if (server.isLobby()) {
+                lobbyServer = server;
+                break;
+            }
+        }
+    }
 
     private final String name;
     private final String address;
@@ -78,7 +89,12 @@ public enum RavelServer {
         return lobby;
     }
 
+    //TODO: Add support for direct connect
     public String getDirectConnect() {
         return directConnect;
+    }
+
+    public static RavelServer getLobby() {
+        return lobbyServer;
     }
 }
