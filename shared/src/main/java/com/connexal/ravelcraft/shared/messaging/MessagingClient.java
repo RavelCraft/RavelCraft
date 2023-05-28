@@ -23,61 +23,69 @@ public class MessagingClient extends Messager {
     }
 
     @Override
-    public void attemptConnect() {
+    public boolean attemptConnect(int attempts) {
+        if (attempts >= 2) {
+            RavelInstance.getLogger().error("Too many attempts to connect to plugin messaging.");
+            return false;
+        }
+
         if (this.connected) {
-            return;
+            return true;
         }
 
         RavelInstance.getLogger().info("Attempting to connect to plugin messaging server at " + this.serverHostname + "...");
 
+        this.connected = true;
+
+        try {
+            this.socket = new Socket(this.serverHostname, MessagingConstants.PORT);
+        } catch (IOException e) {
+            this.connected = false;
+            RavelInstance.getLogger().error("Unable to connect to plugin messaging server at " + this.serverHostname, e);
+            return this.attemptConnect(attempts + 1);
+        }
+
+        try {
+            this.output = new DataOutputStream(this.socket.getOutputStream());
+            this.input = new DataInputStream(this.socket.getInputStream());
+
+            String magic = this.input.readUTF();
+            if (!magic.equals(MessagingConstants.MAGIC + "\n")) {
+                this.connected = false;
+                RavelInstance.getLogger().error("Unable to connect to plugin messaging server at " + this.serverHostname + "! Invalid magic.");
+                return this.attemptConnect(attempts + 1);
+            }
+
+            this.output.writeUTF(RavelInstance.getServer().name());
+            this.output.flush();
+
+            if (!this.input.readBoolean()) {
+                this.connected = false;
+                RavelInstance.getLogger().error("Unable to connect to plugin messaging server at " + this.serverHostname + "! Server refused connection.");
+                return this.attemptConnect(attempts + 1);
+            }
+        } catch (IOException e) {
+            this.connected = false;
+            RavelInstance.getLogger().error("Unable to connect to plugin messaging server at " + this.serverHostname, e);
+            return this.attemptConnect(attempts + 1);
+        }
+
+        RavelInstance.getLogger().info("Connected to plugin messaging server at " + this.serverHostname + ".");
+
         new Thread(() -> {
-            this.connected = true;
-
-            try {
-                this.socket = new Socket(this.serverHostname, MessagingConstants.PORT);
-            } catch (IOException e) {
-                this.connected = false;
-                RavelInstance.getLogger().warning("Unable to connect to plugin messaging server at " + this.serverHostname + "! " + e.getMessage());
-                return;
-            }
-
-            try {
-                this.output = new DataOutputStream(this.socket.getOutputStream());
-                this.input = new DataInputStream(this.socket.getInputStream());
-
-                String magic = this.input.readUTF();
-                if (!magic.equals(MessagingConstants.MAGIC + "\n")) {
-                    this.connected = false;
-                    RavelInstance.getLogger().warning("Unable to connect to plugin messaging server at " + this.serverHostname + "! Invalid magic.");
-                    return;
-                }
-
-                this.output.writeUTF(RavelInstance.getServer().name());
-                this.output.flush();
-
-                if (!this.input.readBoolean()) {
-                    this.connected = false;
-                    RavelInstance.getLogger().warning("Unable to connect to plugin messaging server at " + this.serverHostname + "! Server refused connection.");
-                    return;
-                }
-            } catch (IOException e) {
-                this.connected = false;
-                RavelInstance.getLogger().warning("Unable to connect to plugin messaging server at " + this.serverHostname + "! " + e.getMessage());
-                return;
-            }
-
-            RavelInstance.getLogger().info("Connected to plugin messaging server at " + this.serverHostname + ".");
-
             try {
                 while (this.connected) {
                     this.readStream(this.input);
                 }
             } catch (IOException e) {
-                RavelInstance.getLogger().warning("Got disconnected from plugin messaging server! " + e.getMessage());
+                RavelInstance.getLogger().error("Got disconnected from plugin messaging server! " + e.getMessage());
             }
 
             this.close();
+            this.attemptConnect();
         }).start();
+
+        return true;
     }
 
     @Override

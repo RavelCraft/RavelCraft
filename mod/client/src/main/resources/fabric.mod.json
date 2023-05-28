@@ -2,8 +2,7 @@
   "schemaVersion": 1,
   "id": "${project_id}",
   "version": "${project_version}",
-
-  "name": "RavelMod",
+  "name": "${project_name}",
   "description": "The mod used for the RavelCraft server.",
   "authors": [
     "Alex"
@@ -15,7 +14,7 @@
   "license": "CC0-1.0",
   "icon": "assets/ravelmod/icon.png",
 
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "main": [
       "com.connexal.ravelcraft.mod.client.RavelModClient"
@@ -26,9 +25,9 @@
   ],
 
   "depends": {
-    "fabricloader": ">=0.14.6",
+    "fabricloader": ">=${fabric_loader_version}",
     "fabric": "*",
-    "minecraft": "~1.19",
+    "minecraft": ">=${minecraft_version}",
     "java": ">=17"
   },
   "suggests": {

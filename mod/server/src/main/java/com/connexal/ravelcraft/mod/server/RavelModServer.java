@@ -6,11 +6,11 @@ import com.connexal.ravelcraft.mod.server.util.RavelLoggerImpl;
 import com.connexal.ravelcraft.shared.BuildConstants;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.RavelMain;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.util.ActionResult;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,12 +21,16 @@ public class RavelModServer implements RavelMain, ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		mod = FabricLoader.getInstance().getModContainer(BuildConstants.ID).orElseThrow();
-		RavelInstance.init(this, FabricLoader.getInstance().getConfigDir().resolve(BuildConstants.ID), new RavelLoggerImpl(), new CommandRegistrarImpl(), new PlayerManagerImpl());
+		if (FabricLoader.getInstance().getEnvironmentType() != EnvType.SERVER) {
+			throw new IllegalStateException("RavelModServer must be loaded on a server environment.");
+		}
 
-		AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> {
+		mod = FabricLoader.getInstance().getModContainer(BuildConstants.ID).orElseThrow();
+		RavelInstance.setup(this, FabricLoader.getInstance().getConfigDir().resolve(BuildConstants.ID), new RavelLoggerImpl());
+		RavelInstance.init(new CommandRegistrarImpl(), new PlayerManagerImpl());
+
+		ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
 			RavelInstance.shutdown();
-			return ActionResult.PASS;
 		});
 	}
 

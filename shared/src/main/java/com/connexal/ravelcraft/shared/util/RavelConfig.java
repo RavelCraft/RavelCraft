@@ -11,9 +11,9 @@ import java.util.*;
 
 public class RavelConfig {
     private ConfigSection config;
-    private Path file;
+    private final Path file;
     private boolean correct = false;
-    private RavelLogger logger;
+    private final RavelLogger logger;
 
     public RavelConfig(Path file) {
         this.file = file;

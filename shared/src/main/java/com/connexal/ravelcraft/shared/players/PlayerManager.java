@@ -17,7 +17,7 @@ public abstract class PlayerManager {
     private final RavelConfig config;
 
     public PlayerManager() {
-        this.config = RavelInstance.getConfig("players.yml");
+        this.config = RavelInstance.getConfig("players");
         this.config.save();
     }
 

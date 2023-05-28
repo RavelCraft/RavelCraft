@@ -14,7 +14,11 @@ public abstract class Messager {
     private final Map<String, CompletableFuture<String[]>> responseFutures = new HashMap<>();
 
     //TODO: Add this everywhere
-    public abstract void attemptConnect();
+    public boolean attemptConnect() {
+        return this.attemptConnect(0);
+    }
+
+    protected abstract boolean attemptConnect(int attempts);
 
     public abstract DataOutputStream getServerOutputStream(RavelServer server);
 
@@ -49,7 +53,7 @@ public abstract class Messager {
         }
     }
 
-    protected synchronized boolean readStream(DataInputStream input) throws IOException {
+    protected synchronized void readStream(DataInputStream input) throws IOException {
         String destinationString = input.readUTF();
 
         String typeString = input.readUTF();
@@ -75,7 +79,7 @@ public abstract class Messager {
         }
 
         if (type == null) {
-            return false;
+            return;
         }
 
         RavelServer destination = null;
@@ -84,7 +88,7 @@ public abstract class Messager {
                 destination = RavelServer.valueOf(destinationString);
             } catch (IllegalArgumentException e) {
                 RavelInstance.getLogger().warning("Unknown destination server " + destinationString);
-                return false;
+                return;
             }
         }
 
@@ -93,11 +97,10 @@ public abstract class Messager {
             command = MessagingCommand.valueOf(commandString);
         } catch (IllegalArgumentException e) {
             RavelInstance.getLogger().warning("Unknown command received from proxy: " + commandString);
-            return false;
+            return;
         }
 
         this.processRead(destination, type, responseId, command, arguments);
-        return true;
     }
 
     private synchronized boolean writeStream(RavelServer destination, MessageType type, String responseId, MessagingCommand command, String[] arguments) {

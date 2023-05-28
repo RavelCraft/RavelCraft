@@ -112,8 +112,9 @@ public class MessagingServer extends Messager {
     }
 
     @Override
-    public void attemptConnect() {
+    public boolean attemptConnect(int attempts) {
         // Do nothing, no need to connect to ourselves
+        return true;
     }
 
     @Override

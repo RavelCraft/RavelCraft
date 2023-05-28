@@ -19,8 +19,11 @@ public class BeProxy extends Plugin implements RavelMain {
     public void onEnable() {
         server = this.getProxy();
 
-        RavelInstance.init(this, this.getDataFolder().toPath(), new RavelLoggerImpl(this.getLogger()), new CommandRegistrarImpl(), new PlayerManagerImpl());
+        RavelInstance.setup(this, this.getDataFolder().toPath(), new RavelLoggerImpl(this.getLogger()));
+        RavelInstance.init(new CommandRegistrarImpl(), new PlayerManagerImpl());
         RavelProxyInstance.init(new ServerManagerImpl());
+
+        new BeEventListener();
     }
 
     @Override

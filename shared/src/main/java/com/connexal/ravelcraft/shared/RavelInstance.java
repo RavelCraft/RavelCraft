@@ -28,11 +28,13 @@ public class RavelInstance {
 
     private static final Map<String, RavelConfig> configs = new HashMap<>();
 
-    public static void init(RavelMain main, Path dataPath, RavelLogger logger, CommandRegistrar commandRegistrar, PlayerManager playerManager) {
+    public static void setup(RavelMain main, Path dataPath, RavelLogger logger) {
         RavelInstance.main = main;
         RavelInstance.dataPath = dataPath;
-
         RavelInstance.logger = logger;
+    }
+
+    public static void init(CommandRegistrar commandRegistrar, PlayerManager playerManager) {
         RavelInstance.playerManager = playerManager;
 
         logger.info("RavelCraft is initializing...");
@@ -79,6 +81,8 @@ public class RavelInstance {
 
         //Setup commands
         commandRegistrar.register();
+
+        logger.info("First init phase complete.");
     }
 
     public static void shutdown() {
