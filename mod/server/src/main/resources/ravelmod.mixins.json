@@ -4,8 +4,10 @@
   "package": "com.connexal.ravelcraft.mod.server.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "PlayerManagerMixin",
     "ServerPlayNetworkHandlerMixin",
-    "PlayerManagerMixin"
+    "velocity.ClientConnection_AddressAccessor",
+    "velocity.ServerLoginNetworkHandlerAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

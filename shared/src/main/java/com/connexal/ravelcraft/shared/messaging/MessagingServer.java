@@ -83,9 +83,9 @@ public class MessagingServer extends Messager {
             serverName = server.getName();
 
             if (this.clients.containsKey(server)) {
-                RavelInstance.getLogger().warning("Server " + serverName + " already connected but tried to connect again!");
-                outputStream.writeBoolean(false);
-                client.close();
+                ClientData oldClient = this.clients.remove(server);
+                oldClient.close();
+                RavelInstance.getLogger().warning("Server " + serverName + " already connected but tried to connect again! Old connection terminated.");
                 return;
             }
 

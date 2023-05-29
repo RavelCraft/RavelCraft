@@ -11,6 +11,8 @@ val yarnMappings = project.property("yarn_mappings") as String
 val fabricVersion = project.property("fabric_version") as String
 val fabricLoaderVersion = project.property("fabric_loader_version") as String
 
+val geyserVersion = project.property("geyser_version") as String
+
 val builtJarName = "${projectId}-serverMod-${minecraftVersion}"
 base.archivesName.set(builtJarName)
 
@@ -19,6 +21,8 @@ dependencies {
 	mappings("net.fabricmc:yarn:${yarnMappings}:v2")
 	modImplementation("net.fabricmc:fabric-loader:${fabricLoaderVersion}")
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
+
+	implementation("org.geysermc.geyser:api:${geyserVersion}")
 
 	shadow(project(":shared"))
 	shadow(project(":mod-cross"))

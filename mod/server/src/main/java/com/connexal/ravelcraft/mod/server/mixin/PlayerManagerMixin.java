@@ -18,6 +18,8 @@ public class PlayerManagerMixin {
             return;
         }
 
+        RavelInstance.getLogger().info(player.getName().getString() + " logged in (" + player.getUuidAsString() + ")");
+
         //TODO: Tell player manager about the join
     }
 }
