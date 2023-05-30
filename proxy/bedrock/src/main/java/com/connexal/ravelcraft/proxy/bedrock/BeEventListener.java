@@ -1,6 +1,7 @@
 package com.connexal.ravelcraft.proxy.bedrock;
 
 import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import dev.waterdog.waterdogpe.ProxyServer;
 import dev.waterdog.waterdogpe.event.defaults.PlayerAuthenticatedEvent;
 import dev.waterdog.waterdogpe.event.defaults.PreClientDataSetEvent;
@@ -16,7 +17,7 @@ public class BeEventListener {
     }
 
     private void onPreLogin(PreClientDataSetEvent event) {
-        String username = "." + event.getExtraData().get("displayName").getAsString();
+        String username = RavelPlayer.BEDROCK_PREFIX + event.getExtraData().get("displayName").getAsString();
 
         event.getClientData().remove("ThirdPartyName");
         event.getClientData().addProperty("ThirdPartyName", username);

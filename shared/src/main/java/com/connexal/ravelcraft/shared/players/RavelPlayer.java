@@ -8,6 +8,8 @@ import com.connexal.ravelcraft.shared.util.text.Language;
 import java.util.UUID;
 
 public interface RavelPlayer extends RavelCommandSender {
+    String BEDROCK_PREFIX = ".";
+
     String getName();
 
     UUID getUniqueID();

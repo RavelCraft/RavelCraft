@@ -34,6 +34,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(ServerLoginNetworkHandler.class)
 public interface ServerLoginNetworkHandlerAccessor {
     @Accessor
+    GameProfile getProfile();
+
+    @Accessor
     void setProfile(GameProfile profile);
 
     @Accessor

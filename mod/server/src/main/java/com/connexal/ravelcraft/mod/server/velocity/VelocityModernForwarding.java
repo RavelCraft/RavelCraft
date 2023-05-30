@@ -26,13 +26,18 @@ package com.connexal.ravelcraft.mod.server.velocity;
 
 import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
+import org.geysermc.geyser.api.event.EventRegistrar;
 
 import static com.connexal.ravelcraft.mod.server.velocity.VelocityLib.PLAYER_INFO_CHANNEL;
 import static com.connexal.ravelcraft.mod.server.velocity.VelocityLib.PLAYER_INFO_PACKET;
 
-public class VelocityModernForwarding {
+public class VelocityModernForwarding implements EventRegistrar {
+    private static VelocityPacketHandler handler;
+
     public static void init() {
-        ServerLoginNetworking.registerGlobalReceiver(PLAYER_INFO_CHANNEL, new VelocityPacketHandler()::handleVelocityPacket);
+        handler = new VelocityPacketHandler();
+
+        ServerLoginNetworking.registerGlobalReceiver(PLAYER_INFO_CHANNEL, handler::handleVelocityPacket);
         ServerLoginConnectionEvents.QUERY_START.register((handler, server, sender, synchronizer) -> sender.sendPacket(PLAYER_INFO_CHANNEL, PLAYER_INFO_PACKET));
     }
 }
