@@ -52,7 +52,12 @@ public class CommandRegistrarImpl extends CommandRegistrar {
             return Command.SINGLE_SUCCESS;
         });
 
-        JeProxy.getServer().getCommandManager().register(new BrigadierCommand(builder.build()));
+        CommandManager commandManager = JeProxy.getServer().getCommandManager();
+        CommandMeta commandMeta = commandManager.metaBuilder(command.getName())
+                .aliases(command.getAliases())
+                .build();
+
+        commandManager.register(commandMeta, new BrigadierCommand(builder.build()));
     }
 
     private void processOption(RavelCommand command, CommandOption option, ArgumentBuilder<CommandSource, ?> builder) {

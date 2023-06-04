@@ -11,6 +11,7 @@ import com.connexal.ravelcraft.shared.commands.arguments.CommandSubOption;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.ServerCommandSource;
 
@@ -53,7 +54,17 @@ public class CommandRegistrarImpl extends CommandRegistrar {
                         return Command.SINGLE_SUCCESS;
                     });
 
-            dispatcher.register(builder);
+            LiteralCommandNode<ServerCommandSource> node = dispatcher.register(builder);
+
+            for (String alias : command.getAliases()) {
+                dispatcher.register(literal(alias)
+                        .executes(context -> {
+                            RavelCommandSender sender = this.getSender(context.getSource());
+                            command.execute(sender, new String[0]);
+                            return Command.SINGLE_SUCCESS;
+                        })
+                        .redirect(node));
+            }
         });
     }
 
