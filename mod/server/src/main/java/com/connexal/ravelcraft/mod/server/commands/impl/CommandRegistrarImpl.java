@@ -1,5 +1,6 @@
 package com.connexal.ravelcraft.mod.server.commands.impl;
 
+import com.connexal.ravelcraft.mod.server.RavelModServer;
 import com.connexal.ravelcraft.mod.server.players.RavelPlayerImpl;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.commands.CommandRegistrar;
@@ -18,6 +19,10 @@ import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class CommandRegistrarImpl extends CommandRegistrar {
+    public CommandRegistrarImpl() {
+        super(RavelModServer.class.getClassLoader());
+    }
+
     private RavelCommandSender getSender(ServerCommandSource source) {
         if (source.isExecutedByPlayer()) {
             return new RavelPlayerImpl(source.getPlayer());
@@ -44,7 +49,6 @@ public class CommandRegistrarImpl extends CommandRegistrar {
 
             builder.executes(context -> {
                         RavelCommandSender sender = this.getSender(context.getSource());
-                        RavelInstance.getLogger().info("Command executed: " + context.getInput());
                         command.execute(sender, new String[0]);
                         return Command.SINGLE_SUCCESS;
                     });
@@ -69,12 +73,17 @@ public class CommandRegistrarImpl extends CommandRegistrar {
         }
 
         newOption.executes(context -> {
-            String[] args = context.getInput().split(" ");
-            RavelInstance.getLogger().info("Command executed: " + context.getInput());
             RavelCommandSender sender = this.getSender(context.getSource());
 
-            command.execute(sender, args);
+            String argsUnparsed = context.getInput().substring(context.getInput().indexOf(' ') + 1); // Remove the command name from the input
+            String[] args;
+            if (argsUnparsed.contains(" ")) {
+                args = argsUnparsed.split(" ");
+            } else {
+                args = new String[]{argsUnparsed};
+            }
 
+            command.execute(sender, args);
             return Command.SINGLE_SUCCESS;
         });
 

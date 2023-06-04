@@ -1,5 +1,6 @@
 package com.connexal.ravelcraft.proxy.java.commands;
 
+import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
 import com.connexal.ravelcraft.proxy.java.JeProxy;
 import com.connexal.ravelcraft.proxy.java.players.JavaRavelPlayerImpl;
 import com.connexal.ravelcraft.shared.commands.CommandRegistrar;
@@ -13,6 +14,10 @@ import com.velocitypowered.api.proxy.ConsoleCommandSource;
 import com.velocitypowered.api.proxy.Player;
 
 public class CommandRegistrarImpl extends CommandRegistrar {
+    public CommandRegistrarImpl() {
+        super(RavelProxyInstance.class.getClassLoader());
+    }
+
     private RavelCommandSender getSender(CommandSource source) {
         if (source instanceof ConsoleCommandSource) {
             return new ServerCommandSender(source);

@@ -34,6 +34,8 @@ public class JeProxy implements RavelMain {
     @Subscribe
     public void onInitialize(ProxyInitializeEvent event) {
         RavelInstance.setup(this, Paths.get("plugins/" + BuildConstants.ID), new RavelLoggerImpl(logger));
+        RavelProxyInstance.setup();
+
         RavelInstance.init(new CommandRegistrarImpl(), new PlayerManagerImpl());
         RavelProxyInstance.init(new ServerManagerImpl());
 

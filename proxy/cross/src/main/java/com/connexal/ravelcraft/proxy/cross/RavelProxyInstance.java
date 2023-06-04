@@ -8,6 +8,10 @@ public class RavelProxyInstance {
     private static ServerManager serverManager;
     private static ProxyType proxyType;
 
+    public static void setup() {
+        //No-op
+    }
+
     public static void init(ServerManager serverManager) {
         RavelProxyInstance.serverManager = serverManager;
 
