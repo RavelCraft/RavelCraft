@@ -25,7 +25,10 @@ public class InfoCommand extends RavelCommand {
 
     @Override
     public CommandOption[] getOptions() {
-        return new CommandOption[0];
+        return new CommandOption[] {
+                CommandOption.word("player", CommandOption.word("magic")),
+                CommandOption.literal("hello")
+        };
     }
 
     @Override

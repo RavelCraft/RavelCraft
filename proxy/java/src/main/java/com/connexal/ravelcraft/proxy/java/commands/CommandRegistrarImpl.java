@@ -6,12 +6,17 @@ import com.connexal.ravelcraft.proxy.java.players.JavaRavelPlayerImpl;
 import com.connexal.ravelcraft.shared.commands.CommandRegistrar;
 import com.connexal.ravelcraft.shared.commands.RavelCommand;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.velocitypowered.api.command.CommandManager;
-import com.velocitypowered.api.command.CommandMeta;
-import com.velocitypowered.api.command.CommandSource;
-import com.velocitypowered.api.command.SimpleCommand;
+import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.commands.arguments.CommandSubOption;
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.builder.ArgumentBuilder;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
+import com.velocitypowered.api.command.*;
 import com.velocitypowered.api.proxy.ConsoleCommandSource;
 import com.velocitypowered.api.proxy.Player;
+
+import static com.mojang.brigadier.arguments.StringArgumentType.word;
 
 public class CommandRegistrarImpl extends CommandRegistrar {
     public CommandRegistrarImpl() {
@@ -28,27 +33,58 @@ public class CommandRegistrarImpl extends CommandRegistrar {
 
     @Override
     protected void register(RavelCommand command) {
-        CommandManager commandManager = JeProxy.getServer().getCommandManager();
+        LiteralArgumentBuilder<CommandSource> builder = LiteralArgumentBuilder.<CommandSource>literal(command.getName())
+                .requires(source -> {
+                    if (command.requiresOp()) {
+                        return this.getSender(source).isOp();
+                    } else {
+                        return true;
+                    }
+                });
 
-        CommandMeta.Builder meta = commandManager.metaBuilder(command.getName());
-        if (command.getAliases().length > 0) {
-            meta.aliases(command.getAliases());
+        for (CommandOption option : command.getOptions()) {
+            this.processOption(command, option, builder);
         }
 
-        commandManager.register(meta.build(), new SimpleCommand() {
-            @Override
-            public void execute(Invocation invocation) {
-                command.execute(getSender(invocation.source()), invocation.arguments());
+        builder.executes(context -> {
+            RavelCommandSender sender = this.getSender(context.getSource());
+            command.execute(sender, new String[0]);
+            return Command.SINGLE_SUCCESS;
+        });
+
+        JeProxy.getServer().getCommandManager().register(new BrigadierCommand(builder.build()));
+    }
+
+    private void processOption(RavelCommand command, CommandOption option, ArgumentBuilder<CommandSource, ?> builder) {
+        ArgumentBuilder<CommandSource, ?> newOption;
+
+        switch (option.getType()) {
+            case LITERAL -> newOption = LiteralArgumentBuilder.literal(option.getName());
+            case WORD -> newOption = RequiredArgumentBuilder.argument(option.getName(), word());
+            default -> throw new IllegalStateException("Command option not understood");
+        }
+
+        if (option instanceof CommandSubOption subOption) {
+            for (CommandOption tmpOption : subOption.getOptions()) {
+                this.processOption(command, tmpOption, newOption);
+            }
+        }
+
+        newOption.executes(context -> {
+            RavelCommandSender sender = this.getSender(context.getSource());
+
+            String argsUnparsed = context.getInput().substring(context.getInput().indexOf(' ') + 1); // Remove the command name from the input
+            String[] args;
+            if (argsUnparsed.contains(" ")) {
+                args = argsUnparsed.split(" ");
+            } else {
+                args = new String[]{argsUnparsed};
             }
 
-            @Override
-            public boolean hasPermission(final Invocation invocation) {
-                if (command.requiresOp()) {
-                    return getSender(invocation.source()).isOp();
-                } else {
-                    return true;
-                }
-            }
+            command.execute(sender, args);
+            return Command.SINGLE_SUCCESS;
         });
+
+        builder.then(newOption);
     }
 }
