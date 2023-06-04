@@ -55,8 +55,9 @@ Installation steps:
     - [ ] Cool death messages
     - [ ] Whitelist
     - [ ] Cracked players join
-    - [ ] Bedrock players need a "." on their names
+    - [x] Bedrock players need a "." on their names
     - [ ] PLAYER INDOCTRINATION: RULES & ANNOUNCEMENTS (:
+    - [ ] Redirect players back to lobby on backend server kick if possible
     - [ ] Lobby
         - [ ] Spawn always at spawn, not at leave place
         - [ ] No take damage

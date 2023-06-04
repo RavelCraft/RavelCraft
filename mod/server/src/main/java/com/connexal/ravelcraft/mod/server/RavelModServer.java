@@ -1,6 +1,6 @@
 package com.connexal.ravelcraft.mod.server;
 
-import com.connexal.ravelcraft.mod.server.commands.CommandRegistrarImpl;
+import com.connexal.ravelcraft.mod.server.commands.impl.CommandRegistrarImpl;
 import com.connexal.ravelcraft.mod.server.geyser.GeyserEventRegistration;
 import com.connexal.ravelcraft.mod.server.players.PlayerManagerImpl;
 import com.connexal.ravelcraft.mod.server.util.RavelLoggerImpl;

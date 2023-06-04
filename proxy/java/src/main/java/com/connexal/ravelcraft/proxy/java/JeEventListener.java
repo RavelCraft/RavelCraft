@@ -1,13 +1,21 @@
 package com.connexal.ravelcraft.proxy.java;
 
+import com.connexal.ravelcraft.proxy.java.players.JavaRavelPlayerImpl;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.LoginEvent;
+import com.velocitypowered.api.event.connection.PreLoginEvent;
 import net.kyori.adventure.text.Component;
 
 public class JeEventListener {
+    @Subscribe(order = PostOrder.FIRST)
+    public void onPreLoginEvent(PreLoginEvent event) {
+        //TODO: Disallow players from joining on the wrong address
+    }
+
     @Subscribe(order = PostOrder.FIRST)
     public void onLoginEvent(LoginEvent event) {
         if (!RavelInstance.getMessager().attemptConnect()) {
@@ -19,7 +27,11 @@ public class JeEventListener {
 
         //TODO: Check if player is whitelisted
 
-        //TODO: Tell player manager about join
-        //TODO: Tell bedrock proxy about join
+        RavelInstance.getPlayerManager().playerJoined(new JavaRavelPlayerImpl(event.getPlayer()));
+    }
+
+    @Subscribe
+    public void onDisconnectEvent(DisconnectEvent event) {
+        RavelInstance.getPlayerManager().playerLeft(event.getPlayer().getUniqueId());
     }
 }

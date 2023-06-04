@@ -26,8 +26,8 @@ public class CommandRegistrarImpl extends CommandRegistrar {
         CommandManager commandManager = JeProxy.getServer().getCommandManager();
 
         CommandMeta.Builder meta = commandManager.metaBuilder(command.getName());
-        for (String alias : command.getAliases()) {
-            meta.aliases(alias);
+        if (command.getAliases().length > 0) {
+            meta.aliases(command.getAliases());
         }
 
         commandManager.register(meta.build(), new SimpleCommand() {

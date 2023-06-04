@@ -1,4 +1,4 @@
-package com.connexal.ravelcraft.proxy.cross.commands;
+package com.connexal.ravelcraft.mod.server.commands;
 
 import com.connexal.ravelcraft.shared.commands.RavelCommand;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
@@ -7,7 +7,7 @@ import com.connexal.ravelcraft.shared.util.text.Text;
 import com.google.auto.service.AutoService;
 
 @AutoService(RavelCommand.class)
-public class InfoCommand extends RavelCommand {
+public class FabricTestCommand extends RavelCommand {
     @Override
     public boolean requiresOp() {
         return false;
@@ -15,12 +15,12 @@ public class InfoCommand extends RavelCommand {
 
     @Override
     public String getName() {
-        return "info";
+        return "fabric-test";
     }
 
     @Override
     public String[] getAliases() {
-        return new String[] { "i" };
+        return new String[0];
     }
 
     @Override

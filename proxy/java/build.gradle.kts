@@ -15,6 +15,9 @@ dependencies {
     compileOnly("com.velocitypowered:velocity-api:3.1.0")
     annotationProcessor("com.velocitypowered:velocity-api:3.1.0")
 
+    implementation("com.google.auto.service:auto-service:1.0.1")
+    annotationProcessor("com.google.auto.service:auto-service:1.0.1")
+
     shadow(project(":shared"))
     shadow(project(":proxy-cross"))
 }

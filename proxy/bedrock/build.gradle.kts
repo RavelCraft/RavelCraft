@@ -14,6 +14,9 @@ base.archivesName.set(name)
 dependencies {
     compileOnly("dev.waterdog.waterdogpe:waterdog:2.0.0-SNAPSHOT")
 
+    implementation("com.google.auto.service:auto-service:1.0.1")
+    annotationProcessor("com.google.auto.service:auto-service:1.0.1")
+
     shadow(project(":shared"))
     shadow(project(":proxy-cross"))
 }

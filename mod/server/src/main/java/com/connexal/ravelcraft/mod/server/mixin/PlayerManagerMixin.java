@@ -1,5 +1,6 @@
 package com.connexal.ravelcraft.mod.server.mixin;
 
+import com.connexal.ravelcraft.mod.server.players.RavelPlayerImpl;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -18,8 +19,6 @@ public class PlayerManagerMixin {
             return;
         }
 
-        RavelInstance.getLogger().info(player.getName().getString() + " logged in (" + player.getUuidAsString() + ")");
-
-        //TODO: Tell player manager about the join
+        RavelInstance.getPlayerManager().playerJoined(new RavelPlayerImpl(player));
     }
 }

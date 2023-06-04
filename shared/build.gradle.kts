@@ -9,4 +9,6 @@ base.archivesName.set("${projectId}-shared-${minecraftVersion}")
 
 dependencies {
     implementation("org.yaml:snakeyaml:2.0")
+    implementation("com.google.auto.service:auto-service:1.0.1")
+    annotationProcessor("com.google.auto.service:auto-service:1.0.1")
 }

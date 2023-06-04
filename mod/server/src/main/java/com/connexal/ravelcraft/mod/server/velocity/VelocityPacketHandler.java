@@ -37,27 +37,12 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerLoginNetworkHandler;
 import net.minecraft.text.Text;
-import org.geysermc.event.subscribe.Subscribe;
-import org.geysermc.geyser.api.event.bedrock.SessionInitializeEvent;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.geysermc.api.connection.Connection;
+import org.geysermc.geyser.api.GeyserApi;
 import java.util.UUID;
 
 //Bedrock login handler added for the purposes of this mod
 public class VelocityPacketHandler {
-    private final Map<String, String> geyserPlayers = new HashMap<>();
-
-    public VelocityPacketHandler() {
-        RavelModServer.getGeyserEvents().register(SessionInitializeEvent.class, this::geyserPlayerJoin);
-    }
-
-    @Subscribe
-    public void geyserPlayerJoin(SessionInitializeEvent event) {
-        RavelInstance.getLogger().info("Geyser player join detected. Data: " + event.connection().name() + ", " + event.connection().xuid());
-        this.geyserPlayers.put(event.connection().name(), event.connection().xuid());
-    }
-
     void handleVelocityPacket(MinecraftServer server, ServerLoginNetworkHandler handler, boolean understood, PacketByteBuf buf, ServerLoginNetworking.LoginSynchronizer synchronizer, PacketSender ignored) {
         if (understood) {
             this.javaLogin(server, handler, buf, synchronizer);
@@ -65,7 +50,13 @@ public class VelocityPacketHandler {
         }
 
         String name = ((ServerLoginNetworkHandlerAccessor) handler).getProfile().getName();
-        String xuid = this.geyserPlayers.remove(name);
+        String xuid = null;
+        for (Connection connection : GeyserApi.api().onlineConnections()) {
+            if (connection.bedrockUsername().equals(name)) {
+                xuid = connection.xuid();
+                break;
+            }
+        }
         if (xuid != null) {
             this.bedrockLogin(server, handler, synchronizer, name, xuid);
             return;

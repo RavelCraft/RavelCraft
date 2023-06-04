@@ -10,6 +10,8 @@ import java.util.Properties;
 
 public enum Text {
     COMMAND_REQUIRES_OP("ravelcraft.command.requires-op"),
+    COMMAND_HELP_MESSAGE("ravelcraft.command.help"),
+
     COMMAND_INFO_MESSAGE("ravelcraft.command.info");
 
     private static final Map<Language, Properties> languages = new HashMap<>();

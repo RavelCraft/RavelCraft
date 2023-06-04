@@ -1,10 +1,14 @@
 package com.connexal.ravelcraft.proxy.bedrock;
 
+import com.connexal.ravelcraft.proxy.bedrock.players.BedrockRavelPlayerImpl;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import dev.waterdog.waterdogpe.ProxyServer;
 import dev.waterdog.waterdogpe.event.defaults.PlayerAuthenticatedEvent;
+import dev.waterdog.waterdogpe.event.defaults.PlayerDisconnectedEvent;
+import dev.waterdog.waterdogpe.event.defaults.PlayerLoginEvent;
 import dev.waterdog.waterdogpe.event.defaults.PreClientDataSetEvent;
+import dev.waterdog.waterdogpe.player.ProxiedPlayer;
 
 import java.util.UUID;
 
@@ -14,6 +18,8 @@ public class BeEventListener {
 
         server.getEventManager().subscribe(PreClientDataSetEvent.class, this::onPreLogin);
         server.getEventManager().subscribe(PlayerAuthenticatedEvent.class, this::onPlayerAuthenticate);
+        server.getEventManager().subscribe(PlayerLoginEvent.class, this::onPlayerJoin);
+        server.getEventManager().subscribe(PlayerDisconnectedEvent.class, this::onPlayerLeave);
     }
 
     private void onPreLogin(PreClientDataSetEvent event) {
@@ -25,6 +31,7 @@ public class BeEventListener {
         event.getExtraData().addProperty("displayName", username);
 
         //TODO: Note to self, client data contains a property called "ServerAddress" that contains something like "address:port". Can be used for forced hosts.
+        //TODO: Disallow players from joining on the wrong address
     }
 
     private void onPlayerAuthenticate(PlayerAuthenticatedEvent event) {
@@ -39,8 +46,15 @@ public class BeEventListener {
         //TODO: Check if player is banned
 
         //TODO: Check if player is whitelisted
+    }
 
-        //TODO: Tell player manager about join
-        //TODO: Tell java proxy about join
+    private void onPlayerJoin(PlayerLoginEvent event) {
+        ProxiedPlayer player = event.getPlayer();
+
+        RavelInstance.getPlayerManager().playerJoined(new BedrockRavelPlayerImpl(player));
+    }
+
+    private void onPlayerLeave(PlayerDisconnectedEvent event) {
+        RavelInstance.getPlayerManager().playerLeft(event.getPlayer().getUniqueId());
     }
 }

@@ -1,4 +1,4 @@
-package com.connexal.ravelcraft.mod.server.commands;
+package com.connexal.ravelcraft.mod.server.commands.impl;
 
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
 import com.connexal.ravelcraft.shared.util.text.Language;

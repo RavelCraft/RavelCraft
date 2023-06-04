@@ -22,6 +22,8 @@ dependencies {
 	modImplementation("net.fabricmc:fabric-loader:${fabricLoaderVersion}")
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
 
+	implementation("com.google.auto.service:auto-service:1.0.1")
+	annotationProcessor("com.google.auto.service:auto-service:1.0.1")
 	implementation("org.geysermc.geyser:api:${geyserVersion}")
 
 	shadow(project(":shared"))

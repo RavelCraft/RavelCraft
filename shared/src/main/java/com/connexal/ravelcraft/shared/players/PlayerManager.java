@@ -66,7 +66,7 @@ public abstract class PlayerManager {
 
     public Language getLanguage(RavelPlayer player) {
         //TODO: Implement language getter
-        return null;
+        return Language.DEFAULT;
     }
 
     public void setLanguage(RavelPlayer player, Language language) {
@@ -75,7 +75,7 @@ public abstract class PlayerManager {
 
     public RavelRank getRank(RavelPlayer player) {
         //TODO: Implement rank getter
-        return null;
+        return RavelRank.NONE;
     }
 
     public void setRank(RavelPlayer player, RavelRank rank) {
@@ -158,11 +158,15 @@ public abstract class PlayerManager {
         UUID uuid = player.getUniqueID();
         this.connectedPlayers.put(uuid, player);
         this.playerInfo.put(uuid, this.getPlayerInfo(uuid));
+
+        //TODO: Tell other proxy about the player
     }
 
-    public void playerLeft(RavelPlayer player) {
-        this.connectedPlayers.remove(player.getUniqueID());
-        this.playerInfo.remove(player.getUniqueID());
+    public void playerLeft(UUID uuid) {
+        this.connectedPlayers.remove(uuid);
+        this.playerInfo.remove(uuid);
+
+        //TODO: Tell other proxy about the player
     }
 
     public static class PlayerInfo {
