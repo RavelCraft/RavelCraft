@@ -36,7 +36,7 @@ public abstract class RavelCommand {
             this.buildUsageNode(builder, "\n -", option);
         }
 
-        sender.sendMessage(Text.COMMAND_HELP_MESSAGE, builder.toString());
+        sender.sendMessage(Text.COMMAND_HELP, builder.toString());
     }
 
     private void buildUsageNode(StringBuilder builder, String current, CommandOption option) {

@@ -11,6 +11,7 @@ import com.connexal.ravelcraft.shared.util.text.Text;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -18,7 +19,8 @@ public abstract class PlayerManager {
     private final Map<UUID, PlayerInfo> playerInfo = new HashMap<>();
     private final Map<UUID, RavelPlayer> connectedPlayers = new HashMap<>();
     private final RavelConfig config;
-    private Messager messager = null;
+
+    protected Messager messager = null;
 
     public PlayerManager() {
         this.config = RavelInstance.getConfig("players");
@@ -28,10 +30,11 @@ public abstract class PlayerManager {
     public void init() {
         this.messager = RavelInstance.getMessager();
 
-        this.messager.registerCommandHandler(MessagingCommand.PLAYER_JOINED_PROXY, this::playerJoinedProxyCommand);
-        this.messager.registerCommandHandler(MessagingCommand.PLAYER_LEFT_PROXY, this::playerLeftProxyCommand);
         this.messager.registerCommandHandler(MessagingCommand.PLAYER_GET_INFO, this::getPlayerInfoCommand);
     }
+
+    //This could also be a reconnect
+    public abstract void messagingConnected(RavelServer server);
 
     public RavelServer getServer(RavelPlayer player) {
         PlayerInfo info = this.playerInfo.get(player.getUniqueID());
@@ -98,12 +101,26 @@ public abstract class PlayerManager {
         //TODO: Implement kick
     }
 
-    public void broadcast(Text message) {
-        //TODO: Implement broadcast
+    public void broadcast(Text message, String... args) {
+        for (RavelPlayer player : this.connectedPlayers.values()) {
+            player.sendMessage(message, args);
+        }
     }
 
     public int getOnlineCount() {
         return this.connectedPlayers.size();
+    }
+
+    public Set<UUID> getConnectedUUIDs() {
+        return this.connectedPlayers.keySet();
+    }
+
+    public Set<RavelPlayer> getConnectedPlayers() {
+        return Set.copyOf(this.connectedPlayers.values());
+    }
+
+    public RavelPlayer getPlayer(UUID uuid) {
+        return this.connectedPlayers.get(uuid);
     }
 
     //Utils
@@ -139,7 +156,7 @@ public abstract class PlayerManager {
                 }
             }
 
-            return new PlayerInfo(RavelServer.getLobby(), language, rank);
+            info = new PlayerInfo(RavelServer.getLobby(), language, rank);
         } else {
             CompletableFuture<String[]> future = this.messager.sendCommandWithResponse(MessagingConstants.MESSAGING_SERVER, MessagingCommand.PLAYER_GET_INFO, uuid.toString());
             String[] infoString = future.join();
@@ -147,8 +164,13 @@ public abstract class PlayerManager {
                 return null;
             }
 
-            return this.getMessagePlayerInfo(infoString);
+            info = this.getMessagePlayerInfo(infoString);
         }
+
+        if (info != null) {
+            this.playerInfo.put(uuid, info);
+        }
+        return info;
     }
 
     private String[] getPlayerInfoCommand(RavelServer source, String[] args) {
@@ -182,6 +204,12 @@ public abstract class PlayerManager {
     public void playerJoined(RavelPlayer player) {
         this.playerJoinedInternal(player);
 
+        if (RavelInstance.getServer().isProxy()) {
+            this.broadcast(Text.PLAYERS_JOIN_NETWORK, player.getName());
+        } else {
+            this.broadcast(Text.PLAYERS_JOIN_SERVER, player.getName());
+        }
+
         //Tell the other proxy about the player
         if (RavelInstance.getServer().isProxy()) {
             RavelServer server;
@@ -195,18 +223,21 @@ public abstract class PlayerManager {
         }
     }
 
-    protected abstract String[] playerJoinedProxyCommand(RavelServer source, String[] args);
-
     protected void playerJoinedInternal(RavelPlayer player) {
-        RavelInstance.getLogger().info("Player " + player.getName() + " joined the network");
-
         UUID uuid = player.getUniqueID();
         this.connectedPlayers.put(uuid, player);
         this.playerInfo.put(uuid, this.getPlayerInfo(uuid));
     }
 
     public void playerLeft(UUID uuid) {
+        String name = this.connectedPlayers.get(uuid).getName();
         this.playerLeftInternal(uuid);
+
+        if (RavelInstance.getServer().isProxy()) {
+            this.broadcast(Text.PLAYERS_LEAVE_NETWORK, name);
+        } else {
+            this.broadcast(Text.PLAYERS_LEAVE_SERVER, name);
+        }
 
         //Tell the other proxy about the player
         if (RavelInstance.getServer().isProxy()) {
@@ -221,11 +252,7 @@ public abstract class PlayerManager {
         }
     }
 
-    protected abstract String[] playerLeftProxyCommand(RavelServer source, String[] args);
-
     protected void playerLeftInternal(UUID uuid) {
-        RavelInstance.getLogger().info("Player " + this.connectedPlayers.get(uuid).getName() + " left the network");
-
         this.connectedPlayers.remove(uuid);
         this.playerInfo.remove(uuid);
     }

@@ -1,4 +1,4 @@
-package com.connexal.ravelcraft.mod.server.commands;
+package com.connexal.ravelcraft.proxy.cross.commands;
 
 import com.connexal.ravelcraft.shared.commands.RavelCommand;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
@@ -7,15 +7,15 @@ import com.connexal.ravelcraft.shared.util.text.Text;
 import com.google.auto.service.AutoService;
 
 @AutoService(RavelCommand.class)
-public class FabricTestCommand extends RavelCommand {
+public class BroadcastCommand extends RavelCommand {
     @Override
     public boolean requiresOp() {
-        return false;
+        return true;
     }
 
     @Override
     public String getName() {
-        return "fabric-test";
+        return "broadcast";
     }
 
     @Override
@@ -25,12 +25,14 @@ public class FabricTestCommand extends RavelCommand {
 
     @Override
     public CommandOption[] getOptions() {
-        return new CommandOption[0];
+        return new CommandOption[] {
+                CommandOption.word("message"),
+        };
     }
 
     @Override
     protected boolean run(RavelCommandSender sender, String[] args) {
-        sender.sendMessage(Text.COMMAND_INFO_MESSAGE);
+        sender.sendMessage(Text.COMMAND_BROADCAST, String.join(" ", args));
         return true;
     }
 }

@@ -25,7 +25,6 @@
 package com.connexal.ravelcraft.mod.server.mixin.velocity;
 
 import com.mojang.authlib.GameProfile;
-
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.network.ServerLoginNetworkHandler;
 import org.spongepowered.asm.mixin.Mixin;

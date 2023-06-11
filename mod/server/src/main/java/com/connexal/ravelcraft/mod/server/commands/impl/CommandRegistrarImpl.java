@@ -2,7 +2,6 @@ package com.connexal.ravelcraft.mod.server.commands.impl;
 
 import com.connexal.ravelcraft.mod.server.RavelModServer;
 import com.connexal.ravelcraft.mod.server.players.RavelPlayerImpl;
-import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.commands.CommandRegistrar;
 import com.connexal.ravelcraft.shared.commands.RavelCommand;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;

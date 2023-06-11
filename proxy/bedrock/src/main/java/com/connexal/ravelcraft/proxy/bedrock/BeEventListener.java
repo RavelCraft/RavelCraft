@@ -1,14 +1,16 @@
 package com.connexal.ravelcraft.proxy.bedrock;
 
 import com.connexal.ravelcraft.proxy.bedrock.players.BedrockRavelPlayerImpl;
+import com.connexal.ravelcraft.proxy.cross.players.ProxyRavelPlayer;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.util.UUIDTools;
+import com.connexal.ravelcraft.shared.util.text.Text;
 import dev.waterdog.waterdogpe.ProxyServer;
 import dev.waterdog.waterdogpe.event.defaults.PlayerAuthenticatedEvent;
 import dev.waterdog.waterdogpe.event.defaults.PlayerDisconnectedEvent;
 import dev.waterdog.waterdogpe.event.defaults.PlayerLoginEvent;
 import dev.waterdog.waterdogpe.event.defaults.PreClientDataSetEvent;
-import dev.waterdog.waterdogpe.player.ProxiedPlayer;
 
 import java.util.UUID;
 
@@ -23,7 +25,11 @@ public class BeEventListener {
     }
 
     private void onPreLogin(PreClientDataSetEvent event) {
+        //Change username to a valid Java username
         String username = RavelPlayer.BEDROCK_PREFIX + event.getExtraData().get("displayName").getAsString();
+        if (username.contains(" ")) {
+            username = username.replace(" ", RavelPlayer.BEDROCK_SPACE_REPLACEMENT);
+        }
 
         event.getClientData().remove("ThirdPartyName");
         event.getClientData().addProperty("ThirdPartyName", username);
@@ -38,23 +44,28 @@ public class BeEventListener {
         if (!RavelInstance.getMessager().attemptConnect()) {
             event.setCancelReason("Network IPC connection establishment failed. Contact the server administrator.");
             event.setCancelled(true);
-            return;
         }
+    }
 
-        UUID uuid = event.getLoginData().getUuid();
+    private void onPlayerJoin(PlayerLoginEvent event) {
+        ProxyRavelPlayer player = new BedrockRavelPlayerImpl(event.getPlayer());
 
         //TODO: Check if player is banned
 
         //TODO: Check if player is whitelisted
-    }
 
-    private void onPlayerJoin(PlayerLoginEvent event) {
-        ProxiedPlayer player = event.getPlayer();
-
-        RavelInstance.getPlayerManager().playerJoined(new BedrockRavelPlayerImpl(player));
+        RavelInstance.getPlayerManager().playerJoined(player);
     }
 
     private void onPlayerLeave(PlayerDisconnectedEvent event) {
-        RavelInstance.getPlayerManager().playerLeft(event.getPlayer().getUniqueId());
+        long xuid;
+        try {
+            xuid = Long.parseLong(event.getPlayer().getXuid());
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Unable to parse Bedrock player's XUID", e);
+        }
+        UUID uuid = UUIDTools.getJavaUUIDFromXUID(xuid);
+
+        RavelInstance.getPlayerManager().playerLeft(uuid);
     }
 }

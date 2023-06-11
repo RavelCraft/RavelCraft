@@ -3,6 +3,10 @@ package com.connexal.ravelcraft.shared.util;
 import java.util.UUID;
 
 public class UUIDTools {
+    public static UUID getJavaUUIDFromXUID(long xuid) {
+        return new UUID(0, xuid);
+    }
+
     public UUID getUUID(String name) {
         //TODO: Get UUID from name
         return null;

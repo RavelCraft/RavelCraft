@@ -1,7 +1,9 @@
 package com.connexal.ravelcraft.proxy.java;
 
+import com.connexal.ravelcraft.proxy.cross.players.ProxyRavelPlayer;
 import com.connexal.ravelcraft.proxy.java.players.JavaRavelPlayerImpl;
 import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.util.text.Text;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.event.Subscribe;
@@ -23,11 +25,13 @@ public class JeEventListener {
             return;
         }
 
+        ProxyRavelPlayer player = new JavaRavelPlayerImpl(event.getPlayer());
+
         //TODO: Check if player is banned
 
         //TODO: Check if player is whitelisted
 
-        RavelInstance.getPlayerManager().playerJoined(new JavaRavelPlayerImpl(event.getPlayer()));
+        RavelInstance.getPlayerManager().playerJoined(player);
     }
 
     @Subscribe

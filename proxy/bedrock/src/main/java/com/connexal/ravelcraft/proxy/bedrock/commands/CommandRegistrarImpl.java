@@ -12,7 +12,10 @@ import dev.waterdog.waterdogpe.command.Command;
 import dev.waterdog.waterdogpe.command.CommandSender;
 import dev.waterdog.waterdogpe.command.CommandSettings;
 import dev.waterdog.waterdogpe.player.ProxiedPlayer;
-import org.cloudburstmc.protocol.bedrock.data.command.*;
+import org.cloudburstmc.protocol.bedrock.data.command.CommandEnumConstraint;
+import org.cloudburstmc.protocol.bedrock.data.command.CommandEnumData;
+import org.cloudburstmc.protocol.bedrock.data.command.CommandParam;
+import org.cloudburstmc.protocol.bedrock.data.command.CommandParamData;
 
 import java.util.*;
 

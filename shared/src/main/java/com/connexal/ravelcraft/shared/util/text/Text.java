@@ -9,10 +9,15 @@ import java.util.Map;
 import java.util.Properties;
 
 public enum Text {
-    COMMAND_REQUIRES_OP("ravelcraft.command.requires-op"),
-    COMMAND_HELP_MESSAGE("ravelcraft.command.help"),
+    PLAYERS_JOIN_NETWORK("ravelcraft.players.join.network"),
+    PLAYERS_JOIN_SERVER("ravelcraft.players.join.server"),
+    PLAYERS_LEAVE_NETWORK("ravelcraft.players.leave.network"),
+    PLAYERS_LEAVE_SERVER("ravelcraft.players.leave.server"),
 
-    COMMAND_INFO_MESSAGE("ravelcraft.command.info");
+    COMMAND_REQUIRES_OP("ravelcraft.command.requires-op"),
+    COMMAND_HELP("ravelcraft.command.help"),
+    COMMAND_INFO("ravelcraft.command.info"),
+    COMMAND_BROADCAST("ravelcraft.command.broadcast");
 
     private static final Map<Language, Properties> languages = new HashMap<>();
 

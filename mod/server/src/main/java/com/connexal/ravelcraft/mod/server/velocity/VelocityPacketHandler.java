@@ -24,11 +24,11 @@
 
 package com.connexal.ravelcraft.mod.server.velocity;
 
-import com.connexal.ravelcraft.mod.server.RavelModServer;
 import com.connexal.ravelcraft.mod.server.mixin.velocity.ClientConnection_AddressAccessor;
 import com.connexal.ravelcraft.mod.server.mixin.velocity.ServerLoginNetworkHandlerAccessor;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.util.UUIDTools;
 import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
@@ -39,6 +39,7 @@ import net.minecraft.server.network.ServerLoginNetworkHandler;
 import net.minecraft.text.Text;
 import org.geysermc.api.connection.Connection;
 import org.geysermc.geyser.api.GeyserApi;
+
 import java.util.UUID;
 
 //Bedrock login handler added for the purposes of this mod
@@ -99,7 +100,7 @@ public class VelocityPacketHandler {
         synchronizer.waitFor(server.submit(() -> {
             UUID playerUUID;
             try {
-                playerUUID = new UUID(0, Long.parseLong(xuid));
+                playerUUID = UUIDTools.getJavaUUIDFromXUID(Long.parseLong(xuid));
             } catch (NumberFormatException e) {
                 RavelInstance.getLogger().error("Invalid XUID: " + xuid, e);
                 handler.disconnect(Text.of("Unable to read player profile"));
@@ -109,6 +110,9 @@ public class VelocityPacketHandler {
             String playerName = name;
             if (!playerName.startsWith(RavelPlayer.BEDROCK_PREFIX)) {
                 playerName = "." + playerName;
+            }
+            if (playerName.contains(" ")) {
+                playerName = playerName.replace(" ", RavelPlayer.BEDROCK_SPACE_REPLACEMENT);
             }
             if (playerName.length() > 16) {
                 playerName = playerName.substring(0, 16);

@@ -1,13 +1,11 @@
 package com.connexal.ravelcraft.shared.messaging;
 
 import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.players.PlayerManager;
 import com.connexal.ravelcraft.shared.util.RavelServer;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 public class MessagingClient extends Messager {
     private final String serverHostname;
@@ -69,6 +67,10 @@ public class MessagingClient extends Messager {
         }
 
         RavelInstance.getLogger().info("Connected to plugin messaging server at " + this.serverHostname + ".");
+        PlayerManager playerManager = RavelInstance.getPlayerManager();
+        if (playerManager != null) {
+            playerManager.messagingConnected(MessagingConstants.MESSAGING_SERVER);
+        }
 
         new Thread(() -> {
             try {

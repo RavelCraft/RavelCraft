@@ -10,11 +10,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public abstract class Messager {
     private final Map<String, CompletableFuture<String[]>> responseFutures = new HashMap<>();
@@ -31,12 +28,12 @@ public abstract class Messager {
     private void processRead(RavelServer destination, RavelServer source, MessageType type, String responseId, MessagingCommand command, String[] arguments) {
         if (this.isServer()) {
             if (destination != null && destination != RavelInstance.getServer()) {
-                this.writeStream(destination, type, responseId, command, arguments);
+                this.writeStream(destination, source, type, responseId, command, arguments);
                 return;
             }
         } else {
             if (destination != null) {
-                RavelInstance.getLogger().warning("Received message with redirect from proxy! Ignoring.");
+                RavelInstance.getLogger().warning("Received message with redirect but this is not the server! Ignoring.");
                 return;
             }
         }
@@ -55,7 +52,7 @@ public abstract class Messager {
         try {
             this.runCommand(source, command, arguments, responseId);
         } catch (IllegalArgumentException e) {
-            RavelInstance.getLogger().warning("Unknown command received from proxy: " + command);
+            RavelInstance.getLogger().warning("Unknown command received from " + source + ": " + command);
         }
     }
 
@@ -68,7 +65,7 @@ public abstract class Messager {
         try {
             type = MessageType.valueOf(typeString);
         } catch (IllegalArgumentException e) {
-            RavelInstance.getLogger().warning("Unknown message type received from proxy: " + typeString);
+            RavelInstance.getLogger().warning("Unknown message type received from " + sourceString + ": " + typeString);
             type = null;
         }
 
@@ -99,7 +96,7 @@ public abstract class Messager {
             }
         }
 
-        RavelServer source = null;
+        RavelServer source;
         try {
             source = RavelServer.valueOf(sourceString);
         } catch (IllegalArgumentException e) {
@@ -111,16 +108,16 @@ public abstract class Messager {
         try {
             command = MessagingCommand.valueOf(commandString);
         } catch (IllegalArgumentException e) {
-            RavelInstance.getLogger().warning("Unknown command received from proxy: " + commandString);
+            RavelInstance.getLogger().warning("Unknown command received from " + source + ": " + commandString);
             return;
         }
 
-        RavelInstance.getLogger().info("Received message " + command + " with response ID " + responseId + " and args " + Arrays.toString(arguments) + " from " + destination);
+        RavelInstance.getLogger().info("Received message " + command + " with response ID " + responseId + " and args " + Arrays.toString(arguments) + " from " + source);
 
         this.processRead(destination, source, type, responseId, command, arguments);
     }
 
-    private boolean writeStream(RavelServer destination, MessageType type, String responseId, MessagingCommand command, String[] arguments) {
+    private boolean writeStream(RavelServer destination, RavelServer source, MessageType type, String responseId, MessagingCommand command, String[] arguments) {
         if (destination == RavelInstance.getServer()) {
             RavelInstance.getLogger().error("Attempted to send message to self!");
             return false;
@@ -151,7 +148,7 @@ public abstract class Messager {
 
         try {
             output.writeUTF(destination.name());
-            output.writeUTF(RavelInstance.getServer().name());
+            output.writeUTF(source.name());
             output.writeUTF(type.name());
             if (type == MessageType.RESPONSE || type == MessageType.BIDIRECTIONAL) {
                 output.writeUTF(responseId);
@@ -206,11 +203,12 @@ public abstract class Messager {
 
         this.responseFutures.put(responseId, future);
 
-        if (!this.writeStream(server, MessageType.BIDIRECTIONAL, responseId, command, args)) {
+        if (!this.writeStream(server, RavelInstance.getServer(), MessageType.BIDIRECTIONAL, responseId, command, args)) {
             this.responseFutures.remove(responseId);
             return null;
         }
 
+        //Add a timeout
         new Thread(() -> {
             try {
                 Thread.sleep(10000);
@@ -228,11 +226,11 @@ public abstract class Messager {
     }
 
     public void sendCommand(RavelServer server, MessagingCommand command, String... args) {
-        this.writeStream(server, MessageType.SINGLE_DIRECTION, null, command, args);
+        this.writeStream(server, RavelInstance.getServer(), MessageType.SINGLE_DIRECTION, null, command, args);
     }
 
     private void sendResponse(RavelServer server, String responseId, String... args) {
-        this.writeStream(server, MessageType.RESPONSE, responseId, MessagingCommand.RESPONSE, args);
+        this.writeStream(server, RavelInstance.getServer(), MessageType.RESPONSE, responseId, MessagingCommand.RESPONSE, args);
     }
 
     public abstract void close();

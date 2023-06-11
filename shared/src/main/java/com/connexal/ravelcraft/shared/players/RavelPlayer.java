@@ -9,6 +9,7 @@ import java.util.UUID;
 
 public interface RavelPlayer extends RavelCommandSender {
     String BEDROCK_PREFIX = ".";
+    String BEDROCK_SPACE_REPLACEMENT = ".";
 
     String getName();
 

@@ -2,6 +2,9 @@ package com.connexal.ravelcraft.proxy.java.players;
 
 import com.connexal.ravelcraft.proxy.cross.players.ProxyRavelPlayer;
 import com.connexal.ravelcraft.proxy.cross.servers.ProxyType;
+import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
+import com.connexal.ravelcraft.shared.util.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.Text;
 
 import java.util.UUID;
@@ -17,7 +20,7 @@ public class BedrockRavelPlayerImpl implements ProxyRavelPlayer {
 
     @Override
     public void sendMessage(Text message, String... values) {
-        //TODO: Send message to bedrock proxy
+        RavelInstance.getMessager().sendCommand(RavelServer.BE_PROXY, MessagingCommand.PROXY_SEND_MESSAGE, this.uuid.toString(), message.name());
     }
 
     @Override

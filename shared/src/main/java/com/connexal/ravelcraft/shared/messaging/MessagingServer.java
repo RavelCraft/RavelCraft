@@ -1,6 +1,7 @@
 package com.connexal.ravelcraft.shared.messaging;
 
 import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.players.PlayerManager;
 import com.connexal.ravelcraft.shared.util.RavelServer;
 
 import java.io.*;
@@ -8,7 +9,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 public class MessagingServer extends Messager {
     private ServerSocket serverSocket;
@@ -93,6 +93,11 @@ public class MessagingServer extends Messager {
 
             outputStream.writeBoolean(true);
             outputStream.flush();
+
+            PlayerManager playerManager = RavelInstance.getPlayerManager();
+            if (playerManager != null) {
+                playerManager.messagingConnected(server);
+            }
 
             //--- Main loop ---
 

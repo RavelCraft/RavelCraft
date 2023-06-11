@@ -2,6 +2,7 @@ package com.connexal.ravelcraft.mod.server.mixin;
 
 import com.connexal.ravelcraft.mod.server.players.RavelPlayerImpl;
 import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -19,6 +20,7 @@ public class PlayerManagerMixin {
             return;
         }
 
-        RavelInstance.getPlayerManager().playerJoined(new RavelPlayerImpl(player));
+        RavelPlayer ravelPlayer = new RavelPlayerImpl(player);
+        RavelInstance.getPlayerManager().playerJoined(ravelPlayer);
     }
 }

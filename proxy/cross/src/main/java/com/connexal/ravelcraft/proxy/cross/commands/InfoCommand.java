@@ -33,7 +33,7 @@ public class InfoCommand extends RavelCommand {
 
     @Override
     protected boolean run(RavelCommandSender sender, String[] args) {
-        sender.sendMessage(Text.COMMAND_INFO_MESSAGE);
+        sender.sendMessage(Text.COMMAND_INFO);
         return true;
     }
 }
