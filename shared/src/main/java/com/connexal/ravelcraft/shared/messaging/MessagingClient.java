@@ -76,7 +76,7 @@ public class MessagingClient extends Messager {
                     this.readStream(this.input);
                 }
             } catch (IOException e) {
-                RavelInstance.getLogger().error("Got disconnected from plugin messaging server! " + e.getMessage());
+                RavelInstance.getLogger().error("Got disconnected from plugin messaging server! ", e);
             }
 
             this.close();
@@ -93,16 +93,6 @@ public class MessagingClient extends Messager {
         }
 
         return this.output;
-    }
-
-    @Override
-    public void runCommand(MessagingCommand command, String[] args, String responseId) {
-        switch (command) {
-            default: {
-                RavelInstance.getLogger().warning("Unable to do anything with received command: " + command);
-                break;
-            }
-        }
     }
 
     @Override

@@ -82,6 +82,8 @@ public class RavelInstance {
         //Setup commands
         commandRegistrar.register();
 
+        playerManager.init();
+
         logger.info("First init phase complete.");
     }
 

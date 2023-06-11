@@ -33,7 +33,7 @@ allprojects {
         maven("https://repo.opencollab.dev/main/")
         maven("https://repo.opencollab.dev/maven-snapshots/")
 
-        maven("https://repo.waterdog.dev/artifactory/main/")
+        maven("https://repo.waterdog.dev/snapshots/")
 
         maven("https://repo.papermc.io/repository/maven-public/")
 

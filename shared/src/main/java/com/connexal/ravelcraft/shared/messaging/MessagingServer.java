@@ -126,16 +126,6 @@ public class MessagingServer extends Messager {
     }
 
     @Override
-    public void runCommand(MessagingCommand command, String[] args, String responseId) {
-        switch (command) {
-            default: {
-                RavelInstance.getLogger().warning("Unable to do anything with received command: " + command);
-                break;
-            }
-        }
-    }
-
-    @Override
     public void close() {
         this.listening = false;
 
