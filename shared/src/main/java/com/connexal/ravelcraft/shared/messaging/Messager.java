@@ -1,6 +1,7 @@
 package com.connexal.ravelcraft.shared.messaging;
 
 import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.util.Lock;
 import com.connexal.ravelcraft.shared.util.RavelServer;
 
 import java.io.DataInputStream;
@@ -16,6 +17,7 @@ import java.util.function.BiFunction;
 public abstract class Messager {
     private final Map<String, CompletableFuture<String[]>> responseFutures = new HashMap<>();
     private final Map<MessagingCommand, BiFunction<RavelServer, String[], String[]>> commandHandlers = new HashMap<>();
+    private final Lock writeLock = new Lock();
 
     public boolean attemptConnect() {
         return this.attemptConnect(0);
@@ -147,6 +149,7 @@ public abstract class Messager {
         }
 
         try {
+            this.writeLock.lock();
             output.writeUTF(destination.name());
             output.writeUTF(source.name());
             output.writeUTF(type.name());
@@ -160,6 +163,7 @@ public abstract class Messager {
             }
 
             output.flush();
+            this.writeLock.unlock();
         } catch (IOException e) {
             RavelInstance.getLogger().error("Failed to send message to server", e);
             return false;

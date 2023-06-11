@@ -94,11 +94,6 @@ public class MessagingServer extends Messager {
             outputStream.writeBoolean(true);
             outputStream.flush();
 
-            PlayerManager playerManager = RavelInstance.getPlayerManager();
-            if (playerManager != null) {
-                playerManager.messagingConnected(server);
-            }
-
             //--- Main loop ---
 
             while (this.listening) {

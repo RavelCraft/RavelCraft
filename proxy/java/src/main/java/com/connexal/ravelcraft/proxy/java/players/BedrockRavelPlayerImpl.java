@@ -20,7 +20,12 @@ public class BedrockRavelPlayerImpl implements ProxyRavelPlayer {
 
     @Override
     public void sendMessage(Text message, String... values) {
-        RavelInstance.getMessager().sendCommand(RavelServer.BE_PROXY, MessagingCommand.PROXY_SEND_MESSAGE, this.uuid.toString(), message.name());
+        String[] args = new String[values.length + 2];
+        args[0] = this.uuid.toString();
+        args[1] = message.name();
+        System.arraycopy(values, 0, args, 2, values.length);
+
+        RavelInstance.getMessager().sendCommand(RavelServer.BE_PROXY, MessagingCommand.PROXY_SEND_MESSAGE, args);
     }
 
     @Override

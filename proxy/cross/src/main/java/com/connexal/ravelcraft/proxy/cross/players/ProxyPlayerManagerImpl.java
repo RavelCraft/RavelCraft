@@ -104,7 +104,7 @@ public abstract class ProxyPlayerManagerImpl extends PlayerManager {
     }
 
     private String[] proxySendMessage(RavelServer source, String[] args) {
-        if (args.length != 2) {
+        if (args.length < 2) {
             RavelInstance.getLogger().error("Invalid number of arguments for proxySendMessage command!");
             return null;
         }
@@ -132,7 +132,10 @@ public abstract class ProxyPlayerManagerImpl extends PlayerManager {
             return null;
         }
 
-        player.sendMessage(message);
+        String[] formatArgs = new String[args.length - 2];
+        System.arraycopy(args, 2, formatArgs, 0, formatArgs.length);
+
+        player.sendMessage(message, formatArgs);
         return null;
     }
 }

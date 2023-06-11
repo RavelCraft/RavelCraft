@@ -66,12 +66,6 @@ public class MessagingClient extends Messager {
             return this.attemptConnect(attempts + 1);
         }
 
-        RavelInstance.getLogger().info("Connected to plugin messaging server at " + this.serverHostname + ".");
-        PlayerManager playerManager = RavelInstance.getPlayerManager();
-        if (playerManager != null) {
-            playerManager.messagingConnected(MessagingConstants.MESSAGING_SERVER);
-        }
-
         new Thread(() -> {
             try {
                 while (this.connected) {
@@ -84,6 +78,12 @@ public class MessagingClient extends Messager {
             this.close();
             this.attemptConnect();
         }).start();
+
+        RavelInstance.getLogger().info("Connected to plugin messaging server at " + this.serverHostname + ".");
+        PlayerManager playerManager = RavelInstance.getPlayerManager();
+        if (playerManager != null) {
+            playerManager.messagingConnected(MessagingConstants.MESSAGING_SERVER);
+        }
 
         return true;
     }
