@@ -13,7 +13,21 @@ public interface RavelPlayer extends RavelCommandSender {
 
     String getName();
 
+    String displayName();
+
+    void updateDisplayName();
+
     UUID getUniqueID();
+
+    default String buildDisplayName() {
+        RavelRank rank = this.getRank();
+
+        if (rank.getName() == null) {
+            return this.getName();
+        } else {
+            return "[" + this.getRank().getName() + "] " + this.getName();
+        }
+    }
 
     @Override
     default boolean isOp() {

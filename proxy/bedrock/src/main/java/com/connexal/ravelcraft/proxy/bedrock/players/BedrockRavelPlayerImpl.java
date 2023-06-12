@@ -11,6 +11,7 @@ import java.util.UUID;
 public class BedrockRavelPlayerImpl implements ProxyRavelPlayer {
     private final ProxiedPlayer player;
     private final UUID uuid;
+    private String displayName;
 
     public BedrockRavelPlayerImpl(ProxiedPlayer player) {
         this.player = player;
@@ -22,6 +23,8 @@ public class BedrockRavelPlayerImpl implements ProxyRavelPlayer {
             throw new RuntimeException("Unable to parse Bedrock player's XUID", e);
         }
         this.uuid = UUIDTools.getJavaUUIDFromXUID(xuid);
+
+        this.updateDisplayName();
     }
 
     @Override
@@ -33,6 +36,16 @@ public class BedrockRavelPlayerImpl implements ProxyRavelPlayer {
     @Override
     public String getName() {
         return this.player.getName();
+    }
+
+    @Override
+    public String displayName() {
+        return this.displayName;
+    }
+
+    @Override
+    public void updateDisplayName() {
+        this.displayName = this.buildDisplayName();
     }
 
     @Override

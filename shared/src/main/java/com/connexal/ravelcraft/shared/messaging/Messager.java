@@ -59,37 +59,27 @@ public abstract class Messager {
     }
 
     protected void readStream(DataInputStream input) throws IOException {
-        String destinationString = input.readUTF();
-        String sourceString = input.readUTF();
-
-        String typeString = input.readUTF();
-        MessageType type;
-        try {
-            type = MessageType.valueOf(typeString);
-        } catch (IllegalArgumentException e) {
-            RavelInstance.getLogger().warning("Unknown message type received from " + sourceString + ": " + typeString);
-            type = null;
-        }
-
-        String responseId = null;
-        if (type == MessageType.RESPONSE || type == MessageType.BIDIRECTIONAL) {
-            responseId = input.readUTF();
-        }
-
-        String commandString = input.readUTF();
+        int stringCount = input.readInt();
         int argumentCount = input.readInt();
 
+        String[] strings = new String[stringCount];
+        for (int i = 0; i < stringCount; i++) {
+            strings[i] = input.readUTF();
+        }
         String[] arguments = new String[argumentCount];
         for (int i = 0; i < argumentCount; i++) {
             arguments[i] = input.readUTF();
         }
 
-        if (type == null) {
+        if (stringCount < MessageFormat.length() - 1) {
+            RavelInstance.getLogger().warning("Received message with too few arguments: " + Arrays.toString(strings));
             return;
         }
 
         RavelServer destination = null;
         if (this.isServer()) {
+            String destinationString = strings[MessageFormat.DESTINATION.index()];
+
             try {
                 destination = RavelServer.valueOf(destinationString);
             } catch (IllegalArgumentException e) {
@@ -99,6 +89,7 @@ public abstract class Messager {
         }
 
         RavelServer source;
+        String sourceString = strings[MessageFormat.SOURCE.index()];
         try {
             source = RavelServer.valueOf(sourceString);
         } catch (IllegalArgumentException e) {
@@ -106,12 +97,27 @@ public abstract class Messager {
             return;
         }
 
+        MessageType type;
+        String typeString = strings[MessageFormat.TYPE.index()];
+        try {
+            type = MessageType.valueOf(typeString);
+        } catch (IllegalArgumentException e) {
+            RavelInstance.getLogger().warning("Unknown message type received from " + sourceString + ": " + typeString);
+            type = null;
+        }
+
         MessagingCommand command;
+        String commandString = strings[MessageFormat.COMMAND.index()];
         try {
             command = MessagingCommand.valueOf(commandString);
         } catch (IllegalArgumentException e) {
             RavelInstance.getLogger().warning("Unknown command received from " + source + ": " + commandString);
             return;
+        }
+
+        String responseId = null;
+        if (stringCount == MessageFormat.length()) {
+            responseId = strings[MessageFormat.RESPONSE_ID.index()];
         }
 
         RavelInstance.getLogger().info("Received message " + command + " with response ID " + responseId + " and args " + Arrays.toString(arguments) + " from " + source);
@@ -149,20 +155,34 @@ public abstract class Messager {
         }
 
         try {
-            this.writeLock.lock();
-            output.writeUTF(destination.name());
-            output.writeUTF(source.name());
-            output.writeUTF(type.name());
-            if (type == MessageType.RESPONSE || type == MessageType.BIDIRECTIONAL) {
-                output.writeUTF(responseId);
+            int dataCount = MessageFormat.length();
+            if (responseId == null) {
+                dataCount--;
             }
-            output.writeUTF(command.name());
+            String[] data = new String[dataCount];
+
+            data[MessageFormat.SOURCE.index()] = source.name();
+            data[MessageFormat.DESTINATION.index()] = destination.name();
+            data[MessageFormat.TYPE.index()] = type.name();
+            data[MessageFormat.COMMAND.index()] = command.name();
+            if (responseId != null) {
+                data[MessageFormat.RESPONSE_ID.index()] = responseId;
+            }
+
+            this.writeLock.lock();
+
+            output.writeInt(dataCount);
             output.writeInt(arguments.length);
-            for (String argument : arguments) {
-                output.writeUTF(argument);
+
+            for (String string : data) {
+                output.writeUTF(string);
+            }
+            for (String string : arguments) {
+                output.writeUTF(string);
             }
 
             output.flush();
+
             this.writeLock.unlock();
         } catch (IOException e) {
             RavelInstance.getLogger().error("Failed to send message to server", e);

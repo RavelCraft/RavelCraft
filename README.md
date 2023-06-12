@@ -19,7 +19,7 @@ Installation steps:
 
 - [ ] Commands
     - [ ] Proxy
-        - [ ] broadcast
+        - [x] broadcast
         - [ ] cracked
         - [ ] info
         - [ ] language
@@ -45,7 +45,7 @@ Installation steps:
         - [ ] spawn
         - [ ] suicide
 - [ ] Internals
-    - [ ] Centralised user management
+    - [x] Centralised user management
     - [ ] Website
     - [ ] Custom player list
     - [ ] Ping messages
@@ -66,12 +66,13 @@ Installation steps:
         - [ ] No entity interactions except if in creative
         - [ ] No block breaking except if in creative
     - [ ] Edits
-        - [ ] Join and leave messages (not joined game + joined network)
+        - [x] Join and leave messages (not joined game + joined network)
         - [ ] Invisible item frames (make and unmake invis)
         - [ ] Crop trampling remove
         - [ ] Shulker always drop 2 shells
         - [ ] No drop perks on death (dead and respawn)
         - [ ] Chat cool looking & stop message reporting
+        - [ ] No creeper block damage
 - [ ] Perks
     - [ ] Announce arrival
     - [ ] Arrow trail

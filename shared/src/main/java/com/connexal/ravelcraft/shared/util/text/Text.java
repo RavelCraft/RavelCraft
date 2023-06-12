@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Properties;
 
 public enum Text {
+    CHAT_FORMAT("ravelcraft.chat.format"),
+
     PLAYERS_JOIN_NETWORK("ravelcraft.players.join.network"),
     PLAYERS_JOIN_SERVER("ravelcraft.players.join.server"),
     PLAYERS_LEAVE_NETWORK("ravelcraft.players.leave.network"),

@@ -10,9 +10,12 @@ import java.util.UUID;
 
 public class JavaRavelPlayerImpl implements ProxyRavelPlayer {
     private final Player player;
+    private String displayName;
 
     public JavaRavelPlayerImpl(Player player) {
         this.player = player;
+
+        this.updateDisplayName();
     }
 
     @Override
@@ -24,6 +27,16 @@ public class JavaRavelPlayerImpl implements ProxyRavelPlayer {
     @Override
     public String getName() {
         return this.player.getUsername();
+    }
+
+    @Override
+    public String displayName() {
+        return this.displayName;
+    }
+
+    @Override
+    public void updateDisplayName() {
+        this.displayName = this.buildDisplayName();
     }
 
     @Override

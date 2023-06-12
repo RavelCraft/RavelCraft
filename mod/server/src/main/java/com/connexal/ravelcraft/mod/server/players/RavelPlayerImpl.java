@@ -11,6 +11,7 @@ public class RavelPlayerImpl implements RavelPlayer {
 
     public RavelPlayerImpl(ServerPlayerEntity player) {
         this.player = player;
+        this.updateDisplayName();
     }
 
     @Override
@@ -22,6 +23,17 @@ public class RavelPlayerImpl implements RavelPlayer {
     @Override
     public String getName() {
         return this.player.getName().getString();
+    }
+
+    @Override
+    public String displayName() {
+        return this.player.getCustomName().getString();
+    }
+
+    @Override
+    public void updateDisplayName() {
+        this.player.setCustomName(net.minecraft.text.Text.literal(this.buildDisplayName()));
+        this.player.setCustomNameVisible(true);
     }
 
     @Override
