@@ -5,13 +5,18 @@ import com.connexal.ravelcraft.proxy.cross.players.ProxyRavelPlayer;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.util.UUIDTools;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.nimbusds.jwt.SignedJWT;
 import dev.waterdog.waterdogpe.ProxyServer;
 import dev.waterdog.waterdogpe.event.defaults.PlayerAuthenticatedEvent;
 import dev.waterdog.waterdogpe.event.defaults.PlayerDisconnectedEvent;
 import dev.waterdog.waterdogpe.event.defaults.PlayerLoginEvent;
 import dev.waterdog.waterdogpe.event.defaults.PreClientDataSetEvent;
+import dev.waterdog.waterdogpe.network.protocol.handler.upstream.LoginUpstreamHandler;
+import dev.waterdog.waterdogpe.network.protocol.user.HandshakeUtils;
+import dev.waterdog.waterdogpe.network.protocol.user.LoginData;
+import org.cloudburstmc.protocol.bedrock.packet.LoginPacket;
 
+import java.util.List;
 import java.util.UUID;
 
 public class BeEventListener {
@@ -30,6 +35,10 @@ public class BeEventListener {
         if (username.contains(" ")) {
             username = username.replace(" ", RavelPlayer.BEDROCK_SPACE_REPLACEMENT);
         }
+
+        SignedJWT signedClientData = HandshakeUtils.createExtraData(event.getKeyPair(), event.getExtraData());
+        SignedJWT signedExtraData = HandshakeUtils.encodeJWT(event.getKeyPair(), event.getClientData());
+        BeProxy.getSkinUploadManager().uploadSkin(List.of(signedClientData), signedExtraData.getParsedString());
 
         event.getClientData().remove("ThirdPartyName");
         event.getClientData().addProperty("ThirdPartyName", username);
@@ -58,13 +67,7 @@ public class BeEventListener {
     }
 
     private void onPlayerLeave(PlayerDisconnectedEvent event) {
-        long xuid;
-        try {
-            xuid = Long.parseLong(event.getPlayer().getXuid());
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("Unable to parse Bedrock player's XUID", e);
-        }
-        UUID uuid = UUIDTools.getJavaUUIDFromXUID(xuid);
+        UUID uuid = UUIDTools.getJavaUUIDFromXUID(event.getPlayer().getXuid());
 
         RavelInstance.getPlayerManager().playerLeft(uuid);
     }

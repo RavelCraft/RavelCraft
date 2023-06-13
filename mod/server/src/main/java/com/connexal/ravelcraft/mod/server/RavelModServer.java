@@ -13,6 +13,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+import net.minecraft.server.MinecraftServer;
 import org.geysermc.api.Geyser;
 
 import java.io.IOException;
@@ -22,6 +23,7 @@ import java.nio.file.Path;
 public class RavelModServer implements RavelMain, ModInitializer {
 	private ModContainer mod;
 
+	private static MinecraftServer server;
 	private static GeyserEventRegistration geyserEvents;
 
 	@Override
@@ -45,11 +47,15 @@ public class RavelModServer implements RavelMain, ModInitializer {
 			RavelInstance.getLogger().error("No forwarding key specified in config.yml! Please set one and restart the server.");
 		}
 
+		VelocityModernForwarding.init();
+
+		ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
+			RavelModServer.server = server;
+		});
+
 		ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
 			RavelInstance.shutdown();
 		});
-
-		VelocityModernForwarding.init();
 	}
 
 	@Override
@@ -70,5 +76,9 @@ public class RavelModServer implements RavelMain, ModInitializer {
 
 	public static GeyserEventRegistration getGeyserEvents() {
 		return geyserEvents;
+	}
+
+	public static MinecraftServer getServer() {
+		return server;
 	}
 }

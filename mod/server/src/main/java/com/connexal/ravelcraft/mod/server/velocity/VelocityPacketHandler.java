@@ -1,4 +1,4 @@
-/**
+/*
  * MIT License
  *
  * Copyright (c) 2021 OKTW Network
@@ -24,12 +24,14 @@
 
 package com.connexal.ravelcraft.mod.server.velocity;
 
+import com.connexal.ravelcraft.mod.server.geyser.GeyserSkinGetter;
 import com.connexal.ravelcraft.mod.server.mixin.velocity.ClientConnection_AddressAccessor;
 import com.connexal.ravelcraft.mod.server.mixin.velocity.ServerLoginNetworkHandlerAccessor;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.util.UUIDTools;
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
 import net.minecraft.network.ClientConnection;
@@ -98,14 +100,7 @@ public class VelocityPacketHandler {
 
     private void bedrockLogin(MinecraftServer server, ServerLoginNetworkHandler handler, ServerLoginNetworking.LoginSynchronizer synchronizer, String name, String xuid) {
         synchronizer.waitFor(server.submit(() -> {
-            UUID playerUUID;
-            try {
-                playerUUID = UUIDTools.getJavaUUIDFromXUID(Long.parseLong(xuid));
-            } catch (NumberFormatException e) {
-                RavelInstance.getLogger().error("Invalid XUID: " + xuid, e);
-                handler.disconnect(Text.of("Unable to read player profile"));
-                return;
-            }
+            UUID playerUUID = UUIDTools.getJavaUUIDFromXUID(xuid);
 
             String playerName = name;
             if (!playerName.startsWith(RavelPlayer.BEDROCK_PREFIX)) {
@@ -119,6 +114,14 @@ public class VelocityPacketHandler {
             }
 
             GameProfile profile = new GameProfile(playerUUID, playerName);
+
+            //Try to get skin
+            GeyserSkinGetter.SkinData skinData = GeyserSkinGetter.getSkin(xuid);
+            if (skinData != null) {
+                profile.getProperties().removeAll("textures");
+                profile.getProperties().put("textures", new Property("textures", skinData.value, skinData.signature));
+            }
+
             ((ServerLoginNetworkHandlerAccessor) handler).setProfile(profile);
         }));
     }

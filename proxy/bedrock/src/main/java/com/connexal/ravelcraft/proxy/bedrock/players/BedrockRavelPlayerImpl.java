@@ -15,14 +15,7 @@ public class BedrockRavelPlayerImpl implements ProxyRavelPlayer {
 
     public BedrockRavelPlayerImpl(ProxiedPlayer player) {
         this.player = player;
-
-        long xuid;
-        try {
-            xuid = Long.parseLong(player.getXuid());
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("Unable to parse Bedrock player's XUID", e);
-        }
-        this.uuid = UUIDTools.getJavaUUIDFromXUID(xuid);
+        this.uuid = UUIDTools.getJavaUUIDFromXUID(player.getXuid());
 
         this.updateDisplayName();
     }

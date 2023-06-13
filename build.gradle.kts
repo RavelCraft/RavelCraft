@@ -3,6 +3,7 @@ val projectName = project.property("project_name") as String
 val projectVersion = project.property("project_version") as String
 val minecraftVersion = project.property("minecraft_version") as String
 val fabricLoaderVersion = project.property("fabric_loader_version") as String
+val websocketVersion = project.property("websocket_version") as String
 
 allprojects {
     tasks.withType<JavaCompile> {
@@ -16,7 +17,8 @@ allprojects {
                 "project_name" to projectName,
                 "project_version" to projectVersion,
                 "fabric_loader_version" to fabricLoaderVersion,
-                "minecraft_version" to minecraftVersion
+                "minecraft_version" to minecraftVersion,
+                "websocket_version" to websocketVersion
             ))
         }
     }

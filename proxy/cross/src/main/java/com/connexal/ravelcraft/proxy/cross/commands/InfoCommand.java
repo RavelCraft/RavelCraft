@@ -20,15 +20,12 @@ public class InfoCommand extends RavelCommand {
 
     @Override
     public String[] getAliases() {
-        return new String[] { "i" };
+        return new String[0];
     }
 
     @Override
     public CommandOption[] getOptions() {
-        return new CommandOption[] {
-                CommandOption.word("player", CommandOption.word("magic")),
-                CommandOption.literal("hello")
-        };
+        return new CommandOption[0];
     }
 
     @Override

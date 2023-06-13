@@ -8,6 +8,8 @@ plugins {
 val projectId = project.property("project_id") as String
 val minecraftVersion = project.property("minecraft_version") as String
 
+val websocketVersion = project.property("websocket_version") as String
+
 val name = "${projectId}-bedrockProxy-${minecraftVersion}"
 base.archivesName.set(name)
 
@@ -16,6 +18,8 @@ dependencies {
 
     implementation("com.google.auto.service:auto-service:1.0.1")
     annotationProcessor("com.google.auto.service:auto-service:1.0.1")
+
+    shadow("org.java-websocket:Java-WebSocket:${websocketVersion}")
 
     shadow(project(":shared"))
     shadow(project(":proxy-cross"))

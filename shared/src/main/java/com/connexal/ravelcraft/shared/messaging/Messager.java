@@ -15,6 +15,9 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.BiFunction;
 
 public abstract class Messager {
+    private static final String DATA_SEPARATOR = "_##°##_";
+    private static final String ARGUMENT_SEPARATOR = "°##_##°";
+
     private final Map<String, CompletableFuture<String[]>> responseFutures = new HashMap<>();
     private final Map<MessagingCommand, BiFunction<RavelServer, String[], String[]>> commandHandlers = new HashMap<>();
     private final Lock writeLock = new Lock();
@@ -59,19 +62,13 @@ public abstract class Messager {
     }
 
     protected void readStream(DataInputStream input) throws IOException {
-        int stringCount = input.readInt();
-        int argumentCount = input.readInt();
+        String data = input.readUTF();
+        String[] dataParts = data.split(DATA_SEPARATOR);
 
-        String[] strings = new String[stringCount];
-        for (int i = 0; i < stringCount; i++) {
-            strings[i] = input.readUTF();
-        }
-        String[] arguments = new String[argumentCount];
-        for (int i = 0; i < argumentCount; i++) {
-            arguments[i] = input.readUTF();
-        }
+        String[] strings = dataParts[0].split(ARGUMENT_SEPARATOR);
+        String[] arguments = dataParts[1].split(ARGUMENT_SEPARATOR);
 
-        if (stringCount < MessageFormat.length() - 1) {
+        if (strings.length < MessageFormat.length() - 1) {
             RavelInstance.getLogger().warning("Received message with too few arguments: " + Arrays.toString(strings));
             return;
         }
@@ -116,7 +113,7 @@ public abstract class Messager {
         }
 
         String responseId = null;
-        if (stringCount == MessageFormat.length()) {
+        if (strings.length == MessageFormat.length()) {
             responseId = strings[MessageFormat.RESPONSE_ID.index()];
         }
 
@@ -169,20 +166,11 @@ public abstract class Messager {
                 data[MessageFormat.RESPONSE_ID.index()] = responseId;
             }
 
+            String finalString = String.join(ARGUMENT_SEPARATOR, data) + DATA_SEPARATOR + String.join(ARGUMENT_SEPARATOR, arguments);
+
             this.writeLock.lock();
-
-            output.writeInt(dataCount);
-            output.writeInt(arguments.length);
-
-            for (String string : data) {
-                output.writeUTF(string);
-            }
-            for (String string : arguments) {
-                output.writeUTF(string);
-            }
-
+            output.writeUTF(finalString);
             output.flush();
-
             this.writeLock.unlock();
         } catch (IOException e) {
             RavelInstance.getLogger().error("Failed to send message to server", e);
