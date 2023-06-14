@@ -103,7 +103,21 @@ public abstract class PlayerManager {
             }
         }
 
-        this.playerInfo.get(player.getUniqueID()).updateLanguage(language);
+        this.setLanguageInternal(player.getUniqueID(), language);
+    }
+
+    private boolean setLanguageInternal(UUID uuid, Language language) {
+        if (!this.playerInfo.containsKey(uuid)) {
+            return false;
+        }
+        this.playerInfo.get(uuid).updateLanguage(language);
+
+        if (this.messager.isServer()) {
+            this.config.set(uuid + ".language", language.name());
+            this.config.save();
+        }
+
+        return true;
     }
 
     private String[] setLanguageCommand(RavelServer source, String[] args) {
@@ -119,12 +133,10 @@ public abstract class PlayerManager {
             return new String[] {MessagingConstants.COMMAND_FAILURE};
         }
 
-        PlayerInfo info = this.playerInfo.get(uuid);
-        if (info == null) {
+        boolean success = this.setLanguageInternal(uuid, language);
+        if (!success) {
             return new String[] {MessagingConstants.COMMAND_FAILURE};
         }
-
-        info.updateLanguage(language);
 
         return new String[] {MessagingConstants.COMMAND_SUCCESS};
     }
@@ -164,7 +176,21 @@ public abstract class PlayerManager {
             }
         }
 
-        this.playerInfo.get(player.getUniqueID()).updateRank(rank);
+        this.setRankInternal(player.getUniqueID(), rank);
+    }
+
+    private boolean setRankInternal(UUID uuid, RavelRank rank) {
+        if (!this.playerInfo.containsKey(uuid)) {
+            return false;
+        }
+        this.playerInfo.get(uuid).updateRank(rank);
+
+        if (this.messager.isServer()) {
+            this.config.set(uuid + ".rank", rank.name());
+            this.config.save();
+        }
+
+        return true;
     }
 
     private String[] setRankCommand(RavelServer source, String[] args) {
@@ -180,12 +206,10 @@ public abstract class PlayerManager {
             return new String[] {MessagingConstants.COMMAND_FAILURE};
         }
 
-        PlayerInfo info = this.playerInfo.get(uuid);
-        if (info == null) {
+        boolean success = this.setRankInternal(uuid, rank);
+        if (!success) {
             return new String[] {MessagingConstants.COMMAND_FAILURE};
         }
-
-        info.updateRank(rank);
 
         return new String[] {MessagingConstants.COMMAND_SUCCESS};
     }
