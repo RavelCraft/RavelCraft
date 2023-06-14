@@ -2,7 +2,7 @@ package com.connexal.ravelcraft.proxy.bedrock.servers;
 
 import com.connexal.ravelcraft.proxy.bedrock.BeProxy;
 import com.connexal.ravelcraft.proxy.cross.servers.ServerManager;
-import com.connexal.ravelcraft.shared.util.RavelServer;
+import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import dev.waterdog.waterdogpe.network.serverinfo.BedrockServerInfo;
 import dev.waterdog.waterdogpe.network.serverinfo.ServerInfo;
 

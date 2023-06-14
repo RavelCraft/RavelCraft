@@ -2,7 +2,7 @@ package com.connexal.ravelcraft.shared.messaging;
 
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.players.PlayerManager;
-import com.connexal.ravelcraft.shared.util.RavelServer;
+import com.connexal.ravelcraft.shared.util.server.RavelServer;
 
 import java.io.*;
 import java.net.Socket;

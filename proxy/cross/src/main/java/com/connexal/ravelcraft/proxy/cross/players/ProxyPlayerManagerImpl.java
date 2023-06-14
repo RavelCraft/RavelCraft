@@ -1,11 +1,11 @@
 package com.connexal.ravelcraft.proxy.cross.players;
 
-import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
+import com.connexal.ravelcraft.shared.messaging.MessagingConstants;
 import com.connexal.ravelcraft.shared.players.PlayerManager;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.util.RavelServer;
+import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.Text;
 
 import java.util.ArrayList;
@@ -18,10 +18,11 @@ public abstract class ProxyPlayerManagerImpl extends PlayerManager {
     public void init() {
         super.init();
 
-        this.messager.registerCommandHandler(MessagingCommand.PLAYER_JOINED_PROXY, this::playerJoinedProxyCommand);
-        this.messager.registerCommandHandler(MessagingCommand.PLAYER_LEFT_PROXY, this::playerLeftProxyCommand);
+        this.messager.registerCommandHandler(MessagingCommand.PROXY_PLAYER_JOINED, this::playerJoinedProxyCommand);
+        this.messager.registerCommandHandler(MessagingCommand.PROXY_PLAYER_LEFT, this::playerLeftProxyCommand);
         this.messager.registerCommandHandler(MessagingCommand.PROXY_QUERY_CONNECTED, this::proxyQueryConnected);
         this.messager.registerCommandHandler(MessagingCommand.PROXY_SEND_MESSAGE, this::proxySendMessage);
+        this.messager.registerCommandHandler(MessagingCommand.PROXY_TRANSFER_PLAYER, this::proxyTransferPlayer);
     }
 
     @Override
@@ -43,6 +44,36 @@ public abstract class ProxyPlayerManagerImpl extends PlayerManager {
         RavelInstance.getLogger().info("Querying connected server for player information");
         CompletableFuture<String[]> connectedFuture = this.messager.sendCommandWithResponse(otherServer, MessagingCommand.PROXY_QUERY_CONNECTED, this.generateConnectedPlayerList());
         this.registerConnected(connectedFuture.join());
+    }
+
+    private String[] proxyTransferPlayer(RavelServer source, String[] args) {
+        if (args.length != 2) {
+            RavelInstance.getLogger().error("Invalid number of arguments for proxyTransferPlayer command!");
+            return new String[] {MessagingConstants.COMMAND_FAILURE};
+        }
+
+        UUID uuid = UUID.fromString(args[0]);
+        RavelPlayer player = RavelInstance.getPlayerManager().getPlayer(uuid);
+        if (player == null) {
+            RavelInstance.getLogger().error("Unable to transfer unknown player! (Requested by " + source + ")");
+            return new String[] {MessagingConstants.COMMAND_FAILURE};
+        }
+
+        RavelServer target;
+        try {
+            target = RavelServer.valueOf(args[1]);
+        } catch (IllegalArgumentException e) {
+            RavelInstance.getLogger().error("Unable to transfer player to unknown server! (Requested by " + source + ")");
+            return new String[] {MessagingConstants.COMMAND_FAILURE};
+        }
+
+        boolean success = this.setServerInternal(player, target);
+        if (!success) {
+            RavelInstance.getLogger().error("Unable to transfer player to server! (Requested by " + source + ")");
+            return new String[] {MessagingConstants.COMMAND_FAILURE};
+        }
+
+        return new String[] {MessagingConstants.COMMAND_SUCCESS};
     }
 
     private String[] playerJoinedProxyCommand(RavelServer source, String[] args) {
@@ -73,11 +104,8 @@ public abstract class ProxyPlayerManagerImpl extends PlayerManager {
 
     private String[] generateConnectedPlayerList() {
         List<String> connected = new ArrayList<>();
-        for (RavelPlayer genericPlayer : RavelInstance.getPlayerManager().getConnectedPlayers()) {
-            if (!(genericPlayer instanceof ProxyRavelPlayer player)) {
-                continue;
-            }
-            if (player.getOwner() != RavelProxyInstance.getProxyType()) {
+        for (RavelPlayer player : RavelInstance.getPlayerManager().getConnectedPlayers()) {
+            if (player.getOwnerProxy() != RavelInstance.getServer()) {
                 //We're going to add all these players back again, who knows what happened to them since the servers last talked anyway
                 this.playerLeftProxyCommand(null, new String[]{player.getUniqueID().toString()});
 
@@ -115,11 +143,7 @@ public abstract class ProxyPlayerManagerImpl extends PlayerManager {
             RavelInstance.getLogger().error("Unable to send message to unknown player! (Requested by " + source + ")");
             return null;
         }
-        if (!(player instanceof ProxyRavelPlayer proxyPlayer)) {
-            RavelInstance.getLogger().error("Unable to send message to non-proxy player! (Requested by " + source + ")");
-            return null;
-        }
-        if (proxyPlayer.getOwner() != RavelProxyInstance.getProxyType()) {
+        if (player.getOwnerProxy() != RavelInstance.getServer()) {
             RavelInstance.getLogger().error("Unable to send message to player on other proxy! (Requested by " + source + ")");
             return null;
         }

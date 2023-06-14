@@ -2,7 +2,7 @@ package com.connexal.ravelcraft.shared.players;
 
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.connexal.ravelcraft.shared.util.RavelServer;
+import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.Language;
 
 import java.util.UUID;
@@ -18,6 +18,8 @@ public interface RavelPlayer extends RavelCommandSender {
     void updateDisplayName();
 
     UUID getUniqueID();
+
+    RavelServer getOwnerProxy();
 
     default String buildDisplayName() {
         RavelRank rank = this.getRank();

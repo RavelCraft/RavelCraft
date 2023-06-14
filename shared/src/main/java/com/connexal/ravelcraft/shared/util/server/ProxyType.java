@@ -1,4 +1,4 @@
-package com.connexal.ravelcraft.proxy.cross.servers;
+package com.connexal.ravelcraft.shared.util.server;
 
 public enum ProxyType {
     JAVA,

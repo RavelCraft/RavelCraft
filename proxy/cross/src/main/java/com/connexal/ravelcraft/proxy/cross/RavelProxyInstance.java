@@ -1,8 +1,8 @@
 package com.connexal.ravelcraft.proxy.cross;
 
-import com.connexal.ravelcraft.proxy.cross.servers.ProxyType;
 import com.connexal.ravelcraft.proxy.cross.servers.ServerManager;
 import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.util.server.ProxyType;
 
 public class RavelProxyInstance {
     private static ServerManager serverManager;

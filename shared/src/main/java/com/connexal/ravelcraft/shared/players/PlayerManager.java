@@ -5,7 +5,7 @@ import com.connexal.ravelcraft.shared.messaging.Messager;
 import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
 import com.connexal.ravelcraft.shared.messaging.MessagingConstants;
 import com.connexal.ravelcraft.shared.util.RavelConfig;
-import com.connexal.ravelcraft.shared.util.RavelServer;
+import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.Language;
 import com.connexal.ravelcraft.shared.util.text.Text;
 
@@ -16,8 +16,8 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public abstract class PlayerManager {
-    private final Map<UUID, PlayerInfo> playerInfo = new HashMap<>();
-    private final Map<UUID, RavelPlayer> connectedPlayers = new HashMap<>();
+    protected final Map<UUID, PlayerInfo> playerInfo = new HashMap<>();
+    protected final Map<UUID, RavelPlayer> connectedPlayers = new HashMap<>();
     private final RavelConfig config;
 
     protected Messager messager = null;
@@ -31,70 +31,163 @@ public abstract class PlayerManager {
         this.messager = RavelInstance.getMessager();
 
         this.messager.registerCommandHandler(MessagingCommand.PLAYER_GET_INFO, this::getPlayerInfoCommand);
+
+        this.messager.registerCommandHandler(MessagingCommand.PLAYER_RANK_UPDATE, this::setRankCommand);
+        this.messager.registerCommandHandler(MessagingCommand.PLAYER_LANGUAGE_UPDATE, this::setLanguageCommand);
     }
 
     //This could also be a reconnect
     public abstract void messagingConnected(RavelServer server);
 
     public RavelServer getServer(RavelPlayer player) {
-        PlayerInfo info = this.playerInfo.get(player.getUniqueID());
-        if (info == null) {
+        if (!this.playerInfo.containsKey(player.getUniqueID())) {
             return null;
-        } else {
-            return info.getServer();
         }
+
+        return this.playerInfo.get(player.getUniqueID()).getServer();
     }
 
     public void setServer(RavelPlayer player, RavelServer server) {
         if (server.isProxy()) {
             throw new IllegalArgumentException("Cannot set player server to a proxy server");
         }
+        if (server == RavelInstance.getServer()) {
+            throw new IllegalArgumentException("Cannot set player server to the current server");
+        }
+
+        boolean success = this.setServerInternal(player, server);
+        if (!success) {
+            return;
+        }
 
         if (!this.playerInfo.containsKey(player.getUniqueID())) {
             return;
         }
         this.playerInfo.get(player.getUniqueID()).updateServer(server);
-
-        // --- Java proxy specific code ---
-        /*
-        Optional<Player> optionalPlayer = JeProxy.getServer().getPlayer(player.getUniqueID());
-        if (optionalPlayer.isEmpty()) {
-            return;
-        }
-
-        RegisteredServer registeredServer = JeProxy.getServer().getServer(server.getName()).orElse(null);
-        if (registeredServer == null) {
-            return;
-        }
-
-        Player velocityPlayer = optionalPlayer.get();
-        velocityPlayer.createConnectionRequest(registeredServer).connect().thenAcceptAsync((result) -> {
-            if (result.isSuccessful()) {
-                this.playerInfo.get(player.getUniqueID()).updateServer(server);
-                //There is no need to notify the backend server of the change, as player will be disconnected from it
-            } else {
-                RavelInstance.getLogger().error("Failed to connect player " + player.getName() + " to server " + server.getName() + "!");
-            }
-        });
-         */
     }
 
+    protected abstract boolean setServerInternal(RavelPlayer player, RavelServer server);
+
     public Language getLanguage(RavelPlayer player) {
-        //TODO: Implement language getter
-        return Language.DEFAULT;
+        if (!this.playerInfo.containsKey(player.getUniqueID())) {
+            return Language.DEFAULT;
+        }
+
+        return this.playerInfo.get(player.getUniqueID()).getLanguage();
     }
 
     public void setLanguage(RavelPlayer player, Language language) {
-        //TODO: Implement language setter
+        if (!this.playerInfo.containsKey(player.getUniqueID())) {
+            return;
+        }
+
+        RavelServer playerServer = this.getServer(player);
+
+        for (RavelServer server : RavelServer.values()) {
+            if (server == RavelInstance.getServer()) { //We don't need to send a message to ourselves
+                continue;
+            }
+
+            if (server.isProxy() || server == playerServer) {
+                CompletableFuture<String[]> returnData = this.messager.sendCommandWithResponse(server, MessagingCommand.PLAYER_LANGUAGE_UPDATE, player.getUniqueID().toString(), language.name());
+                if (returnData == null) {
+                    RavelInstance.getLogger().error("Failed to update player language for " + player.getName() + "!");
+                    return;
+                }
+                String[] response = returnData.join();
+
+                if (response.length != 1 || !response[0].equals(MessagingConstants.COMMAND_SUCCESS)) {
+                    RavelInstance.getLogger().error("Failed to update player language for " + player.getName() + "!");
+                    return;
+                }
+            }
+        }
+
+        this.playerInfo.get(player.getUniqueID()).updateLanguage(language);
+    }
+
+    private String[] setLanguageCommand(RavelServer source, String[] args) {
+        if (args.length != 2) {
+            return new String[] {MessagingConstants.COMMAND_FAILURE};
+        }
+
+        UUID uuid = UUID.fromString(args[0]);
+        Language language;
+        try {
+            language = Language.valueOf(args[1]);
+        } catch (IllegalArgumentException e) {
+            return new String[] {MessagingConstants.COMMAND_FAILURE};
+        }
+
+        PlayerInfo info = this.playerInfo.get(uuid);
+        if (info == null) {
+            return new String[] {MessagingConstants.COMMAND_FAILURE};
+        }
+
+        info.updateLanguage(language);
+
+        return new String[] {MessagingConstants.COMMAND_SUCCESS};
     }
 
     public RavelRank getRank(RavelPlayer player) {
-        //TODO: Implement rank getter
-        return RavelRank.NONE;
+        if (!this.playerInfo.containsKey(player.getUniqueID())) {
+            return RavelRank.NONE;
+        }
+
+        return this.playerInfo.get(player.getUniqueID()).getRank();
     }
 
     public void setRank(RavelPlayer player, RavelRank rank) {
-        //TODO: Implement rank setter
+        if (!this.playerInfo.containsKey(player.getUniqueID())) {
+            return;
+        }
+
+        RavelServer playerServer = this.getServer(player);
+
+        for (RavelServer server : RavelServer.values()) {
+            if (server == RavelInstance.getServer()) { //We don't need to send a message to ourselves
+                continue;
+            }
+
+            if (server.isProxy() || server == playerServer) {
+                CompletableFuture<String[]> returnData = this.messager.sendCommandWithResponse(server, MessagingCommand.PLAYER_LANGUAGE_UPDATE, player.getUniqueID().toString(), rank.name());
+                if (returnData == null) {
+                    RavelInstance.getLogger().error("Failed to update player language for " + player.getName() + "!");
+                    return;
+                }
+                String[] response = returnData.join();
+
+                if (response.length != 1 || !response[0].equals(MessagingConstants.COMMAND_SUCCESS)) {
+                    RavelInstance.getLogger().error("Failed to update player language for " + player.getName() + "!");
+                    return;
+                }
+            }
+        }
+
+        this.playerInfo.get(player.getUniqueID()).updateRank(rank);
+    }
+
+    private String[] setRankCommand(RavelServer source, String[] args) {
+        if (args.length != 2) {
+            return new String[] {MessagingConstants.COMMAND_FAILURE};
+        }
+
+        UUID uuid = UUID.fromString(args[0]);
+        RavelRank rank;
+        try {
+            rank = RavelRank.valueOf(args[1]);
+        } catch (IllegalArgumentException e) {
+            return new String[] {MessagingConstants.COMMAND_FAILURE};
+        }
+
+        PlayerInfo info = this.playerInfo.get(uuid);
+        if (info == null) {
+            return new String[] {MessagingConstants.COMMAND_FAILURE};
+        }
+
+        info.updateRank(rank);
+
+        return new String[] {MessagingConstants.COMMAND_SUCCESS};
     }
 
     public void kick(RavelPlayer player, String reason, boolean network) {
@@ -131,7 +224,7 @@ public abstract class PlayerManager {
             return info;
         }
 
-        if (RavelInstance.getServer() == MessagingConstants.MESSAGING_SERVER) {
+        if (this.messager.isServer()) {
             String rankString = this.config.getString(uuid + ".rank");
             RavelRank rank;
             if (rankString == null) {
@@ -219,7 +312,7 @@ public abstract class PlayerManager {
                 server = RavelServer.JE_PROXY;
             }
 
-            this.messager.sendCommand(server, MessagingCommand.PLAYER_JOINED_PROXY, player.getUniqueID().toString(), player.getName());
+            this.messager.sendCommand(server, MessagingCommand.PROXY_PLAYER_JOINED, player.getUniqueID().toString(), player.getName());
         }
     }
 
@@ -248,7 +341,7 @@ public abstract class PlayerManager {
                 server = RavelServer.JE_PROXY;
             }
 
-            this.messager.sendCommand(server, MessagingCommand.PLAYER_LEFT_PROXY, uuid.toString());
+            this.messager.sendCommand(server, MessagingCommand.PROXY_PLAYER_LEFT, uuid.toString());
         }
     }
 

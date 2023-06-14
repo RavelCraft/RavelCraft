@@ -2,7 +2,7 @@ package com.connexal.ravelcraft.proxy.java.servers;
 
 import com.connexal.ravelcraft.proxy.cross.servers.ServerManager;
 import com.connexal.ravelcraft.proxy.java.JeProxy;
-import com.connexal.ravelcraft.shared.util.RavelServer;
+import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
 
@@ -22,7 +22,8 @@ public class ServerManagerImpl extends ServerManager {
 
     @Override
     public void unregisterServer(RavelServer server) {
-        JeProxy.getServer().unregisterServer(this.constructInfo(server));
+        JeProxy.getServer().getServer(server.getIdentifier())
+                .ifPresent(registeredServer -> JeProxy.getServer().unregisterServer(registeredServer.getServerInfo()));
     }
 
     @Override

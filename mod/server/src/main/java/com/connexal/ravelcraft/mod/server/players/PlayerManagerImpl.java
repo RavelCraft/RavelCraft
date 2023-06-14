@@ -1,15 +1,17 @@
 package com.connexal.ravelcraft.mod.server.players;
 
 import com.connexal.ravelcraft.mod.server.RavelModServer;
-import com.connexal.ravelcraft.mod.server.geyser.GeyserSkinGetter;
 import com.connexal.ravelcraft.mod.server.util.SkinApplier;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
+import com.connexal.ravelcraft.shared.messaging.MessagingConstants;
 import com.connexal.ravelcraft.shared.players.PlayerManager;
-import com.connexal.ravelcraft.shared.util.RavelServer;
+import com.connexal.ravelcraft.shared.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class PlayerManagerImpl extends PlayerManager {
     @Override
@@ -21,6 +23,21 @@ public class PlayerManagerImpl extends PlayerManager {
 
     @Override
     public void messagingConnected(RavelServer server) {
+    }
+
+    @Override
+    protected boolean setServerInternal(RavelPlayer player, RavelServer server) {
+        CompletableFuture<String[]> future = this.messager.sendCommandWithResponse(player.getOwnerProxy(), MessagingCommand.PROXY_TRANSFER_PLAYER, player.getUniqueID().toString(), server.name());
+        if (future == null) {
+            return false;
+        }
+
+        String[] response = future.join();
+        if (response == null || response.length != 1) {
+            return false;
+        }
+
+        return response[0].equals(MessagingConstants.COMMAND_SUCCESS);
     }
 
     private String[] playerSkinUpdated(RavelServer source, String[] args) {

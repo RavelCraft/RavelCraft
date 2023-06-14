@@ -1,6 +1,11 @@
 package com.connexal.ravelcraft.proxy.bedrock.players;
 
+import com.connexal.ravelcraft.proxy.bedrock.BeProxy;
 import com.connexal.ravelcraft.proxy.cross.players.ProxyPlayerManagerImpl;
+import com.connexal.ravelcraft.shared.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.util.server.RavelServer;
+import dev.waterdog.waterdogpe.network.serverinfo.ServerInfo;
+import dev.waterdog.waterdogpe.player.ProxiedPlayer;
 
 import java.util.UUID;
 
@@ -13,5 +18,21 @@ public class PlayerManagerImpl extends ProxyPlayerManagerImpl {
     @Override
     protected void playerLeftProxyCommand(UUID uuid) {
         this.playerLeftInternal(uuid);
+    }
+
+    @Override
+    protected boolean setServerInternal(RavelPlayer player, RavelServer server) {
+        ProxiedPlayer proxyPlayer = BeProxy.getServer().getPlayer(player.getUniqueID());
+        if (proxyPlayer == null) {
+            return false;
+        }
+
+        ServerInfo serverInfo = BeProxy.getServer().getServerInfo(server.getIdentifier());
+        if (serverInfo == null) {
+            return false;
+        }
+
+        proxyPlayer.redirectServer(serverInfo);
+        return true;
     }
 }

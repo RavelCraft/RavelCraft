@@ -1,7 +1,6 @@
 package com.connexal.ravelcraft.proxy.bedrock;
 
 import com.connexal.ravelcraft.proxy.bedrock.players.BedrockRavelPlayerImpl;
-import com.connexal.ravelcraft.proxy.cross.players.ProxyRavelPlayer;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.util.UUIDTools;
@@ -11,10 +10,7 @@ import dev.waterdog.waterdogpe.event.defaults.PlayerAuthenticatedEvent;
 import dev.waterdog.waterdogpe.event.defaults.PlayerDisconnectedEvent;
 import dev.waterdog.waterdogpe.event.defaults.PlayerLoginEvent;
 import dev.waterdog.waterdogpe.event.defaults.PreClientDataSetEvent;
-import dev.waterdog.waterdogpe.network.protocol.handler.upstream.LoginUpstreamHandler;
 import dev.waterdog.waterdogpe.network.protocol.user.HandshakeUtils;
-import dev.waterdog.waterdogpe.network.protocol.user.LoginData;
-import org.cloudburstmc.protocol.bedrock.packet.LoginPacket;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,15 +26,16 @@ public class BeEventListener {
     }
 
     private void onPreLogin(PreClientDataSetEvent event) {
+        //Upload player skin to the Geyser global API
+        SignedJWT signedClientData = HandshakeUtils.createExtraData(event.getKeyPair(), event.getExtraData());
+        SignedJWT signedExtraData = HandshakeUtils.encodeJWT(event.getKeyPair(), event.getClientData());
+        BeProxy.getSkinUploadManager().uploadSkin(List.of(signedClientData), signedExtraData.getParsedString());
+
         //Change username to a valid Java username
         String username = RavelPlayer.BEDROCK_PREFIX + event.getExtraData().get("displayName").getAsString();
         if (username.contains(" ")) {
             username = username.replace(" ", RavelPlayer.BEDROCK_SPACE_REPLACEMENT);
         }
-
-        SignedJWT signedClientData = HandshakeUtils.createExtraData(event.getKeyPair(), event.getExtraData());
-        SignedJWT signedExtraData = HandshakeUtils.encodeJWT(event.getKeyPair(), event.getClientData());
-        BeProxy.getSkinUploadManager().uploadSkin(List.of(signedClientData), signedExtraData.getParsedString());
 
         event.getClientData().remove("ThirdPartyName");
         event.getClientData().addProperty("ThirdPartyName", username);
@@ -57,7 +54,7 @@ public class BeEventListener {
     }
 
     private void onPlayerJoin(PlayerLoginEvent event) {
-        ProxyRavelPlayer player = new BedrockRavelPlayerImpl(event.getPlayer());
+        RavelPlayer player = new BedrockRavelPlayerImpl(event.getPlayer());
 
         //TODO: Check if player is banned
 

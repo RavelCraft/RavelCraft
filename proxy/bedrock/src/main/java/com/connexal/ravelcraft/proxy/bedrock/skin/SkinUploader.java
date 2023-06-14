@@ -58,10 +58,6 @@ public final class SkinUploader {
     private final WebSocketClient client;
     private volatile boolean closed;
 
-    private int id;
-    private String verifyCode;
-    private int subscribersCount;
-
     public SkinUploader() {
         URI wsUri;
         try {
@@ -102,11 +98,6 @@ public final class SkinUploader {
                     }
 
                     switch (type) {
-                        case SUBSCRIBER_CREATED -> {
-                            id = node.get("id").asInt();
-                            verifyCode = node.get("verify_code").asText();
-                        }
-                        case SUBSCRIBER_COUNT -> subscribersCount = node.get("subscribers_count").asInt();
                         case SKIN_UPLOADED -> {
                             String xuid = node.get("xuid").asText();
                             UUID uuid = UUIDTools.getJavaUUIDFromXUID(xuid);
@@ -147,7 +138,6 @@ public final class SkinUploader {
             @Override
             public void onClose(int code, String reason, boolean remote) {
                 if (reason != null && !reason.isEmpty()) {
-                    // The reason why I don't like Jackson
                     try {
                         JsonNode node = JACKSON.readTree(reason);
                         // info means that the uploader itself did nothing wrong
@@ -167,7 +157,7 @@ public final class SkinUploader {
                     }
                 }
 
-                // try to reconnect (which will make a new id and verify token) after a few seconds
+                // try to reconnect after a few seconds
                 reconnectLater();
             }
 
@@ -187,7 +177,7 @@ public final class SkinUploader {
 
     public void uploadSkin(List<SignedJWT> chainData, String clientData) {
         if (chainData == null || clientData == null) {
-            logger.error("Invalid skin data, unable to upload");
+            this.logger.error("Invalid skin data, unable to upload");
             return;
         }
 
@@ -201,7 +191,7 @@ public final class SkinUploader {
         try {
             jsonString = this.JACKSON.writeValueAsString(node);
         } catch (Exception e) {
-            logger.error("Failed to upload skin", e);
+            this.logger.error("Failed to upload skin", e);
             return;
         }
 

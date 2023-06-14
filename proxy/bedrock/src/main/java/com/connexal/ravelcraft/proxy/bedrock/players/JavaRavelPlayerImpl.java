@@ -1,15 +1,14 @@
 package com.connexal.ravelcraft.proxy.bedrock.players;
 
-import com.connexal.ravelcraft.proxy.cross.players.ProxyRavelPlayer;
-import com.connexal.ravelcraft.proxy.cross.servers.ProxyType;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
-import com.connexal.ravelcraft.shared.util.RavelServer;
+import com.connexal.ravelcraft.shared.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.Text;
 
 import java.util.UUID;
 
-public class JavaRavelPlayerImpl implements ProxyRavelPlayer {
+public class JavaRavelPlayerImpl implements RavelPlayer {
     private final UUID uuid;
     private final String name;
     private String displayName;
@@ -52,7 +51,7 @@ public class JavaRavelPlayerImpl implements ProxyRavelPlayer {
     }
 
     @Override
-    public ProxyType getOwner() {
-        return ProxyType.JAVA;
+    public RavelServer getOwnerProxy() {
+        return RavelServer.JE_PROXY;
     }
 }

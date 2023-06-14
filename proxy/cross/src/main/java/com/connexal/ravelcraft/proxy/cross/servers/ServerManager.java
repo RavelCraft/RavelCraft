@@ -1,7 +1,7 @@
 package com.connexal.ravelcraft.proxy.cross.servers;
 
 import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.util.RavelServer;
+import com.connexal.ravelcraft.shared.util.server.RavelServer;
 
 public abstract class ServerManager {
     public void init() {
