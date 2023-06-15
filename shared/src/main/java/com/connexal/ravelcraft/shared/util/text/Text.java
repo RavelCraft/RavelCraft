@@ -26,7 +26,9 @@ public enum Text {
 
     COMMAND_LANGUAGE_LIST("ravelcraft.command.language.list"),
     COMMAND_LANGUAGE_SET("ravelcraft.command.language.set"),
-    COMMAND_LANGUAGE_INVALID("ravelcraft.command.language.invalid");
+    COMMAND_LANGUAGE_INVALID("ravelcraft.command.language.invalid"),
+
+    COMMAND_RANK_
 
     private static final Map<Language, Properties> languages = new HashMap<>();
 
