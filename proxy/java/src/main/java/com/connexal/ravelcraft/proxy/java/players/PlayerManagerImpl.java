@@ -3,6 +3,7 @@ package com.connexal.ravelcraft.proxy.java.players;
 import com.connexal.ravelcraft.proxy.cross.players.ProxyPlayerManagerImpl;
 import com.connexal.ravelcraft.proxy.java.JeProxy;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.players.RavelRank;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.velocitypowered.api.proxy.ConnectionRequestBuilder;
 import com.velocitypowered.api.proxy.Player;
@@ -39,5 +40,10 @@ public class PlayerManagerImpl extends ProxyPlayerManagerImpl {
         CompletableFuture<ConnectionRequestBuilder.Result> future = velocityPlayer.createConnectionRequest(registeredServer).connect();
 
         return future.join().isSuccessful();
+    }
+
+    @Override
+    protected void playerRankChanged(RavelPlayer player, RavelRank rank) {
+        //Nothing. I think?
     }
 }

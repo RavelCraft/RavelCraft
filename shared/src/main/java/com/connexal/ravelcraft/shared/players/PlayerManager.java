@@ -190,6 +190,8 @@ public abstract class PlayerManager {
             this.config.save();
         }
 
+        this.playerRankChanged(this.getPlayer(uuid), rank);
+
         return true;
     }
 
@@ -213,6 +215,8 @@ public abstract class PlayerManager {
 
         return new String[] {MessagingConstants.COMMAND_SUCCESS};
     }
+
+    protected abstract void playerRankChanged(RavelPlayer player, RavelRank rank);
 
     public void kick(RavelPlayer player, String reason, boolean network) {
         //TODO: Implement kick

@@ -90,7 +90,7 @@ public class MessagingClient extends Messager {
 
     @Override
     public DataOutputStream getServerOutputStream(RavelServer server) {
-        if (server != MessagingConstants.MESSAGING_SERVER || !this.connected) {
+        if (!this.connected) {
             return null;
         }
 

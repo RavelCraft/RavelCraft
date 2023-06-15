@@ -1,5 +1,6 @@
 package com.connexal.ravelcraft.proxy.cross.commands;
 
+import com.connexal.ravelcraft.shared.BuildConstants;
 import com.connexal.ravelcraft.shared.commands.RavelCommand;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
 import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
@@ -30,7 +31,7 @@ public class InfoCommand extends RavelCommand {
 
     @Override
     protected boolean run(RavelCommandSender sender, String[] args) {
-        sender.sendMessage(Text.COMMAND_INFO);
+        sender.sendMessage(Text.COMMAND_INFO, BuildConstants.SERVER_IP, BuildConstants.VERSION);
         return true;
     }
 }

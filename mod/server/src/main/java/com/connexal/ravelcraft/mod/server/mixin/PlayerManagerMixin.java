@@ -1,8 +1,10 @@
 package com.connexal.ravelcraft.mod.server.mixin;
 
+import com.connexal.ravelcraft.mod.server.RavelModServer;
 import com.connexal.ravelcraft.mod.server.players.RavelPlayerImpl;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.players.RavelRank;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -22,5 +24,12 @@ public class PlayerManagerMixin {
 
         RavelPlayer ravelPlayer = new RavelPlayerImpl(player);
         RavelInstance.getPlayerManager().playerJoined(ravelPlayer);
+
+        RavelRank rank = ravelPlayer.getRank();
+        if (rank.isOperator()) {
+            RavelModServer.getServer().getPlayerManager().addToOperators(player.getGameProfile());
+        } else {
+            RavelModServer.getServer().getPlayerManager().removeFromOperators(player.getGameProfile());
+        }
     }
 }

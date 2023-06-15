@@ -18,8 +18,15 @@ public enum Text {
 
     COMMAND_REQUIRES_OP("ravelcraft.command.requires-op"),
     COMMAND_HELP("ravelcraft.command.help"),
+    COMMAND_MUST_BE_PLAYER("ravelcraft.command.must-be-player"),
+
     COMMAND_INFO("ravelcraft.command.info"),
-    COMMAND_BROADCAST("ravelcraft.command.broadcast");
+
+    COMMAND_BROADCAST("ravelcraft.command.broadcast"),
+
+    COMMAND_LANGUAGE_LIST("ravelcraft.command.language.list"),
+    COMMAND_LANGUAGE_SET("ravelcraft.command.language.set"),
+    COMMAND_LANGUAGE_INVALID("ravelcraft.command.language.invalid");
 
     private static final Map<Language, Properties> languages = new HashMap<>();
 

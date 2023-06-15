@@ -7,6 +7,7 @@ import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
 import com.connexal.ravelcraft.shared.messaging.MessagingConstants;
 import com.connexal.ravelcraft.shared.players.PlayerManager;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.players.RavelRank;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -38,6 +39,20 @@ public class PlayerManagerImpl extends PlayerManager {
         }
 
         return response[0].equals(MessagingConstants.COMMAND_SUCCESS);
+    }
+
+    @Override
+    protected void playerRankChanged(RavelPlayer player, RavelRank rank) {
+        player.updateDisplayName();
+
+        ServerPlayerEntity serverPlayer = RavelModServer.getServer().getPlayerManager().getPlayer(player.getUniqueID());
+        if (serverPlayer == null) {
+            throw new AssertionError("Player " + player.getUniqueID() + " is not online");
+        }
+
+        if (rank.isOperator()) {
+            RavelModServer.getServer().getPlayerManager().addToOperators(serverPlayer.getGameProfile());
+        }
     }
 
     private String[] playerSkinUpdated(RavelServer source, String[] args) {
