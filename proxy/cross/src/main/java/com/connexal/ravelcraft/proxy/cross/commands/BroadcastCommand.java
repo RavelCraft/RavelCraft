@@ -1,8 +1,10 @@
 package com.connexal.ravelcraft.proxy.cross.commands;
 
+import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.commands.RavelCommand;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
 import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.util.text.Text;
 import com.google.auto.service.AutoService;
 
@@ -32,7 +34,13 @@ public class BroadcastCommand extends RavelCommand {
 
     @Override
     protected boolean run(RavelCommandSender sender, String[] args) {
-        sender.sendMessage(Text.COMMAND_BROADCAST, String.join(" ", args));
+        if (args.length == 0) {
+            return false;
+        }
+
+        for (RavelPlayer player : RavelInstance.getPlayerManager().getConnectedPlayers()) {
+            player.sendMessage(Text.COMMAND_BROADCAST, String.join(" ", args));
+        }
         return true;
     }
 }

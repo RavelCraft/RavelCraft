@@ -15,12 +15,8 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.BiFunction;
 
 public abstract class Messager {
-    private static final String DATA_SEPARATOR = "_##°##_";
-    private static final String ARGUMENT_SEPARATOR = "°##_##°";
-
     private final Map<String, CompletableFuture<String[]>> responseFutures = new HashMap<>();
     private final Map<MessagingCommand, BiFunction<RavelServer, String[], String[]>> commandHandlers = new HashMap<>();
-    private final Lock writeLock = new Lock();
 
     public boolean attemptConnect() {
         return this.attemptConnect(0);
@@ -29,6 +25,8 @@ public abstract class Messager {
     protected abstract boolean attemptConnect(int attempts);
 
     public abstract DataOutputStream getServerOutputStream(RavelServer server);
+
+    public abstract Lock getWriteLock(RavelServer server);
 
     private void processRead(RavelServer destination, RavelServer source, MessageType type, String responseId, MessagingCommand command, String[] arguments) {
         if (this.isServer()) {
@@ -62,11 +60,32 @@ public abstract class Messager {
     }
 
     protected void readStream(DataInputStream input) throws IOException {
-        String data = input.readUTF();
-        String[] dataParts = data.split(DATA_SEPARATOR);
+        int dataParts = input.readInt();
+        String[] strings;
+        String[] arguments;
 
-        String[] strings = dataParts[0].split(ARGUMENT_SEPARATOR);
-        String[] arguments = dataParts[1].split(ARGUMENT_SEPARATOR);
+        if (dataParts < 1) { //Ignore, can be used as a ping
+            return;
+        }
+
+        strings = new String[input.readInt()];
+        for (int i = 0; i < strings.length; i++) {
+            strings[i] = input.readUTF();
+        }
+
+        if (dataParts > 1) {
+            if (dataParts != 2) {
+                RavelInstance.getLogger().warning("Received message with too many data parts");
+                return;
+            }
+
+            arguments = new String[input.readInt()];
+            for (int i = 0; i < arguments.length; i++) {
+                arguments[i] = input.readUTF();
+            }
+        } else {
+            arguments = new String[0];
+        }
 
         if (strings.length < MessageFormat.length() - 1) {
             RavelInstance.getLogger().warning("Received message with too few arguments: " + Arrays.toString(strings));
@@ -166,12 +185,31 @@ public abstract class Messager {
                 data[MessageFormat.RESPONSE_ID.index()] = responseId;
             }
 
-            String finalString = String.join(ARGUMENT_SEPARATOR, data) + DATA_SEPARATOR + String.join(ARGUMENT_SEPARATOR, arguments);
+            Lock writeLock = this.getWriteLock(destination);
+            writeLock.lock();
 
-            this.writeLock.lock();
-            output.writeUTF(finalString);
+            boolean sendArgs = true;
+            if (arguments == null || arguments.length == 0) {
+                sendArgs = false;
+                output.writeInt(1);
+            } else {
+                output.writeInt(2);
+            }
+
+            output.writeInt(data.length);
+            for (String string : data) {
+                output.writeUTF(string);
+            }
+
+            if (sendArgs) {
+                output.writeInt(arguments.length);
+                for (String string : arguments) {
+                    output.writeUTF(string);
+                }
+            }
+
             output.flush();
-            this.writeLock.unlock();
+            writeLock.unlock();
         } catch (IOException e) {
             RavelInstance.getLogger().error("Failed to send message to server", e);
             return false;

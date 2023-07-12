@@ -112,7 +112,7 @@ public abstract class PlayerManager {
         }
         this.playerInfo.get(uuid).updateLanguage(language);
 
-        if (this.messager.isServer()) {
+        if (MessagingConstants.isServer()) {
             this.config.set(uuid + ".language", language.name());
             this.config.save();
         }
@@ -185,7 +185,7 @@ public abstract class PlayerManager {
         }
         this.playerInfo.get(uuid).updateRank(rank);
 
-        if (this.messager.isServer()) {
+        if (MessagingConstants.isServer()) {
             this.config.set(uuid + ".rank", rank.name());
             this.config.save();
         }
@@ -252,7 +252,7 @@ public abstract class PlayerManager {
             return info;
         }
 
-        if (this.messager.isServer()) {
+        if (MessagingConstants.isServer()) {
             String rankString = this.config.getString(uuid + ".rank");
             RavelRank rank;
             if (rankString == null) {

@@ -2,6 +2,7 @@ package com.connexal.ravelcraft.shared.messaging;
 
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.players.PlayerManager;
+import com.connexal.ravelcraft.shared.util.Lock;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 
 import java.io.*;
@@ -14,6 +15,7 @@ public class MessagingClient extends Messager {
     private Socket socket;
     private DataOutputStream output;
     private DataInputStream input;
+    private final Lock writeLock = new Lock();
 
     public MessagingClient(String hostname) {
         this.serverHostname = hostname;
@@ -35,6 +37,7 @@ public class MessagingClient extends Messager {
 
         try {
             this.socket = new Socket(this.serverHostname, MessagingConstants.PORT);
+            this.socket.setKeepAlive(true);
         } catch (IOException e) {
             this.connected = false;
             RavelInstance.getLogger().error("Unable to connect to plugin messaging server at " + this.serverHostname, e);
@@ -95,6 +98,11 @@ public class MessagingClient extends Messager {
         }
 
         return this.output;
+    }
+
+    @Override
+    public Lock getWriteLock(RavelServer server) {
+        return this.writeLock;
     }
 
     @Override

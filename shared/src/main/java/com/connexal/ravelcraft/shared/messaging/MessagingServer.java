@@ -1,6 +1,7 @@
 package com.connexal.ravelcraft.shared.messaging;
 
 import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.util.Lock;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 
 import java.io.*;
@@ -125,6 +126,15 @@ public class MessagingServer extends Messager {
     }
 
     @Override
+    public Lock getWriteLock(RavelServer server) {
+        if (!this.listening || !this.clients.containsKey(server)) {
+            return null;
+        }
+
+        return this.clients.get(server).getWriteLock();
+    }
+
+    @Override
     public void close() {
         this.listening = false;
 
@@ -149,6 +159,7 @@ public class MessagingServer extends Messager {
         private final Socket socket;
         private final DataOutputStream outputStream;
         private final DataInputStream inputStream;
+        private final Lock writeLock = new Lock();
 
         public ClientData(Socket socket) throws IOException {
             this.socket = socket;
@@ -163,6 +174,10 @@ public class MessagingServer extends Messager {
 
         public DataInputStream getInputStream() {
             return this.inputStream;
+        }
+
+        public Lock getWriteLock() {
+            return this.writeLock;
         }
 
         public void close() {
