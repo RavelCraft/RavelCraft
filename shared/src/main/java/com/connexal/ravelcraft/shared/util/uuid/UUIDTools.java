@@ -133,4 +133,13 @@ public class UUIDTools {
             return name;
         }
     }
+
+    public void registerPlayerData(UUID uuid, String name) {
+        this.uuidCache.put(name, uuid);
+
+        if (this.config != null) {
+            this.config.set(uuid.toString(), name);
+            this.config.save();
+        }
+    }
 }

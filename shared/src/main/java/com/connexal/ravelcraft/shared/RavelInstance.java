@@ -15,6 +15,7 @@ import com.connexal.ravelcraft.shared.util.text.Text;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class RavelInstance {
     private static RavelMain main = null;

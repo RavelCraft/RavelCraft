@@ -136,7 +136,7 @@ public abstract class Messager {
             responseId = strings[MessageFormat.RESPONSE_ID.index()];
         }
 
-        RavelInstance.getLogger().info("Received message " + command + " with response ID " + responseId + " and args " + Arrays.toString(arguments) + " from " + source);
+        //RavelInstance.getLogger().info("Received message " + command + " with response ID " + responseId + " and args " + Arrays.toString(arguments) + " from " + source);
 
         this.processRead(destination, source, type, responseId, command, arguments);
     }
@@ -215,7 +215,7 @@ public abstract class Messager {
             return false;
         }
 
-        RavelInstance.getLogger().info("Sent message " + command + " with response ID " + responseId + " and args " + Arrays.toString(arguments) + " to " + destination);
+        //RavelInstance.getLogger().info("Sent message " + command + " with response ID " + responseId + " and args " + Arrays.toString(arguments) + " to " + destination);
 
         return true;
     }
