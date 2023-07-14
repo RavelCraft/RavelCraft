@@ -3,7 +3,7 @@ package com.connexal.ravelcraft.proxy.bedrock;
 import com.connexal.ravelcraft.proxy.bedrock.players.BedrockRavelPlayerImpl;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.util.UUIDTools;
+import com.connexal.ravelcraft.shared.util.uuid.UUIDTools;
 import com.nimbusds.jwt.SignedJWT;
 import dev.waterdog.waterdogpe.ProxyServer;
 import dev.waterdog.waterdogpe.event.defaults.PlayerAuthenticatedEvent;

@@ -1,7 +1,7 @@
 package com.connexal.ravelcraft.proxy.bedrock.players;
 
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.util.UUIDTools;
+import com.connexal.ravelcraft.shared.util.uuid.UUIDTools;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.Text;
 import dev.waterdog.waterdogpe.player.ProxiedPlayer;

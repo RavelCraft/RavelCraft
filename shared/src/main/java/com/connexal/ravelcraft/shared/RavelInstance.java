@@ -8,7 +8,7 @@ import com.connexal.ravelcraft.shared.messaging.MessagingServer;
 import com.connexal.ravelcraft.shared.players.PlayerManager;
 import com.connexal.ravelcraft.shared.util.RavelConfig;
 import com.connexal.ravelcraft.shared.util.RavelLogger;
-import com.connexal.ravelcraft.shared.util.UUIDTools;
+import com.connexal.ravelcraft.shared.util.uuid.UUIDTools;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.Text;
 

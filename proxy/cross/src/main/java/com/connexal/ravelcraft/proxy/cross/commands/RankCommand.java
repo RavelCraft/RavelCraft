@@ -27,8 +27,6 @@ public class RankCommand extends RavelCommand {
         return new CommandOption[] {
                 CommandOption.word("get", CommandOption.literal("player")),
                 CommandOption.word("set", CommandOption.literal("player", CommandOption.literal("rank"))),
-                CommandOption.word("add", CommandOption.literal("rank", CommandOption.literal("colour"))),
-                CommandOption.word("remove", CommandOption.literal("rank")),
                 CommandOption.word("list"),
                 CommandOption.word("reload")
         };

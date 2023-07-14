@@ -29,7 +29,7 @@ import com.connexal.ravelcraft.mod.server.mixin.velocity.ClientConnection_Addres
 import com.connexal.ravelcraft.mod.server.mixin.velocity.ServerLoginNetworkHandlerAccessor;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.util.UUIDTools;
+import com.connexal.ravelcraft.shared.util.uuid.UUIDTools;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
