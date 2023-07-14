@@ -7,7 +7,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.UUID;
 
-public class UUIDTypeAdapter extends TypeAdapter<UUID> {
+class UUIDTypeAdapter extends TypeAdapter<UUID> {
     public void write(final JsonWriter out, final UUID value) throws IOException {
         out.value(fromUUID(value));
     }

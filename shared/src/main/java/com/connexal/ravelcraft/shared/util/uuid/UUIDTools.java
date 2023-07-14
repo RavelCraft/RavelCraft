@@ -1,25 +1,55 @@
 package com.connexal.ravelcraft.shared.util.uuid;
 
 import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.connexal.ravelcraft.shared.messaging.Messager;
+import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
+import com.connexal.ravelcraft.shared.messaging.MessagingConstants;
+import com.connexal.ravelcraft.shared.util.RavelConfig;
+import com.connexal.ravelcraft.shared.util.server.RavelServer;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class UUIDTools {
-    private static final String API_KEY = "4765c134-ab62-4b7f-b7bc-04128f37bb97"; //Maybe not terribly intelligent
+    private final RavelConfig config;
+    private final Messager messager;
 
-    private static final String JAVA_UUID_URL = "https://mcprofile.io/api/v1/java/username/%s";
-    private static final String JAVA_NAME_URL = "https://mcprofile.io/api/v1/java/uuid/%s";
-    private static final String BEDROCK_UUID_URL = "https://mcprofile.io/api/v1/bedrock/gamertag/%s";
-    private static final String BEDROCK_NAME_URL = "https://mcprofile.io/api/v1/bedrock/fuid/%s";
+    private final Map<String, UUID> uuidCache = new HashMap<>();
 
-    private static final Gson gson = new GsonBuilder().registerTypeAdapter(UUID.class, new UUIDTypeAdapter()).create();
+    public UUIDTools() {
+        this.messager = RavelInstance.getMessager();
+
+        if (MessagingConstants.isServer()) {
+            this.config = RavelInstance.getConfig("uuids");
+            this.config.save();
+
+            this.messager.registerCommandHandler(MessagingCommand.PLAYER_GET_UUID_FROM_NAME, this::commandUUIDFromName);
+            this.messager.registerCommandHandler(MessagingCommand.PLAYER_GET_NAME_FROM_UUID, this::commandNameFromUUID);
+        } else {
+            this.config = null;
+        }
+    }
+
+    private String[] commandUUIDFromName(RavelServer source, String[] args) {
+        if (args.length != 1) {
+            throw new IllegalArgumentException("Invalid number of arguments");
+        }
+
+        UUID uuid = this.getUUID(args[0]);
+        return new String[] { uuid.toString() };
+    }
+
+    private String[] commandNameFromUUID(RavelServer source, String[] args) {
+        if (args.length != 1) {
+            throw new IllegalArgumentException("Invalid number of arguments");
+        }
+
+        UUID uuid = UUID.fromString(args[0]);
+        String name = this.getName(uuid);
+        return new String[] { name };
+    }
 
     public static UUID getJavaUUIDFromXUID(String xuid) {
         try {
@@ -30,92 +60,77 @@ public class UUIDTools {
         }
     }
 
+    private UUID addUUIDToCache(String name, String uuid) {
+        UUID uuidObj = UUID.fromString(uuid);
+        this.uuidCache.put(name, uuidObj);
+        return uuidObj;
+    }
+
     public UUID getUUID(String name) {
-        try {
-            boolean isBedrock = name.startsWith(RavelPlayer.BEDROCK_PREFIX);
-            URL url;
+        if (this.uuidCache.containsKey(name)) {
+            return this.uuidCache.get(name);
+        }
 
-            if (isBedrock) { //Bedrock name
-                url = new URL(String.format(BEDROCK_UUID_URL, name.substring(1)));
-            } else { //Java name
-                url = new URL(String.format(JAVA_UUID_URL, name));
-            }
-
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestProperty("User-Agent", "ImDaBigBoss/1.0 (RavelCraft)");
-            connection.setRequestProperty("x-api-key", API_KEY);
-            connection.setReadTimeout(5000);
-            if (connection.getResponseCode() != 200) {
+        if (this.config == null) { //Ask the main server
+            CompletableFuture<String[]> future = this.messager.sendCommandWithResponse(MessagingConstants.MESSAGING_SERVER, MessagingCommand.PLAYER_GET_UUID_FROM_NAME, name);
+            String[] uuidString = future.join();
+            if (uuidString == null) {
                 return null;
             }
 
-            if (isBedrock) {
-                BedrockResponse response = gson.fromJson(new BufferedReader(new InputStreamReader(connection.getInputStream())), BedrockResponse.class);
-                return UUID.fromString(response.floodgateuid);
-            } else {
-                JavaResponse response = gson.fromJson(new BufferedReader(new InputStreamReader(connection.getInputStream())), JavaResponse.class);
-                return UUID.fromString(response.uuid);
+            return this.addUUIDToCache(name, uuidString[0]);
+        } else {
+            for (String uuidString : this.config.getKeys()) {
+                if (this.config.getString(uuidString).equals(name)) {
+                    return this.addUUIDToCache(name, uuidString);
+                }
             }
-        } catch (Exception e) {
-            RavelInstance.getLogger().error("Unable to get UUID for " + name, e);
-            return null;
+
+            UUID uuid = UUIDApi.getUUID(name);
+            if (uuid == null) {
+                return null;
+            }
+
+            this.config.set(uuid.toString(), name);
+            this.config.save();
+            this.uuidCache.put(name, uuid);
+            return uuid;
         }
+    }
+
+    private String addNameToCache(UUID uuid, String name) {
+        this.uuidCache.put(name, uuid);
+        return name;
     }
 
     public String getName(UUID uuid) {
-        try {
-            boolean isBedrock = uuid.getMostSignificantBits() == 0;
-            URL url;
-
-            if (isBedrock) { //Bedrock UUID
-                url = new URL(String.format(BEDROCK_NAME_URL, uuid));
-            } else { //Java UUID
-                url = new URL(String.format(JAVA_NAME_URL, uuid));
+        for (Map.Entry<String, UUID> entry : this.uuidCache.entrySet()) {
+            if (entry.getValue().equals(uuid)) {
+                return entry.getKey();
             }
+        }
 
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestProperty("User-Agent", "ImDaBigBoss/1.0 (RavelCraft)");
-            connection.setRequestProperty("x-api-key", API_KEY);
-            connection.setReadTimeout(5000);
-            if (connection.getResponseCode() != 200) {
+        if (this.config == null) { //Ask the main server
+            CompletableFuture<String[]> future = this.messager.sendCommandWithResponse(MessagingConstants.MESSAGING_SERVER, MessagingCommand.PLAYER_GET_NAME_FROM_UUID, uuid.toString());
+            String[] name = future.join();
+            if (name == null) {
                 return null;
             }
 
-            if (isBedrock) {
-                BedrockResponse response = gson.fromJson(new BufferedReader(new InputStreamReader(connection.getInputStream())), BedrockResponse.class);
-                return RavelPlayer.BEDROCK_PREFIX + response.gamertag;
-            } else {
-                JavaResponse response = gson.fromJson(new BufferedReader(new InputStreamReader(connection.getInputStream())), JavaResponse.class);
-                return response.username;
+            return this.addNameToCache(uuid, name[0]);
+        } else {
+            if (this.config.contains(uuid.toString())) {
+                return this.config.getString(uuid.toString());
             }
-        } catch (Exception e) {
-            RavelInstance.getLogger().error("Unable to get name for " + uuid.toString(), e);
-            return null;
+
+            String name = UUIDApi.getName(uuid);
+            if (name == null) {
+                return null;
+            }
+
+            this.config.set(uuid.toString(), name);
+            this.config.save();
+            return name;
         }
-    }
-
-    public static class BedrockResponse {
-        public String gamertag;
-        public String xuid;
-        public String floodgateuid;
-        public String icon;
-        public String gamescore;
-        public String accounttier;
-        public String textureid;
-        public String skin;
-        public boolean linked;
-        public String java_uuid;
-        public String java_name;
-    }
-
-    public static class JavaResponse {
-        public String username;
-        public String uuid;
-        public String skin;
-        public String cape;
-        public boolean linked;
-        public String bedrock_gamertag;
-        public String bedrock_xuid;
-        public String bedrock_fuid;
     }
 }
