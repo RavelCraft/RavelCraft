@@ -19,6 +19,7 @@ public enum Text {
     COMMAND_REQUIRES_OP("ravelcraft.command.requires-op"),
     COMMAND_HELP("ravelcraft.command.help"),
     COMMAND_MUST_BE_PLAYER("ravelcraft.command.must-be-player"),
+    COMMAND_PLAYER_NOT_FOUND("ravelcraft.command.player-not-found"),
 
     COMMAND_INFO("ravelcraft.command.info"),
 

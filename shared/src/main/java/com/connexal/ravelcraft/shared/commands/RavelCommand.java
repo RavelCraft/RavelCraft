@@ -39,17 +39,20 @@ public abstract class RavelCommand {
         sender.sendMessage(Text.COMMAND_HELP, builder.toString());
     }
 
+    private String buildName(CommandOption option) {
+        return switch (option.getType()) {
+            case LITERAL -> option.getName();
+            case WORD -> "<" + option.getName() + ">";
+        };
+    }
+
     private void buildUsageNode(StringBuilder builder, String current, CommandOption option) {
         if (option instanceof CommandSubOption subOption) {
             for (CommandOption sub : subOption.getOptions()) {
-                this.buildUsageNode(builder, current + " " + subOption.getName(), sub);
+                this.buildUsageNode(builder, current + " " + this.buildName(subOption), sub);
             }
         } else {
-            builder.append(current).append(" ");
-            switch (option.getType()) {
-                case LITERAL -> builder.append(option.getName());
-                case WORD -> builder.append("<").append(option.getName()).append(">");
-            }
+            builder.append(current).append(" ").append(this.buildName(option));
         }
     }
 }

@@ -38,8 +38,11 @@ public class BroadcastCommand extends RavelCommand {
             return false;
         }
 
-        for (RavelPlayer player : RavelInstance.getPlayerManager().getConnectedPlayers()) {
-            player.sendMessage(Text.COMMAND_BROADCAST, String.join(" ", args));
+        String message = String.join(" ", args);
+        RavelInstance.getPlayerManager().broadcast(Text.COMMAND_BROADCAST, message);
+
+        if (!sender.isPlayer()) {
+            sender.sendMessage(Text.COMMAND_BROADCAST, message);
         }
         return true;
     }

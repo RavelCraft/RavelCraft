@@ -7,6 +7,7 @@ import com.connexal.ravelcraft.shared.util.server.RavelServer;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 public class MessagingClient extends Messager {
     private final String serverHostname;
@@ -38,6 +39,7 @@ public class MessagingClient extends Messager {
         try {
             this.socket = new Socket(this.serverHostname, MessagingConstants.PORT);
             this.socket.setKeepAlive(true);
+            this.socket.setTcpNoDelay(true);
         } catch (IOException e) {
             this.connected = false;
             RavelInstance.getLogger().error("Unable to connect to plugin messaging server at " + this.serverHostname, e);

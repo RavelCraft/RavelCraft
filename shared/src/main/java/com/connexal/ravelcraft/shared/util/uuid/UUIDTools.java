@@ -72,9 +72,8 @@ public class UUIDTools {
         }
 
         if (this.config == null) { //Ask the main server
-            CompletableFuture<String[]> future = this.messager.sendCommandWithResponse(MessagingConstants.MESSAGING_SERVER, MessagingCommand.PLAYER_GET_UUID_FROM_NAME, name);
-            String[] uuidString = future.join();
-            if (uuidString == null) {
+            String[] uuidString = this.messager.sendCommandWithResponse(MessagingConstants.MESSAGING_SERVER, MessagingCommand.PLAYER_GET_UUID_FROM_NAME, name);
+            if (uuidString == null || uuidString.length != 1) {
                 return null;
             }
 
@@ -111,9 +110,8 @@ public class UUIDTools {
         }
 
         if (this.config == null) { //Ask the main server
-            CompletableFuture<String[]> future = this.messager.sendCommandWithResponse(MessagingConstants.MESSAGING_SERVER, MessagingCommand.PLAYER_GET_NAME_FROM_UUID, uuid.toString());
-            String[] name = future.join();
-            if (name == null) {
+            String[] name = this.messager.sendCommandWithResponse(MessagingConstants.MESSAGING_SERVER, MessagingCommand.PLAYER_GET_NAME_FROM_UUID, uuid.toString());
+            if (name == null || name.length != 1) {
                 return null;
             }
 

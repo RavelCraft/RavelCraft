@@ -17,14 +17,14 @@ public class ServerManagerImpl extends ServerManager {
 
     @Override
     protected void additionalInit() {
-        BeProxy.getServer().setJoinHandler(proxiedPlayer -> this.getServerInfo(RavelServer.getLobby()));
+        BeProxy.getServer().setJoinHandler(proxiedPlayer -> this.getServerInfo(RavelServer.DEFAULT_SERVER));
 
         BeProxy.getServer().setReconnectHandler((proxiedPlayer, serverInfo, kickMessage) -> {
-            if (serverInfo.getServerName().equals(RavelServer.getLobby().getIdentifier())) { //Kicked from the lobby
+            if (serverInfo.getServerName().equals(RavelServer.DEFAULT_SERVER.getIdentifier())) { //Kicked from the lobby
                 return null;
             }
 
-            return this.getServerInfo(RavelServer.getLobby());
+            return this.getServerInfo(RavelServer.DEFAULT_SERVER);
         });
     }
 

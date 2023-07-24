@@ -6,6 +6,7 @@ import com.connexal.ravelcraft.shared.messaging.MessagingClient;
 import com.connexal.ravelcraft.shared.messaging.MessagingConstants;
 import com.connexal.ravelcraft.shared.messaging.MessagingServer;
 import com.connexal.ravelcraft.shared.players.PlayerManager;
+import com.connexal.ravelcraft.shared.players.RavelRank;
 import com.connexal.ravelcraft.shared.util.RavelConfig;
 import com.connexal.ravelcraft.shared.util.RavelLogger;
 import com.connexal.ravelcraft.shared.util.uuid.UUIDTools;

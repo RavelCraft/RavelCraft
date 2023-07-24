@@ -1,12 +1,25 @@
 package com.connexal.ravelcraft.proxy.cross.commands;
 
+import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.commands.RavelCommand;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
 import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.players.PlayerManager;
+import com.connexal.ravelcraft.shared.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.players.RavelRank;
+import com.connexal.ravelcraft.shared.util.text.Text;
 import com.google.auto.service.AutoService;
+
+import java.util.UUID;
 
 @AutoService(RavelCommand.class)
 public class RankCommand extends RavelCommand {
+    private final PlayerManager playerManager;
+
+    public RankCommand() {
+        this.playerManager = RavelInstance.getPlayerManager();
+    }
+
     @Override
     public boolean requiresOp() {
         return true;
@@ -25,10 +38,10 @@ public class RankCommand extends RavelCommand {
     @Override
     public CommandOption[] getOptions() {
         return new CommandOption[] {
-                CommandOption.word("get", CommandOption.literal("player")),
-                CommandOption.word("set", CommandOption.literal("player", CommandOption.literal("rank"))),
-                CommandOption.word("list"),
-                CommandOption.word("reload")
+                CommandOption.literal("get", CommandOption.word("player")),
+                CommandOption.literal("set", CommandOption.word("player", CommandOption.word("rank"))),
+                CommandOption.literal("list"),
+                CommandOption.literal("reload")
         };
     }
 
@@ -43,21 +56,15 @@ public class RankCommand extends RavelCommand {
                 return false;
             }
 
-            
+            UUID uuid = RavelInstance.getUUIDTools().getUUID(args[1]);
+            if (uuid == null) {
+                sender.sendMessage(Text.COMMAND_PLAYER_NOT_FOUND);
+                return true;
+            }
+
+            //TODO
         } else if (args[0].equalsIgnoreCase("set")) {
             if (args.length != 3) {
-                return false;
-            }
-
-
-        } else if (args[0].equalsIgnoreCase("add")) {
-            if (args.length != 3) {
-                return false;
-            }
-
-
-        } else if (args[0].equalsIgnoreCase("remove")) {
-            if (args.length != 2) {
                 return false;
             }
 

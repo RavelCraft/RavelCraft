@@ -8,10 +8,13 @@ import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.Text;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.TimeoutException;
 
 public abstract class ProxyPlayerManagerImpl extends PlayerManager {
     @Override
@@ -42,8 +45,13 @@ public abstract class ProxyPlayerManagerImpl extends PlayerManager {
         }
 
         RavelInstance.getLogger().info("Querying connected server for player information");
-        CompletableFuture<String[]> connectedFuture = this.messager.sendCommandWithResponse(otherServer, MessagingCommand.PROXY_QUERY_CONNECTED, this.generateConnectedPlayerList());
-        this.registerConnected(connectedFuture.join());
+
+        String[] connected = this.messager.sendCommandWithResponse(otherServer, MessagingCommand.PROXY_QUERY_CONNECTED, this.generateConnectedPlayerList());
+        if (connected == null) {
+            RavelInstance.getLogger().error("Unable to query connected server for player information!");
+            return;
+        }
+        this.registerConnected(connected);
     }
 
     private String[] proxyTransferPlayer(RavelServer source, String[] args) {
@@ -67,11 +75,13 @@ public abstract class ProxyPlayerManagerImpl extends PlayerManager {
             return new String[] {MessagingConstants.COMMAND_FAILURE};
         }
 
-        boolean success = this.setServerInternal(player, target);
+        boolean success = this.transferPlayerToServer(player, target);
         if (!success) {
             RavelInstance.getLogger().error("Unable to transfer player to server! (Requested by " + source + ")");
             return new String[] {MessagingConstants.COMMAND_FAILURE};
         }
+
+        player.setServer(target);
 
         return new String[] {MessagingConstants.COMMAND_SUCCESS};
     }

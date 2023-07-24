@@ -10,9 +10,9 @@ public enum MessagingCommand {
     PROXY_TRANSFER_PLAYER, //When wanting to transfer a player to another backend server
 
     PLAYER_GET_INFO, //When a server wants to get info about a player
+    PLAYER_GET_UUID_FROM_NAME, //When a server wants to get a player's UUID from their name
+    PLAYER_GET_NAME_FROM_UUID, //When a server wants to get a player's name from their UUID
     PLAYER_SKIN_UPDATE, //Tell a server that a player's skin has been updated
     PLAYER_RANK_UPDATE, //Tell a server that a player's rank has been updated
     PLAYER_LANGUAGE_UPDATE, //Tell a server that a player's nickname has been updated
-    PLAYER_GET_UUID_FROM_NAME, //When a server wants to get a player's UUID from their name
-    PLAYER_GET_NAME_FROM_UUID, //When a server wants to get a player's name from their UUID
 }

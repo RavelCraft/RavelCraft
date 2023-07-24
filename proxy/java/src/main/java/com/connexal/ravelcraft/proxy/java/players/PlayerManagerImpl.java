@@ -2,6 +2,7 @@ package com.connexal.ravelcraft.proxy.java.players;
 
 import com.connexal.ravelcraft.proxy.cross.players.ProxyPlayerManagerImpl;
 import com.connexal.ravelcraft.proxy.java.JeProxy;
+import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.players.RavelRank;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
@@ -25,7 +26,7 @@ public class PlayerManagerImpl extends ProxyPlayerManagerImpl {
     }
 
     @Override
-    protected boolean setServerInternal(RavelPlayer player, RavelServer server) {
+    protected boolean transferPlayerInternal(RavelPlayer player, RavelServer server) {
         Optional<Player> optionalPlayer = JeProxy.getServer().getPlayer(player.getUniqueID());
         if (optionalPlayer.isEmpty()) {
             return false;
@@ -38,12 +39,21 @@ public class PlayerManagerImpl extends ProxyPlayerManagerImpl {
 
         Player velocityPlayer = optionalPlayer.get();
         CompletableFuture<ConnectionRequestBuilder.Result> future = velocityPlayer.createConnectionRequest(registeredServer).connect();
+        boolean success = future.join().isSuccessful();
 
-        return future.join().isSuccessful();
+        if (success) {
+            player.setServer(server);
+        }
+        return success;
     }
 
     @Override
     protected void playerRankChanged(RavelPlayer player, RavelRank rank) {
         //Nothing. I think?
+    }
+
+    @Override
+    public void kick(RavelPlayer player, String reason, boolean network) {
+        //TODO: Implement
     }
 }

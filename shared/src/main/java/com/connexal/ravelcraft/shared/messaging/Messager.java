@@ -3,18 +3,23 @@ package com.connexal.ravelcraft.shared.messaging;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.util.Lock;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
+import com.google.gson.Gson;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeoutException;
 import java.util.function.BiFunction;
 
 public abstract class Messager {
+    private static final Gson gson = new Gson();
+
     private final Map<String, CompletableFuture<String[]>> responseFutures = new HashMap<>();
     private final Map<MessagingCommand, BiFunction<RavelServer, String[], String[]>> commandHandlers = new HashMap<>();
 
@@ -60,85 +65,33 @@ public abstract class Messager {
     }
 
     protected void readStream(DataInputStream input) throws IOException {
-        int dataParts = input.readInt();
-        String[] strings;
-        String[] arguments;
-
-        if (dataParts < 1) { //Ignore, can be used as a ping
+        String data;
+        try {
+            data = input.readUTF();
+        } catch (SocketTimeoutException e) {
             return;
         }
 
-        strings = new String[input.readInt()];
-        for (int i = 0; i < strings.length; i++) {
-            strings[i] = input.readUTF();
-        }
-
-        if (dataParts > 1) {
-            if (dataParts != 2) {
-                RavelInstance.getLogger().warning("Received message with too many data parts");
-                return;
-            }
-
-            arguments = new String[input.readInt()];
-            for (int i = 0; i < arguments.length; i++) {
-                arguments[i] = input.readUTF();
-            }
-        } else {
-            arguments = new String[0];
-        }
-
-        if (strings.length < MessageFormat.length() - 1) {
-            RavelInstance.getLogger().warning("Received message with too few arguments: " + Arrays.toString(strings));
+        MessageData format;
+        try {
+            format = MessageData.fromJSON(data);
+        } catch (Exception e) {
+            RavelInstance.getLogger().error("Failed to parse message from server", e);
             return;
         }
 
-        RavelServer destination = null;
+        final RavelServer destination;
         if (this.isServer()) {
-            String destinationString = strings[MessageFormat.DESTINATION.index()];
-
-            try {
-                destination = RavelServer.valueOf(destinationString);
-            } catch (IllegalArgumentException e) {
-                RavelInstance.getLogger().warning("Unknown destination server " + destinationString);
-                return;
-            }
+            destination = format.getDestination();
+        } else {
+            destination = null;
         }
 
-        RavelServer source;
-        String sourceString = strings[MessageFormat.SOURCE.index()];
-        try {
-            source = RavelServer.valueOf(sourceString);
-        } catch (IllegalArgumentException e) {
-            RavelInstance.getLogger().warning("Unknown source server " + sourceString);
-            return;
-        }
+        RavelInstance.getLogger().info("Received message " + format.getCommand() + " with response ID " + format.getResponseId() + " and args " + Arrays.toString(format.getArguments()) + " from " + format.getSource() + " redirect? " + destination);
 
-        MessageType type;
-        String typeString = strings[MessageFormat.TYPE.index()];
-        try {
-            type = MessageType.valueOf(typeString);
-        } catch (IllegalArgumentException e) {
-            RavelInstance.getLogger().warning("Unknown message type received from " + sourceString + ": " + typeString);
-            type = null;
-        }
-
-        MessagingCommand command;
-        String commandString = strings[MessageFormat.COMMAND.index()];
-        try {
-            command = MessagingCommand.valueOf(commandString);
-        } catch (IllegalArgumentException e) {
-            RavelInstance.getLogger().warning("Unknown command received from " + source + ": " + commandString);
-            return;
-        }
-
-        String responseId = null;
-        if (strings.length == MessageFormat.length()) {
-            responseId = strings[MessageFormat.RESPONSE_ID.index()];
-        }
-
-        //RavelInstance.getLogger().info("Received message " + command + " with response ID " + responseId + " and args " + Arrays.toString(arguments) + " from " + source);
-
-        this.processRead(destination, source, type, responseId, command, arguments);
+        new Thread(() -> {
+            this.processRead(destination, format.getSource(), format.getType(), format.getResponseId(), format.getCommand(), format.getArguments());
+        }).start();
     }
 
     private boolean writeStream(RavelServer destination, RavelServer source, MessageType type, String responseId, MessagingCommand command, String[] arguments) {
@@ -153,69 +106,41 @@ public abstract class Messager {
             return false;
         }
 
-        if (type == MessageType.RESPONSE || type == MessageType.BIDIRECTIONAL) {
-            if (responseId == null) {
-                RavelInstance.getLogger().error("There must be a response ID attached if you are sending a bidirectional or response message!");
-                return false;
-            } else if (type == MessageType.BIDIRECTIONAL) {
-                if (!this.responseFutures.containsKey(responseId)) {
-                    RavelInstance.getLogger().error("Tried to send bidirectional message with unregistered response ID!");
+        //Only check the messages that come from us, the other server will have done its own checks
+        if (source == RavelInstance.getServer()) {
+            if (type == MessageType.RESPONSE || type == MessageType.BIDIRECTIONAL) {
+                if (responseId == null) {
+                    RavelInstance.getLogger().error("There must be a response ID attached if you are sending a bidirectional or response message!");
+                    return false;
+                } else if (type == MessageType.BIDIRECTIONAL && !this.responseFutures.containsKey(responseId)) {
+                    RavelInstance.getLogger().error("Tried to send bidirectional message with no registered completion future!");
+                    return false;
+                }
+            } else {
+                if (responseId != null) {
+                    RavelInstance.getLogger().error("There must not be a response ID if you are sending a single direction message!");
                     return false;
                 }
             }
-        } else {
-            if (responseId != null) {
-                RavelInstance.getLogger().error("There must not be a response ID if you are sending a single direction message!");
-                return false;
-            }
         }
 
+        MessageData format = new MessageData(source, destination, type, command, responseId, arguments);
+
+        Lock writeLock = this.getWriteLock(destination);
+        writeLock.lock();
+
         try {
-            int dataCount = MessageFormat.length();
-            if (responseId == null) {
-                dataCount--;
-            }
-            String[] data = new String[dataCount];
-
-            data[MessageFormat.SOURCE.index()] = source.name();
-            data[MessageFormat.DESTINATION.index()] = destination.name();
-            data[MessageFormat.TYPE.index()] = type.name();
-            data[MessageFormat.COMMAND.index()] = command.name();
-            if (responseId != null) {
-                data[MessageFormat.RESPONSE_ID.index()] = responseId;
-            }
-
-            Lock writeLock = this.getWriteLock(destination);
-            writeLock.lock();
-
-            boolean sendArgs = true;
-            if (arguments == null || arguments.length == 0) {
-                sendArgs = false;
-                output.writeInt(1);
-            } else {
-                output.writeInt(2);
-            }
-
-            output.writeInt(data.length);
-            for (String string : data) {
-                output.writeUTF(string);
-            }
-
-            if (sendArgs) {
-                output.writeInt(arguments.length);
-                for (String string : arguments) {
-                    output.writeUTF(string);
-                }
-            }
-
+            output.writeUTF(format.toString());
             output.flush();
-            writeLock.unlock();
         } catch (IOException e) {
             RavelInstance.getLogger().error("Failed to send message to server", e);
+            writeLock.unlock();
             return false;
         }
 
-        //RavelInstance.getLogger().info("Sent message " + command + " with response ID " + responseId + " and args " + Arrays.toString(arguments) + " to " + destination);
+        writeLock.unlock();
+
+        RavelInstance.getLogger().info("Sent message " + command + " with response ID " + responseId + " and args " + Arrays.toString(arguments) + " to " + destination + " from " + source);
 
         return true;
     }
@@ -247,7 +172,7 @@ public abstract class Messager {
         }
     }
 
-    public CompletableFuture<String[]> sendCommandWithResponse(RavelServer server, MessagingCommand command, String... args) {
+    public String[] sendCommandWithResponse(RavelServer server, MessagingCommand command, String... args) {
         String responseId = System.currentTimeMillis() + String.valueOf(Math.random()).substring(2);
         CompletableFuture<String[]> future = new CompletableFuture<>();
 
@@ -261,7 +186,7 @@ public abstract class Messager {
         //Add a timeout
         new Thread(() -> {
             try {
-                Thread.sleep(10000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 return;
             }
@@ -272,7 +197,12 @@ public abstract class Messager {
             }
         }).start();
 
-        return future;
+        try {
+            return future.join();
+        } catch (CompletionException e) {
+            RavelInstance.getLogger().error("Timeout while waiting for response from proxy server!");
+            return null;
+        }
     }
 
     public void sendCommand(RavelServer server, MessagingCommand command, String... args) {
@@ -286,4 +216,102 @@ public abstract class Messager {
     public abstract void close();
 
     public abstract boolean isServer();
+
+    private static class MessageFormat {
+        public String source;
+        public String destination;
+        public String type;
+        public String responseId;
+        public String command;
+        public String[] arguments;
+    }
+
+    private static class MessageData {
+        private final RavelServer source;
+        private final RavelServer destination;
+        private final MessageType type;
+        private final MessagingCommand command;
+        private final String responseId;
+        private final String[] arguments;
+
+        private MessageData(MessageFormat format) {
+            try {
+                this.source = RavelServer.valueOf(format.source);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid source server: " + format.source);
+            }
+
+            try {
+                this.destination = RavelServer.valueOf(format.destination);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid destination server: " + format.destination);
+            }
+
+            try {
+                this.type = MessageType.valueOf(format.type);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid message type: " + format.type);
+            }
+
+            try {
+                this.command = MessagingCommand.valueOf(format.command);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Unknown command: " + format.command);
+            }
+
+            this.responseId = format.responseId;
+            this.arguments = format.arguments;
+        }
+
+        public MessageData(RavelServer source, RavelServer destination, MessageType type, MessagingCommand command, String responseId, String[] arguments) {
+            this.source = source;
+            this.destination = destination;
+            this.type = type;
+            this.command = command;
+            this.responseId = responseId;
+            this.arguments = arguments;
+        }
+
+        public RavelServer getSource() {
+            return this.source;
+        }
+
+        public RavelServer getDestination() {
+            return this.destination;
+        }
+
+        public MessageType getType() {
+            return this.type;
+        }
+
+        public MessagingCommand getCommand() {
+            return this.command;
+        }
+
+        public String getResponseId() {
+            return this.responseId;
+        }
+
+        public String[] getArguments() {
+            return this.arguments;
+        }
+
+        public static MessageData fromJSON(String json) {
+            MessageFormat format = gson.fromJson(json, MessageFormat.class);
+            return new MessageData(format);
+        }
+
+        @Override
+        public String toString() {
+            MessageFormat format = new MessageFormat();
+            format.source = this.source.name();
+            format.destination = this.destination.name();
+            format.type = this.type.name();
+            format.command = this.command.name();
+            format.responseId = this.responseId;
+            format.arguments = this.arguments;
+
+            return gson.toJson(format);
+        }
+    }
 }

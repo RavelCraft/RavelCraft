@@ -1,7 +1,7 @@
 package com.connexal.ravelcraft.shared.players;
 
-import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
+import com.connexal.ravelcraft.shared.util.ChatColor;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.Language;
 
@@ -19,7 +19,9 @@ public interface RavelPlayer extends RavelCommandSender {
 
     UUID getUniqueID();
 
-    RavelServer getOwnerProxy();
+    RavelRank getRank();
+
+    void setRank(RavelRank rank);
 
     default String buildDisplayName() {
         RavelRank rank = this.getRank();
@@ -27,13 +29,13 @@ public interface RavelPlayer extends RavelCommandSender {
         if (rank.getName() == null) {
             return this.getName();
         } else {
-            return "[" + this.getRank().getName() + "] " + this.getName();
+            return "[" + this.getRank().getName() + ChatColor.RESET + "] " + this.getName();
         }
     }
 
     @Override
     default boolean isOp() {
-        return RavelInstance.getPlayerManager().getRank(this).isOperator();
+        return this.getRank().isOperator();
     }
 
     @Override
@@ -46,31 +48,13 @@ public interface RavelPlayer extends RavelCommandSender {
         return this;
     }
 
-    default RavelServer getServer() {
-        return RavelInstance.getPlayerManager().getServer(this);
-    }
+    RavelServer getServer();
 
-    default void sendToServer(RavelServer server) {
-        RavelInstance.getPlayerManager().setServer(this, server);
-    }
+    void setServer(RavelServer server);
 
-    default Language getLanguage() {
-        return RavelInstance.getPlayerManager().getLanguage(this);
-    }
+    RavelServer getOwnerProxy();
 
-    default void setLanguage(Language language) {
-        RavelInstance.getPlayerManager().setLanguage(this, language);
-    }
+    Language getLanguage();
 
-    default RavelRank getRank() {
-        return RavelInstance.getPlayerManager().getRank(this);
-    }
-
-    default void setRank(RavelRank rank) {
-        RavelInstance.getPlayerManager().setRank(this, rank);
-    }
-
-    default void kick(String reason, boolean network) {
-        RavelInstance.getPlayerManager().kick(this, reason, network);
-    }
+    void setLanguage(Language language);
 }

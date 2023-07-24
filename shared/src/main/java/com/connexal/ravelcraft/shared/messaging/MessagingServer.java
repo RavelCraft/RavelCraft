@@ -42,6 +42,10 @@ public class MessagingServer extends Messager {
 
             try {
                 Socket socket = this.serverSocket.accept();
+                socket.setTcpNoDelay(true);
+                socket.setKeepAlive(true);
+                socket.setSoTimeout(200);
+
                 client = new ClientData(socket);
             } catch (IOException e) {
                 continue;

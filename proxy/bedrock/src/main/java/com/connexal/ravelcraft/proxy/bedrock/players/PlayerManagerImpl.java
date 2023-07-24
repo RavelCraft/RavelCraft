@@ -2,6 +2,7 @@ package com.connexal.ravelcraft.proxy.bedrock.players;
 
 import com.connexal.ravelcraft.proxy.bedrock.BeProxy;
 import com.connexal.ravelcraft.proxy.cross.players.ProxyPlayerManagerImpl;
+import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.players.RavelRank;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
@@ -22,7 +23,7 @@ public class PlayerManagerImpl extends ProxyPlayerManagerImpl {
     }
 
     @Override
-    protected boolean setServerInternal(RavelPlayer player, RavelServer server) {
+    protected boolean transferPlayerInternal(RavelPlayer player, RavelServer server) {
         ProxiedPlayer proxyPlayer = BeProxy.getServer().getPlayer(player.getUniqueID());
         if (proxyPlayer == null) {
             return false;
@@ -34,11 +35,17 @@ public class PlayerManagerImpl extends ProxyPlayerManagerImpl {
         }
 
         proxyPlayer.redirectServer(serverInfo);
+        player.setServer(server);
         return true;
     }
 
     @Override
     protected void playerRankChanged(RavelPlayer player, RavelRank rank) {
         //Nothing. I think?
+    }
+
+    @Override
+    public void kick(RavelPlayer player, String reason, boolean network) {
+        //TODO: Implement
     }
 }

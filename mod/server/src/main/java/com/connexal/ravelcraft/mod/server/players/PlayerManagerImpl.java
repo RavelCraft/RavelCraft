@@ -27,18 +27,9 @@ public class PlayerManagerImpl extends PlayerManager {
     }
 
     @Override
-    protected boolean setServerInternal(RavelPlayer player, RavelServer server) {
-        CompletableFuture<String[]> future = this.messager.sendCommandWithResponse(player.getOwnerProxy(), MessagingCommand.PROXY_TRANSFER_PLAYER, player.getUniqueID().toString(), server.name());
-        if (future == null) {
-            return false;
-        }
-
-        String[] response = future.join();
-        if (response == null || response.length != 1) {
-            return false;
-        }
-
-        return response[0].equals(MessagingConstants.COMMAND_SUCCESS);
+    protected boolean transferPlayerInternal(RavelPlayer player, RavelServer server) {
+        //Will never be run
+        throw new IllegalStateException("This method should never be run on the server");
     }
 
     @Override
@@ -53,6 +44,11 @@ public class PlayerManagerImpl extends PlayerManager {
         if (rank.isOperator()) {
             RavelModServer.getServer().getPlayerManager().addToOperators(serverPlayer.getGameProfile());
         }
+    }
+
+    @Override
+    public void kick(RavelPlayer player, String reason, boolean network) {
+        //TODO: Implement
     }
 
     private String[] playerSkinUpdated(RavelServer source, String[] args) {

@@ -1,6 +1,10 @@
 package com.connexal.ravelcraft.proxy.bedrock.players;
 
+import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.players.PlayerManager;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.players.RavelRank;
+import com.connexal.ravelcraft.shared.util.text.Language;
 import com.connexal.ravelcraft.shared.util.uuid.UUIDTools;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.Text;
@@ -12,10 +16,18 @@ public class BedrockRavelPlayerImpl implements RavelPlayer {
     private final ProxiedPlayer player;
     private final UUID uuid;
     private String displayName;
+    private RavelRank rank;
+    private Language language;
+    private RavelServer server;
 
     public BedrockRavelPlayerImpl(ProxiedPlayer player) {
         this.player = player;
         this.uuid = UUIDTools.getJavaUUIDFromXUID(player.getXuid());
+
+        this.server = RavelServer.DEFAULT_SERVER;
+        PlayerManager.PlayerSettings settings = RavelInstance.getPlayerManager().getPlayerSettings(this.uuid, true);
+        this.rank = settings.rank();
+        this.language = settings.language();
 
         this.updateDisplayName();
     }
@@ -47,7 +59,37 @@ public class BedrockRavelPlayerImpl implements RavelPlayer {
     }
 
     @Override
+    public RavelRank getRank() {
+        return this.rank;
+    }
+
+    @Override
+    public void setRank(RavelRank rank) {
+        this.rank = rank;
+    }
+
+    @Override
+    public RavelServer getServer() {
+        return this.server;
+    }
+
+    @Override
+    public void setServer(RavelServer server) {
+        this.server = server;
+    }
+
+    @Override
     public RavelServer getOwnerProxy() {
         return RavelServer.BE_PROXY;
+    }
+
+    @Override
+    public Language getLanguage() {
+        return this.language;
+    }
+
+    @Override
+    public void setLanguage(Language language) {
+        this.language = language;
     }
 }

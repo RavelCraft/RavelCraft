@@ -1,8 +1,10 @@
 package com.connexal.ravelcraft.proxy.cross.commands;
 
+import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.commands.RavelCommand;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
 import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.Language;
 import com.connexal.ravelcraft.shared.util.text.Text;
 import com.google.auto.service.AutoService;
@@ -61,7 +63,7 @@ public class LanguageCommand extends RavelCommand {
                 return true;
             }
 
-            sender.asPlayer().setLanguage(language);
+            RavelInstance.getPlayerManager().languageUpdate(sender.asPlayer().getUniqueID(), language);
             sender.sendMessage(Text.COMMAND_LANGUAGE_SET, language.name());
         }
 

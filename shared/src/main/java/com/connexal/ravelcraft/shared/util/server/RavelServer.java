@@ -16,16 +16,7 @@ public enum RavelServer {
     CHARLES("Charles", "oracle-carlito.chickenkiller.com", 25565),
     TEST("Test", "backup.hughes123.co.uk", 25566);
 
-    public static RavelServer lobbyServer;
-
-    static {
-        for (RavelServer server : values()) {
-            if (server.isLobby()) {
-                lobbyServer = server;
-                break;
-            }
-        }
-    }
+    public static final RavelServer DEFAULT_SERVER = LOBBY;
 
     private final String name;
     private final String address;
@@ -94,9 +85,5 @@ public enum RavelServer {
     //TODO: Add support for direct connect
     public String getDirectConnect() {
         return directConnect;
-    }
-
-    public static RavelServer getLobby() {
-        return lobbyServer;
     }
 }
