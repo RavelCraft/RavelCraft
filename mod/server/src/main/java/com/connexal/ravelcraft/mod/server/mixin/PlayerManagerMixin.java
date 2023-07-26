@@ -24,12 +24,6 @@ public class PlayerManagerMixin {
 
         RavelPlayer ravelPlayer = new FabricRavelPlayer(player);
         RavelInstance.getPlayerManager().playerJoined(ravelPlayer);
-
-        RavelRank rank = ravelPlayer.getRank();
-        if (rank.isOperator()) {
-            RavelModServer.getServer().getPlayerManager().addToOperators(player.getGameProfile());
-        } else {
-            RavelModServer.getServer().getPlayerManager().removeFromOperators(player.getGameProfile());
-        }
+        RavelInstance.getPlayerManager().applyPlayerRank(ravelPlayer, ravelPlayer.getRank());
     }
 }

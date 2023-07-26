@@ -25,6 +25,7 @@ public class JeEventListener {
         }
 
         RavelPlayer player = new VelocityJavaRavelPlayer(event.getPlayer());
+        RavelInstance.getPlayerManager().applyPlayerRank(player, player.getRank());
 
         //TODO: Check if player is banned
 

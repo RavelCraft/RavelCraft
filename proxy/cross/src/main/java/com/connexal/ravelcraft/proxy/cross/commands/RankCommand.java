@@ -5,6 +5,7 @@ import com.connexal.ravelcraft.shared.commands.RavelCommand;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
 import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
 import com.connexal.ravelcraft.shared.players.PlayerManager;
+import com.connexal.ravelcraft.shared.players.RavelRank;
 import com.connexal.ravelcraft.shared.util.text.Text;
 import com.google.auto.service.AutoService;
 
@@ -30,7 +31,7 @@ public class RankCommand extends RavelCommand {
 
     @Override
     public String[] getAliases() {
-        return new String[] { "ranks" };
+        return new String[0];
     }
 
     @Override
@@ -38,8 +39,7 @@ public class RankCommand extends RavelCommand {
         return new CommandOption[] {
                 CommandOption.literal("get", CommandOption.word("player")),
                 CommandOption.literal("set", CommandOption.word("player", CommandOption.word("rank"))),
-                CommandOption.literal("list"),
-                CommandOption.literal("reload")
+                CommandOption.literal("list")
         };
     }
 
@@ -60,25 +60,47 @@ public class RankCommand extends RavelCommand {
                 return true;
             }
 
-            //TODO
+            PlayerManager.PlayerSettings settings = this.playerManager.getPlayerSettings(uuid, false);
+            sender.sendMessage(Text.COMMAND_RANK_GET, args[1], settings.rank().getName());
         } else if (args[0].equalsIgnoreCase("set")) {
             if (args.length != 3) {
                 return false;
             }
 
+            UUID uuid = RavelInstance.getUUIDTools().getUUID(args[1]);
+            if (uuid == null) {
+                sender.sendMessage(Text.COMMAND_PLAYER_NOT_FOUND);
+                return true;
+            }
 
+            RavelRank rank;
+            try {
+                rank = RavelRank.valueOf(args[2].toUpperCase());
+            } catch (IllegalArgumentException e) {
+                sender.sendMessage(Text.COMMAND_RANK_INVALID);
+                return true;
+            }
+
+            RavelInstance.getPlayerManager().rankUpdate(uuid, rank);
+            sender.sendMessage(Text.COMMAND_RANK_SET, args[1], rank.getName());
         } else if (args[0].equalsIgnoreCase("list")) {
             if (args.length != 1) {
                 return false;
             }
 
+            StringBuilder builder = new StringBuilder();
+            for (RavelRank rank : RavelRank.values()) {
+                if (rank == RavelRank.NONE) {
+                    continue;
+                }
 
-        } else if (args[0].equalsIgnoreCase("reload")) {
-            if (args.length != 1) {
-                return false;
+                builder.append("\n - ").append(rank.getName());
+                if (rank.isOperator()) {
+                    builder.append(" (OP)");
+                }
             }
 
-
+            sender.sendMessage(Text.COMMAND_RANK_LIST, builder.toString());
         } else {
             return false;
         }

@@ -43,6 +43,11 @@ public class WaterdogPlayerManager extends ProxyPlayerManager {
     }
 
     @Override
+    public void applyPlayerRank(RavelPlayer player, RavelRank rank) {
+        //Nothing. I think?
+    }
+
+    @Override
     protected void playerRankChanged(RavelPlayer player, RavelRank rank) {
         //Nothing. I think?
     }

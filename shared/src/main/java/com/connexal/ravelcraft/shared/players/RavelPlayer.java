@@ -26,10 +26,10 @@ public interface RavelPlayer extends RavelCommandSender {
     default String buildDisplayName() {
         RavelRank rank = this.getRank();
 
-        if (rank.getName() == null) {
+        if (rank == RavelRank.NONE) {
             return this.getName();
         } else {
-            return "[" + this.getRank().getName() + ChatColor.RESET + "] " + this.getName();
+            return "[" + this.getRank().getName() + "] " + this.getName();
         }
     }
 

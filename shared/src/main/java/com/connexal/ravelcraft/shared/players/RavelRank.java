@@ -3,32 +3,38 @@ package com.connexal.ravelcraft.shared.players;
 import com.connexal.ravelcraft.shared.util.ChatColor;
 
 public enum RavelRank {
-    OWNER(ChatColor.RED + "Owner", true),
-    MODERATOR(ChatColor.GOLD + "Mod", true),
+    OWNER("Owner", ChatColor.RED, true),
+    MOD("Mod", ChatColor.GOLD, true),
 
-    DEVELOPER(ChatColor.AQUA + "Dev", true),
-    BUILDER(ChatColor.AQUA + "Builder", false),
+    DEV("Dev", ChatColor.AQUA, true),
+    BUILDER("Builder", ChatColor.AQUA, false),
 
-    PARTNER(ChatColor.GREEN + "Partner", false),
-    DONATOR_I(ChatColor.DARK_PURPLE + "Donator I", false),
-    DONATOR_II(ChatColor.DARK_BLUE + "Donator II", false),
-    DONATOR_III(ChatColor.BLUE + "Donator III", false),
+    PARTNER("Partner", ChatColor.GREEN, false),
+    DONATOR_I("Donator I", ChatColor.DARK_PURPLE, false),
+    DONATOR_II( "Donator II", ChatColor.DARK_BLUE, false),
+    DONATOR_III("Donator III", ChatColor.BLUE, false),
 
-    NONE(null, false);
+    NONE("None", null, false);
 
     private final String name;
+    private final String colour;
     private final boolean operator;
 
-    RavelRank(String name, boolean operator) {
+    RavelRank(String name, String colour, boolean operator) {
         this.name = name;
+        this.colour = colour;
         this.operator = operator;
     }
 
     public String getName() {
-        return name;
+        if (this.colour == null) {
+            return this.name;
+        }
+
+        return this.colour + this.name + ChatColor.RESET;
     }
 
     public boolean isOperator() {
-        return operator;
+        return this.operator;
     }
 }

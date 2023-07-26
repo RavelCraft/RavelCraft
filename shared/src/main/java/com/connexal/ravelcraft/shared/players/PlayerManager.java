@@ -178,6 +178,8 @@ public abstract class PlayerManager {
         return new String[] {MessagingConstants.COMMAND_SUCCESS};
     }
 
+    public abstract void applyPlayerRank(RavelPlayer player, RavelRank rank);
+
     protected abstract void playerRankChanged(RavelPlayer player, RavelRank rank);
 
     public abstract boolean kick(RavelPlayer player, String reason, boolean network);

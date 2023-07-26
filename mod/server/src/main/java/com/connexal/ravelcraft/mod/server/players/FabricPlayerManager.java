@@ -33,17 +33,20 @@ public class FabricPlayerManager extends PlayerManager {
     }
 
     @Override
-    protected void playerRankChanged(RavelPlayer player, RavelRank rank) {
-        player.updateDisplayName();
-
-        ServerPlayerEntity serverPlayer = RavelModServer.getServer().getPlayerManager().getPlayer(player.getUniqueID());
-        if (serverPlayer == null) {
-            throw new AssertionError("Player " + player.getUniqueID() + " is not online");
-        }
+    public void applyPlayerRank(RavelPlayer player, RavelRank rank) {
+        ServerPlayerEntity serverPlayer = ((FabricRavelPlayer) player).getPlayer();
 
         if (rank.isOperator()) {
             RavelModServer.getServer().getPlayerManager().addToOperators(serverPlayer.getGameProfile());
+        } else {
+            RavelModServer.getServer().getPlayerManager().removeFromOperators(serverPlayer.getGameProfile());
         }
+    }
+
+    @Override
+    protected void playerRankChanged(RavelPlayer player, RavelRank rank) {
+        player.updateDisplayName();
+        this.applyPlayerRank(player, rank);
     }
 
     @Override

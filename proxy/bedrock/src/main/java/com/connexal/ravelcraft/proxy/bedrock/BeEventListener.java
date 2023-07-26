@@ -55,6 +55,7 @@ public class BeEventListener {
 
     private void onPlayerJoin(PlayerLoginEvent event) {
         RavelPlayer player = new WaterdogBedrockRavelPlayer(event.getPlayer());
+        RavelInstance.getPlayerManager().applyPlayerRank(player, player.getRank());
 
         //TODO: Check if player is banned
 
