@@ -1,7 +1,7 @@
 package com.connexal.ravelcraft.proxy.bedrock.commands;
 
 import com.connexal.ravelcraft.proxy.bedrock.BeProxy;
-import com.connexal.ravelcraft.proxy.bedrock.players.BedrockRavelPlayerImpl;
+import com.connexal.ravelcraft.proxy.bedrock.players.WaterdogBedrockRavelPlayer;
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
 import com.connexal.ravelcraft.shared.commands.CommandRegistrar;
 import com.connexal.ravelcraft.shared.commands.RavelCommand;
@@ -19,14 +19,14 @@ import org.cloudburstmc.protocol.bedrock.data.command.CommandParamData;
 
 import java.util.*;
 
-public class CommandRegistrarImpl extends CommandRegistrar {
-    public CommandRegistrarImpl() {
+public class WaterdogCommandRegistrar extends CommandRegistrar {
+    public WaterdogCommandRegistrar() {
         super(RavelProxyInstance.class.getClassLoader());
     }
 
     private RavelCommandSender getSender(CommandSender sender) {
         if (sender.isPlayer()) {
-            return new BedrockRavelPlayerImpl((ProxiedPlayer) sender);
+            return new WaterdogBedrockRavelPlayer((ProxiedPlayer) sender);
         } else {
             return new ServerCommandSender(sender);
         }

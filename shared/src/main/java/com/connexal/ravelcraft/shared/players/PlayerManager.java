@@ -13,10 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.TimeoutException;
-import java.util.function.Consumer;
 
 public abstract class PlayerManager {
     protected final Map<UUID, RavelPlayer> connectedPlayers = new HashMap<>();
@@ -37,6 +33,8 @@ public abstract class PlayerManager {
 
         this.messager.registerCommandHandler(MessagingCommand.PLAYER_RANK_UPDATE, this::rankUpdateCommand);
         this.messager.registerCommandHandler(MessagingCommand.PLAYER_LANGUAGE_UPDATE, this::languageUpdateCommand);
+
+        this.messager.registerCommandHandler(MessagingCommand.PLAYER_KICK, this::playerKickCommand);
     }
 
     //This could also be a reconnect
@@ -182,7 +180,25 @@ public abstract class PlayerManager {
 
     protected abstract void playerRankChanged(RavelPlayer player, RavelRank rank);
 
-    public abstract void kick(RavelPlayer player, String reason, boolean network);
+    public abstract boolean kick(RavelPlayer player, String reason, boolean network);
+
+    private String[] playerKickCommand(RavelServer source, String[] args) {
+        if (args.length != 2) {
+            return new String[] {MessagingConstants.COMMAND_FAILURE};
+        }
+
+        UUID uuid = UUID.fromString(args[0]);
+        String reason = args[1];
+
+        RavelPlayer player = this.getPlayer(uuid);
+        if (player == null) {
+            return new String[] {MessagingConstants.COMMAND_FAILURE};
+        }
+
+        this.kick(player, reason, RavelInstance.getServer().isProxy());
+
+        return new String[] {MessagingConstants.COMMAND_SUCCESS};
+    }
 
     public void broadcast(Text message, String... args) {
         for (RavelPlayer player : this.connectedPlayers.values()) {
@@ -200,6 +216,16 @@ public abstract class PlayerManager {
 
     public RavelPlayer getPlayer(UUID uuid) {
         return this.connectedPlayers.get(uuid);
+    }
+
+    public RavelPlayer getPlayer(String name) {
+        for (RavelPlayer player : this.connectedPlayers.values()) {
+            if (player.getName().equals(name)) {
+                return player;
+            }
+        }
+
+        return null;
     }
 
     public PlayerSettings getPlayerSettings(UUID uuid) {

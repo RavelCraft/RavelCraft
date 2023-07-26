@@ -10,7 +10,6 @@ import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 public class UUIDTools {
     private final RavelConfig config;

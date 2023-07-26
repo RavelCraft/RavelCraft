@@ -5,10 +5,10 @@ import com.connexal.ravelcraft.shared.util.RavelLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RavelLoggerImpl implements RavelLogger {
+public class FabricRavelLogger implements RavelLogger {
     private final Logger logger;
 
-    public RavelLoggerImpl() {
+    public FabricRavelLogger() {
         this.logger = LoggerFactory.getLogger(BuildConstants.ID);
     }
 

@@ -8,15 +8,11 @@ import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.Text;
 
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.TimeoutException;
 
-public abstract class ProxyPlayerManagerImpl extends PlayerManager {
+public abstract class ProxyPlayerManager extends PlayerManager {
     @Override
     public void init() {
         super.init();
@@ -53,6 +49,33 @@ public abstract class ProxyPlayerManagerImpl extends PlayerManager {
         }
         this.registerConnected(connected);
     }
+
+    @Override
+    public boolean kick(RavelPlayer player, String reason, boolean network) {
+        if (!network) {
+            String[] response = this.messager.sendCommandWithResponse(player.getServer(), MessagingCommand.PLAYER_KICK, player.getUniqueID().toString(), reason);
+            if (response == null || response.length != 1 || !response[0].equals(MessagingConstants.COMMAND_SUCCESS)) {
+                RavelInstance.getLogger().error("Unable to kick " + player.getName() + " from backend server " + player.getServer());
+                return false;
+            }
+
+            return true;
+        }
+
+        if (player.getOwnerProxy() != RavelInstance.getServer()) {
+            String[] response = this.messager.sendCommandWithResponse(player.getOwnerProxy(), MessagingCommand.PLAYER_KICK, player.getUniqueID().toString(), reason);
+            if (response == null || response.length != 1 || !response[0].equals(MessagingConstants.COMMAND_SUCCESS)) {
+                RavelInstance.getLogger().error("Unable to kick " + player.getName() + " from proxy " + player.getOwnerProxy());
+                return false;
+            }
+
+            return true;
+        }
+
+        return this.kickInternal(player, reason);
+    }
+
+    protected abstract boolean kickInternal(RavelPlayer player, String reason);
 
     private String[] proxyTransferPlayer(RavelServer source, String[] args) {
         if (args.length != 2) {

@@ -1,4 +1,4 @@
-package com.connexal.ravelcraft.proxy.java.players;
+package com.connexal.ravelcraft.mod.server.players;
 
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.players.PlayerManager;
@@ -7,53 +7,64 @@ import com.connexal.ravelcraft.shared.players.RavelRank;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.Language;
 import com.connexal.ravelcraft.shared.util.text.Text;
-import com.velocitypowered.api.proxy.Player;
-import net.kyori.adventure.text.Component;
+import net.minecraft.server.network.ServerPlayerEntity;
+import org.geysermc.geyser.api.GeyserApi;
 
 import java.util.UUID;
 
-public class JavaRavelPlayerImpl implements RavelPlayer {
-    private final Player player;
-    private String displayName;
+public class FabricRavelPlayer implements RavelPlayer {
+    private final ServerPlayerEntity player;
+    private final RavelServer ownerProxy;
     private RavelRank rank;
     private Language language;
     private RavelServer server;
 
-    public JavaRavelPlayerImpl(Player player) {
+    public FabricRavelPlayer(ServerPlayerEntity player) {
         this.player = player;
 
-        this.server = RavelServer.DEFAULT_SERVER;
-        PlayerManager.PlayerSettings settings = RavelInstance.getPlayerManager().getPlayerSettings(this.player.getUniqueId(), true);
+        if (GeyserApi.api().isBedrockPlayer(player.getUuid())) {
+            this.ownerProxy = RavelServer.BE_PROXY;
+        } else {
+            this.ownerProxy = RavelServer.JE_PROXY;
+        }
+
+        this.server = RavelInstance.getServer();
+        PlayerManager.PlayerSettings settings = RavelInstance.getPlayerManager().getPlayerSettings(player.getUuid(), true);
         this.rank = settings.rank();
         this.language = settings.language();
 
         this.updateDisplayName();
     }
 
+    public ServerPlayerEntity getPlayer() {
+        return this.player;
+    }
+
     @Override
     public void sendMessage(Text message, String... values) {
         String messageString = message.getMessage(this.getLanguage(), values);
-        this.player.sendMessage(Component.text(messageString));
+        this.player.sendMessage(net.minecraft.text.Text.literal(messageString));
     }
 
     @Override
     public String getName() {
-        return this.player.getUsername();
+        return this.player.getName().getString();
     }
 
     @Override
     public String displayName() {
-        return this.displayName;
+        return this.player.getCustomName().getString();
     }
 
     @Override
     public void updateDisplayName() {
-        this.displayName = this.buildDisplayName();
+        this.player.setCustomName(net.minecraft.text.Text.literal(this.buildDisplayName()));
+        this.player.setCustomNameVisible(true);
     }
 
     @Override
     public UUID getUniqueID() {
-        return this.player.getUniqueId();
+        return this.player.getUuid();
     }
 
     @Override
@@ -78,7 +89,7 @@ public class JavaRavelPlayerImpl implements RavelPlayer {
 
     @Override
     public RavelServer getOwnerProxy() {
-        return RavelServer.JE_PROXY;
+        return this.ownerProxy;
     }
 
     @Override

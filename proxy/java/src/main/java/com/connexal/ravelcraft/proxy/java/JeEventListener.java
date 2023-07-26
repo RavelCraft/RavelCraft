@@ -1,6 +1,6 @@
 package com.connexal.ravelcraft.proxy.java;
 
-import com.connexal.ravelcraft.proxy.java.players.JavaRavelPlayerImpl;
+import com.connexal.ravelcraft.proxy.java.players.VelocityJavaRavelPlayer;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.velocitypowered.api.event.PostOrder;
@@ -24,7 +24,7 @@ public class JeEventListener {
             return;
         }
 
-        RavelPlayer player = new JavaRavelPlayerImpl(event.getPlayer());
+        RavelPlayer player = new VelocityJavaRavelPlayer(event.getPlayer());
 
         //TODO: Check if player is banned
 

@@ -1,6 +1,6 @@
 package com.connexal.ravelcraft.proxy.bedrock;
 
-import com.connexal.ravelcraft.proxy.bedrock.players.BedrockRavelPlayerImpl;
+import com.connexal.ravelcraft.proxy.bedrock.players.WaterdogBedrockRavelPlayer;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.util.uuid.UUIDTools;
@@ -54,7 +54,7 @@ public class BeEventListener {
     }
 
     private void onPlayerJoin(PlayerLoginEvent event) {
-        RavelPlayer player = new BedrockRavelPlayerImpl(event.getPlayer());
+        RavelPlayer player = new WaterdogBedrockRavelPlayer(event.getPlayer());
 
         //TODO: Check if player is banned
 

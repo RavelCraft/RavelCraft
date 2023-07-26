@@ -1,7 +1,7 @@
 package com.connexal.ravelcraft.mod.server.commands.impl;
 
 import com.connexal.ravelcraft.mod.server.RavelModServer;
-import com.connexal.ravelcraft.mod.server.players.RavelPlayerImpl;
+import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
 import com.connexal.ravelcraft.shared.commands.CommandRegistrar;
 import com.connexal.ravelcraft.shared.commands.RavelCommand;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
@@ -18,14 +18,14 @@ import static com.mojang.brigadier.arguments.StringArgumentType.word;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
-public class CommandRegistrarImpl extends CommandRegistrar {
-    public CommandRegistrarImpl() {
+public class FabricCommandRegistrar extends CommandRegistrar {
+    public FabricCommandRegistrar() {
         super(RavelModServer.class.getClassLoader());
     }
 
     private RavelCommandSender getSender(ServerCommandSource source) {
         if (source.isExecutedByPlayer()) {
-            return new RavelPlayerImpl(source.getPlayer());
+            return new FabricRavelPlayer(source.getPlayer());
         } else {
             return new ServerCommandSender(source);
         }

@@ -1,7 +1,7 @@
 package com.connexal.ravelcraft.mod.server.mixin;
 
 import com.connexal.ravelcraft.mod.server.RavelModServer;
-import com.connexal.ravelcraft.mod.server.players.RavelPlayerImpl;
+import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.players.RavelRank;
@@ -22,7 +22,7 @@ public class PlayerManagerMixin {
             return;
         }
 
-        RavelPlayer ravelPlayer = new RavelPlayerImpl(player);
+        RavelPlayer ravelPlayer = new FabricRavelPlayer(player);
         RavelInstance.getPlayerManager().playerJoined(ravelPlayer);
 
         RavelRank rank = ravelPlayer.getRank();

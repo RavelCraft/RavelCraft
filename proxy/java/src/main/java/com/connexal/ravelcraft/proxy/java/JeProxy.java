@@ -1,10 +1,10 @@
 package com.connexal.ravelcraft.proxy.java;
 
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
-import com.connexal.ravelcraft.proxy.java.commands.CommandRegistrarImpl;
-import com.connexal.ravelcraft.proxy.java.players.PlayerManagerImpl;
+import com.connexal.ravelcraft.proxy.java.commands.VelocityCommandRegistrar;
+import com.connexal.ravelcraft.proxy.java.players.VelocityPlayerManager;
 import com.connexal.ravelcraft.proxy.java.servers.ServerManagerImpl;
-import com.connexal.ravelcraft.proxy.java.util.RavelLoggerImpl;
+import com.connexal.ravelcraft.proxy.java.util.VelocityRavelLogger;
 import com.connexal.ravelcraft.shared.BuildConstants;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.RavelMain;
@@ -33,10 +33,10 @@ public class JeProxy implements RavelMain {
 
     @Subscribe
     public void onInitialize(ProxyInitializeEvent event) {
-        RavelInstance.setup(this, Paths.get("plugins/" + BuildConstants.ID), new RavelLoggerImpl(logger));
+        RavelInstance.setup(this, Paths.get("plugins/" + BuildConstants.ID), new VelocityRavelLogger(logger));
         RavelProxyInstance.setup();
 
-        RavelInstance.init(new CommandRegistrarImpl(), new PlayerManagerImpl());
+        RavelInstance.init(new VelocityCommandRegistrar(), new VelocityPlayerManager());
         RavelProxyInstance.init(new ServerManagerImpl());
 
         server.getEventManager().register(this, new JeEventListener());

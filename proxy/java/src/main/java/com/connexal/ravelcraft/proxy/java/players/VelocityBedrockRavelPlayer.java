@@ -1,35 +1,30 @@
-package com.connexal.ravelcraft.mod.server.players;
+package com.connexal.ravelcraft.proxy.java.players;
 
 import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
 import com.connexal.ravelcraft.shared.players.PlayerManager;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.players.RavelRank;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.Language;
 import com.connexal.ravelcraft.shared.util.text.Text;
-import net.minecraft.server.network.ServerPlayerEntity;
-import org.geysermc.geyser.api.GeyserApi;
 
 import java.util.UUID;
 
-public class RavelPlayerImpl implements RavelPlayer {
-    private final ServerPlayerEntity player;
-    private final RavelServer ownerProxy;
+public class VelocityBedrockRavelPlayer implements RavelPlayer {
+    private final UUID uuid;
+    private final String name;
+    private String displayName;
     private RavelRank rank;
     private Language language;
     private RavelServer server;
 
-    public RavelPlayerImpl(ServerPlayerEntity player) {
-        this.player = player;
+    public VelocityBedrockRavelPlayer(UUID uuid, String name) {
+        this.uuid = uuid;
+        this.name = name;
 
-        if (GeyserApi.api().isBedrockPlayer(player.getUuid())) {
-            this.ownerProxy = RavelServer.BE_PROXY;
-        } else {
-            this.ownerProxy = RavelServer.JE_PROXY;
-        }
-
-        this.server = RavelInstance.getServer();
-        PlayerManager.PlayerSettings settings = RavelInstance.getPlayerManager().getPlayerSettings(player.getUuid(), true);
+        this.server = RavelServer.DEFAULT_SERVER;
+        PlayerManager.PlayerSettings settings = RavelInstance.getPlayerManager().getPlayerSettings(this.uuid, true);
         this.rank = settings.rank();
         this.language = settings.language();
 
@@ -38,29 +33,32 @@ public class RavelPlayerImpl implements RavelPlayer {
 
     @Override
     public void sendMessage(Text message, String... values) {
-        String messageString = message.getMessage(this.getLanguage(), values);
-        this.player.sendMessage(net.minecraft.text.Text.literal(messageString));
+        String[] args = new String[values.length + 2];
+        args[0] = this.uuid.toString();
+        args[1] = message.name();
+        System.arraycopy(values, 0, args, 2, values.length);
+
+        RavelInstance.getMessager().sendCommand(RavelServer.BE_PROXY, MessagingCommand.PROXY_SEND_MESSAGE, args);
     }
 
     @Override
     public String getName() {
-        return this.player.getName().getString();
+        return this.name;
     }
 
     @Override
     public String displayName() {
-        return this.player.getCustomName().getString();
+        return this.displayName;
     }
 
     @Override
     public void updateDisplayName() {
-        this.player.setCustomName(net.minecraft.text.Text.literal(this.buildDisplayName()));
-        this.player.setCustomNameVisible(true);
+        this.displayName = this.buildDisplayName();
     }
 
     @Override
     public UUID getUniqueID() {
-        return this.player.getUuid();
+        return this.uuid;
     }
 
     @Override
@@ -85,7 +83,7 @@ public class RavelPlayerImpl implements RavelPlayer {
 
     @Override
     public RavelServer getOwnerProxy() {
-        return this.ownerProxy;
+        return RavelServer.BE_PROXY;
     }
 
     @Override

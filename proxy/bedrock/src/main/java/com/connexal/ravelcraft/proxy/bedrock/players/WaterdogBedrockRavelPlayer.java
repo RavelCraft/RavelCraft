@@ -1,27 +1,28 @@
 package com.connexal.ravelcraft.proxy.bedrock.players;
 
 import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
 import com.connexal.ravelcraft.shared.players.PlayerManager;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.players.RavelRank;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.Language;
 import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.util.uuid.UUIDTools;
+import dev.waterdog.waterdogpe.player.ProxiedPlayer;
 
 import java.util.UUID;
 
-public class JavaRavelPlayerImpl implements RavelPlayer {
+public class WaterdogBedrockRavelPlayer implements RavelPlayer {
+    private final ProxiedPlayer player;
     private final UUID uuid;
-    private final String name;
     private String displayName;
     private RavelRank rank;
     private Language language;
     private RavelServer server;
 
-    public JavaRavelPlayerImpl(UUID uuid, String name) {
-        this.uuid = uuid;
-        this.name = name;
+    public WaterdogBedrockRavelPlayer(ProxiedPlayer player) {
+        this.player = player;
+        this.uuid = UUIDTools.getJavaUUIDFromXUID(player.getXuid());
 
         this.server = RavelServer.DEFAULT_SERVER;
         PlayerManager.PlayerSettings settings = RavelInstance.getPlayerManager().getPlayerSettings(this.uuid, true);
@@ -31,19 +32,19 @@ public class JavaRavelPlayerImpl implements RavelPlayer {
         this.updateDisplayName();
     }
 
+    public ProxiedPlayer getPlayer() {
+        return this.player;
+    }
+
     @Override
     public void sendMessage(Text message, String... values) {
-        String[] args = new String[values.length + 2];
-        args[0] = this.uuid.toString();
-        args[1] = message.name();
-        System.arraycopy(values, 0, args, 2, values.length);
-
-        RavelInstance.getMessager().sendCommand(RavelServer.JE_PROXY, MessagingCommand.PROXY_SEND_MESSAGE, args);
+        String messageString = message.getMessage(this.getLanguage(), values);
+        this.player.sendMessage(messageString);
     }
 
     @Override
     public String getName() {
-        return this.name;
+        return this.player.getName();
     }
 
     @Override
@@ -83,7 +84,7 @@ public class JavaRavelPlayerImpl implements RavelPlayer {
 
     @Override
     public RavelServer getOwnerProxy() {
-        return RavelServer.JE_PROXY;
+        return RavelServer.BE_PROXY;
     }
 
     @Override

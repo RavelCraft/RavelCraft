@@ -1,10 +1,10 @@
 package com.connexal.ravelcraft.proxy.bedrock;
 
-import com.connexal.ravelcraft.proxy.bedrock.commands.CommandRegistrarImpl;
-import com.connexal.ravelcraft.proxy.bedrock.players.PlayerManagerImpl;
-import com.connexal.ravelcraft.proxy.bedrock.servers.ServerManagerImpl;
+import com.connexal.ravelcraft.proxy.bedrock.commands.WaterdogCommandRegistrar;
+import com.connexal.ravelcraft.proxy.bedrock.players.WaterdogPlayerManager;
+import com.connexal.ravelcraft.proxy.bedrock.servers.WaterdogServerManager;
 import com.connexal.ravelcraft.proxy.bedrock.skin.SkinUploader;
-import com.connexal.ravelcraft.proxy.bedrock.util.RavelLoggerImpl;
+import com.connexal.ravelcraft.proxy.bedrock.util.WaterdogRavelLogger;
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.RavelMain;
@@ -22,11 +22,11 @@ public class BeProxy extends Plugin implements RavelMain {
     public void onEnable() {
         server = this.getProxy();
 
-        RavelInstance.setup(this, this.getDataFolder().toPath(), new RavelLoggerImpl(this.getLogger()));
+        RavelInstance.setup(this, this.getDataFolder().toPath(), new WaterdogRavelLogger(this.getLogger()));
         RavelProxyInstance.setup();
 
-        RavelInstance.init(new CommandRegistrarImpl(), new PlayerManagerImpl());
-        RavelProxyInstance.init(new ServerManagerImpl());
+        RavelInstance.init(new WaterdogCommandRegistrar(), new WaterdogPlayerManager());
+        RavelProxyInstance.init(new WaterdogServerManager());
 
         new BeEventListener();
 

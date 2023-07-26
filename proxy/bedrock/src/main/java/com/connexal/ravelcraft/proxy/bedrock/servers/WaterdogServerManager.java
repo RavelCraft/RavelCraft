@@ -10,7 +10,7 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServerManagerImpl extends ServerManager {
+public class WaterdogServerManager extends ServerManager {
     private ServerInfo getServerInfo(RavelServer server) {
         return new BedrockServerInfo(server.getIdentifier(), new InetSocketAddress(server.getAddress(), server.getPort()), null);
     }

@@ -6,17 +6,15 @@ import com.connexal.ravelcraft.shared.messaging.MessagingClient;
 import com.connexal.ravelcraft.shared.messaging.MessagingConstants;
 import com.connexal.ravelcraft.shared.messaging.MessagingServer;
 import com.connexal.ravelcraft.shared.players.PlayerManager;
-import com.connexal.ravelcraft.shared.players.RavelRank;
 import com.connexal.ravelcraft.shared.util.RavelConfig;
 import com.connexal.ravelcraft.shared.util.RavelLogger;
-import com.connexal.ravelcraft.shared.util.uuid.UUIDTools;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.util.uuid.UUIDTools;
 
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class RavelInstance {
     private static RavelMain main = null;

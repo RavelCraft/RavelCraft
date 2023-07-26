@@ -1,9 +1,9 @@
 package com.connexal.ravelcraft.mod.server;
 
-import com.connexal.ravelcraft.mod.server.commands.impl.CommandRegistrarImpl;
+import com.connexal.ravelcraft.mod.server.commands.impl.FabricCommandRegistrar;
 import com.connexal.ravelcraft.mod.server.geyser.GeyserEventRegistration;
-import com.connexal.ravelcraft.mod.server.players.PlayerManagerImpl;
-import com.connexal.ravelcraft.mod.server.util.RavelLoggerImpl;
+import com.connexal.ravelcraft.mod.server.players.FabricPlayerManager;
+import com.connexal.ravelcraft.mod.server.util.FabricRavelLogger;
 import com.connexal.ravelcraft.mod.server.velocity.VelocityModernForwarding;
 import com.connexal.ravelcraft.shared.BuildConstants;
 import com.connexal.ravelcraft.shared.RavelInstance;
@@ -36,8 +36,8 @@ public class RavelModServer implements RavelMain, ModInitializer {
 		}
 
 		mod = FabricLoader.getInstance().getModContainer(BuildConstants.ID).orElseThrow();
-		RavelInstance.setup(this, FabricLoader.getInstance().getConfigDir().resolve(BuildConstants.ID), new RavelLoggerImpl());
-		RavelInstance.init(new CommandRegistrarImpl(), new PlayerManagerImpl());
+		RavelInstance.setup(this, FabricLoader.getInstance().getConfigDir().resolve(BuildConstants.ID), new FabricRavelLogger());
+		RavelInstance.init(new FabricCommandRegistrar(), new FabricPlayerManager());
 
 		geyserEvents = new GeyserEventRegistration();
 

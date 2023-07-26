@@ -7,7 +7,6 @@ import com.connexal.ravelcraft.shared.util.server.RavelServer;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
 
 public class MessagingClient extends Messager {
     private final String serverHostname;

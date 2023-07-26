@@ -10,11 +10,11 @@ import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.players.RavelRank;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
-public class PlayerManagerImpl extends PlayerManager {
+public class FabricPlayerManager extends PlayerManager {
     @Override
     public void init() {
         super.init();
@@ -47,8 +47,22 @@ public class PlayerManagerImpl extends PlayerManager {
     }
 
     @Override
-    public void kick(RavelPlayer player, String reason, boolean network) {
-        //TODO: Implement
+    public boolean kick(RavelPlayer player, String reason, boolean network) {
+        if (network) {
+            String[] response = this.messager.sendCommandWithResponse(player.getOwnerProxy(), MessagingCommand.PLAYER_KICK, player.getUniqueID().toString(), reason);
+            if (response == null || response.length != 1 || !response[0].equals(MessagingConstants.COMMAND_SUCCESS)) {
+                RavelInstance.getLogger().error("Unable to kick " + player.getName() + " from proxy " + player.getOwnerProxy());
+                return false;
+            }
+
+            return true;
+        }
+
+        ServerPlayerEntity fabricPlayer = ((FabricRavelPlayer) player).getPlayer();
+        fabricPlayer.networkHandler.disconnect(Text.of(reason));
+        RavelInstance.getLogger().info("Kicked " + player.getName() + " from the server");
+
+        return true;
     }
 
     private String[] playerSkinUpdated(RavelServer source, String[] args) {

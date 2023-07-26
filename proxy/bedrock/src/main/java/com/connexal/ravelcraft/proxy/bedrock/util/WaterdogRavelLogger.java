@@ -1,12 +1,12 @@
-package com.connexal.ravelcraft.proxy.java.util;
+package com.connexal.ravelcraft.proxy.bedrock.util;
 
 import com.connexal.ravelcraft.shared.util.RavelLogger;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 
-public class RavelLoggerImpl implements RavelLogger {
+public class WaterdogRavelLogger implements RavelLogger {
     private final Logger logger;
 
-    public RavelLoggerImpl(Logger logger) {
+    public WaterdogRavelLogger(Logger logger) {
         this.logger = logger;
     }
 

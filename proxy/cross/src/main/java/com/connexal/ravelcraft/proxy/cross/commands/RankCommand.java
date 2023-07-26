@@ -5,8 +5,6 @@ import com.connexal.ravelcraft.shared.commands.RavelCommand;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
 import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
 import com.connexal.ravelcraft.shared.players.PlayerManager;
-import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.players.RavelRank;
 import com.connexal.ravelcraft.shared.util.text.Text;
 import com.google.auto.service.AutoService;
 
