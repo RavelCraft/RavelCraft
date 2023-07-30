@@ -8,6 +8,7 @@ public enum MessagingCommand {
     PROXY_QUERY_CONNECTED, //When a proxy connects to the network, it asks the other about online players
     PROXY_SEND_MESSAGE, //When a proxy wants to send a message to a player that it doesn't own
     PROXY_TRANSFER_PLAYER, //When wanting to transfer a player to another backend server
+    PROXY_TRANSFER_PLAYER_COMPLETE, //When a player has been transferred to another backend server
 
     PLAYER_GET_INFO, //When a server wants to get info about a player
     PLAYER_GET_UUID_FROM_NAME, //When a server wants to get a player's UUID from their name

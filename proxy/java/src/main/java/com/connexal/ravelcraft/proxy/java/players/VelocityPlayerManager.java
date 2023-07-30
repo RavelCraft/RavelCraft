@@ -31,22 +31,19 @@ public class VelocityPlayerManager extends ProxyPlayerManager {
     protected boolean transferPlayerInternal(RavelPlayer player, RavelServer server) {
         Optional<Player> optionalPlayer = JeProxy.getServer().getPlayer(player.getUniqueID());
         if (optionalPlayer.isEmpty()) {
+            RavelInstance.getLogger().error("Unable to transfer player to server! The player doesn't exist on the proxy!");
             return false;
         }
 
         RegisteredServer registeredServer = JeProxy.getServer().getServer(server.getIdentifier()).orElse(null);
         if (registeredServer == null) {
+            RavelInstance.getLogger().error("Unable to transfer player to server! The server doesn't exist!");
             return false;
         }
 
         Player velocityPlayer = optionalPlayer.get();
         CompletableFuture<ConnectionRequestBuilder.Result> future = velocityPlayer.createConnectionRequest(registeredServer).connect();
-        boolean success = future.join().isSuccessful();
-
-        if (success) {
-            player.setServer(server);
-        }
-        return success;
+        return future.join().isSuccessful();
     }
 
     @Override

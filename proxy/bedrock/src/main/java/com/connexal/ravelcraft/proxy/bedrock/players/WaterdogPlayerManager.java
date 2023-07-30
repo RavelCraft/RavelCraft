@@ -3,8 +3,6 @@ package com.connexal.ravelcraft.proxy.bedrock.players;
 import com.connexal.ravelcraft.proxy.bedrock.BeProxy;
 import com.connexal.ravelcraft.proxy.cross.players.ProxyPlayerManager;
 import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
-import com.connexal.ravelcraft.shared.messaging.MessagingConstants;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.players.RavelRank;
 import com.connexal.ravelcraft.shared.util.ChatColor;
@@ -29,16 +27,17 @@ public class WaterdogPlayerManager extends ProxyPlayerManager {
     protected boolean transferPlayerInternal(RavelPlayer player, RavelServer server) {
         ProxiedPlayer proxyPlayer = BeProxy.getServer().getPlayer(player.getUniqueID());
         if (proxyPlayer == null) {
+            RavelInstance.getLogger().error("Unable to transfer player to server! The player doesn't exist on the proxy!");
             return false;
         }
 
         ServerInfo serverInfo = BeProxy.getServer().getServerInfo(server.getIdentifier());
         if (serverInfo == null) {
+            RavelInstance.getLogger().error("Unable to transfer player to server! The server \"" + server.getIdentifier() + "\" doesn't exist!");
             return false;
         }
 
         proxyPlayer.redirectServer(serverInfo);
-        player.setServer(server);
         return true;
     }
 

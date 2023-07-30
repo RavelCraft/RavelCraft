@@ -3,8 +3,11 @@ package com.connexal.ravelcraft.proxy.bedrock.servers;
 import com.connexal.ravelcraft.proxy.bedrock.BeProxy;
 import com.connexal.ravelcraft.proxy.cross.servers.ServerManager;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
+import dev.waterdog.waterdogpe.network.connection.handler.IReconnectHandler;
+import dev.waterdog.waterdogpe.network.connection.handler.ReconnectReason;
 import dev.waterdog.waterdogpe.network.serverinfo.BedrockServerInfo;
 import dev.waterdog.waterdogpe.network.serverinfo.ServerInfo;
+import dev.waterdog.waterdogpe.player.ProxiedPlayer;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -19,12 +22,15 @@ public class WaterdogServerManager extends ServerManager {
     protected void additionalInit() {
         BeProxy.getServer().setJoinHandler(proxiedPlayer -> this.getServerInfo(RavelServer.DEFAULT_SERVER));
 
-        BeProxy.getServer().setReconnectHandler((proxiedPlayer, serverInfo, kickMessage) -> {
-            if (serverInfo.getServerName().equals(RavelServer.DEFAULT_SERVER.getIdentifier())) { //Kicked from the lobby
-                return null;
-            }
+        BeProxy.getServer().setReconnectHandler(new IReconnectHandler() {
+            @Override
+            public ServerInfo getFallbackServer(ProxiedPlayer player, ServerInfo oldServer, ReconnectReason reason, String kickMessage) {
+                if (oldServer.getServerName().equals(RavelServer.DEFAULT_SERVER.getIdentifier())) { //Kicked from the lobby
+                    return null;
+                }
 
-            return this.getServerInfo(RavelServer.DEFAULT_SERVER);
+                return getServerInfo(RavelServer.DEFAULT_SERVER);
+            }
         });
     }
 

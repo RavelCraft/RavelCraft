@@ -1,7 +1,6 @@
 package com.connexal.ravelcraft.shared.players;
 
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.connexal.ravelcraft.shared.util.ChatColor;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.Language;
 
@@ -18,6 +17,16 @@ public interface RavelPlayer extends RavelCommandSender {
     void updateDisplayName();
 
     UUID getUniqueID();
+
+    @Override
+    default boolean isPlayer() {
+        return true;
+    }
+
+    @Override
+    default RavelPlayer asPlayer() {
+        return this;
+    }
 
     RavelRank getRank();
 
@@ -36,16 +45,6 @@ public interface RavelPlayer extends RavelCommandSender {
     @Override
     default boolean isOp() {
         return this.getRank().isOperator();
-    }
-
-    @Override
-    default boolean isPlayer() {
-        return true;
-    }
-
-    @Override
-    default RavelPlayer asPlayer() {
-        return this;
     }
 
     RavelServer getServer();

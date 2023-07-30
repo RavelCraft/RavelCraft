@@ -22,6 +22,7 @@ public abstract class ProxyPlayerManager extends PlayerManager {
         this.messager.registerCommandHandler(MessagingCommand.PROXY_QUERY_CONNECTED, this::proxyQueryConnected);
         this.messager.registerCommandHandler(MessagingCommand.PROXY_SEND_MESSAGE, this::proxySendMessage);
         this.messager.registerCommandHandler(MessagingCommand.PROXY_TRANSFER_PLAYER, this::proxyTransferPlayer);
+        this.messager.registerCommandHandler(MessagingCommand.PROXY_TRANSFER_PLAYER_COMPLETE, this::playerTransferComplete);
     }
 
     @Override
@@ -104,9 +105,32 @@ public abstract class ProxyPlayerManager extends PlayerManager {
             return new String[] {MessagingConstants.COMMAND_FAILURE};
         }
 
-        player.setServer(target);
-
         return new String[] {MessagingConstants.COMMAND_SUCCESS};
+    }
+
+    private String[] playerTransferComplete(RavelServer source, String[] args) {
+        if (args.length != 2) {
+            RavelInstance.getLogger().error("Invalid number of arguments for playerTransferComplete command!");
+            return null;
+        }
+
+        UUID uuid = UUID.fromString(args[0]);
+        RavelPlayer player = RavelInstance.getPlayerManager().getPlayer(uuid);
+        if (player == null) {
+            RavelInstance.getLogger().error("Unable to locally complete transfer for unknown player!");
+            return null;
+        }
+
+        RavelServer target;
+        try {
+            target = RavelServer.valueOf(args[1]);
+        } catch (IllegalArgumentException e) {
+            RavelInstance.getLogger().error("Unable to locally complete transfer to unknown server!");
+            return null;
+        }
+
+        player.setServer(target);
+        return null;
     }
 
     private String[] playerJoinedProxyCommand(RavelServer source, String[] args) {

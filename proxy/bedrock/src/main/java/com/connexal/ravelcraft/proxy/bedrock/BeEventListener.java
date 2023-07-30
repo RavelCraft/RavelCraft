@@ -2,17 +2,17 @@ package com.connexal.ravelcraft.proxy.bedrock;
 
 import com.connexal.ravelcraft.proxy.bedrock.players.WaterdogBedrockRavelPlayer;
 import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.uuid.UUIDTools;
 import com.nimbusds.jwt.SignedJWT;
 import dev.waterdog.waterdogpe.ProxyServer;
-import dev.waterdog.waterdogpe.event.defaults.PlayerAuthenticatedEvent;
-import dev.waterdog.waterdogpe.event.defaults.PlayerDisconnectedEvent;
-import dev.waterdog.waterdogpe.event.defaults.PlayerLoginEvent;
-import dev.waterdog.waterdogpe.event.defaults.PreClientDataSetEvent;
+import dev.waterdog.waterdogpe.event.defaults.*;
 import dev.waterdog.waterdogpe.network.protocol.user.HandshakeUtils;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 public class BeEventListener {
@@ -23,6 +23,7 @@ public class BeEventListener {
         server.getEventManager().subscribe(PlayerAuthenticatedEvent.class, this::onPlayerAuthenticate);
         server.getEventManager().subscribe(PlayerLoginEvent.class, this::onPlayerJoin);
         server.getEventManager().subscribe(PlayerDisconnectedEvent.class, this::onPlayerLeave);
+        server.getEventManager().subscribe(TransferCompleteEvent.class, this::onPlayerTransfer);
     }
 
     private void onPreLogin(PreClientDataSetEvent event) {
@@ -68,5 +69,21 @@ public class BeEventListener {
         UUID uuid = UUIDTools.getJavaUUIDFromXUID(event.getPlayer().getXuid());
 
         RavelInstance.getPlayerManager().playerLeft(uuid);
+    }
+
+    private void onPlayerTransfer(TransferCompleteEvent event) {
+        UUID uuid = UUIDTools.getJavaUUIDFromXUID(event.getPlayer().getXuid());
+        RavelPlayer player = RavelInstance.getPlayerManager().getPlayer(uuid);
+
+        RavelServer server;
+        try {
+            server = RavelServer.valueOf(event.getTargetServer().getServerName().toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            RavelInstance.getLogger().error("Failed to find player server!", e);
+            return;
+        }
+
+        player.setServer(server);
+        RavelInstance.getMessager().sendCommand(RavelServer.JE_PROXY, MessagingCommand.PROXY_TRANSFER_PLAYER_COMPLETE, player.getUniqueID().toString(), server.name());
     }
 }

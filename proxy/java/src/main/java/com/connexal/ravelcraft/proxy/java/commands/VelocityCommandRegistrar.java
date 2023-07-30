@@ -3,6 +3,7 @@ package com.connexal.ravelcraft.proxy.java.commands;
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
 import com.connexal.ravelcraft.proxy.java.JeProxy;
 import com.connexal.ravelcraft.proxy.java.players.VelocityJavaRavelPlayer;
+import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.commands.CommandRegistrar;
 import com.connexal.ravelcraft.shared.commands.RavelCommand;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
@@ -30,7 +31,7 @@ public class VelocityCommandRegistrar extends CommandRegistrar {
         if (source instanceof ConsoleCommandSource) {
             return new ServerCommandSender(source);
         } else {
-            return new VelocityJavaRavelPlayer((Player) source);
+            return RavelInstance.getPlayerManager().getPlayer(((Player) source).getUniqueId());
         }
     }
 

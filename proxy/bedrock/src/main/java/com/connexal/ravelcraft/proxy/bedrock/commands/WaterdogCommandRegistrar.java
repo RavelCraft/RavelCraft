@@ -3,19 +3,18 @@ package com.connexal.ravelcraft.proxy.bedrock.commands;
 import com.connexal.ravelcraft.proxy.bedrock.BeProxy;
 import com.connexal.ravelcraft.proxy.bedrock.players.WaterdogBedrockRavelPlayer;
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
+import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.commands.CommandRegistrar;
 import com.connexal.ravelcraft.shared.commands.RavelCommand;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
 import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
 import com.connexal.ravelcraft.shared.commands.arguments.CommandSubOption;
+import com.connexal.ravelcraft.shared.util.uuid.UUIDTools;
 import dev.waterdog.waterdogpe.command.Command;
 import dev.waterdog.waterdogpe.command.CommandSender;
 import dev.waterdog.waterdogpe.command.CommandSettings;
 import dev.waterdog.waterdogpe.player.ProxiedPlayer;
-import org.cloudburstmc.protocol.bedrock.data.command.CommandEnumConstraint;
-import org.cloudburstmc.protocol.bedrock.data.command.CommandEnumData;
-import org.cloudburstmc.protocol.bedrock.data.command.CommandParam;
-import org.cloudburstmc.protocol.bedrock.data.command.CommandParamData;
+import org.cloudburstmc.protocol.bedrock.data.command.*;
 
 import java.util.*;
 
@@ -26,13 +25,14 @@ public class WaterdogCommandRegistrar extends CommandRegistrar {
 
     private RavelCommandSender getSender(CommandSender sender) {
         if (sender.isPlayer()) {
-            return new WaterdogBedrockRavelPlayer((ProxiedPlayer) sender);
+            UUID uuid = UUIDTools.getJavaUUIDFromXUID(((ProxiedPlayer) sender).getXuid());
+            return RavelInstance.getPlayerManager().getPlayer(uuid);
         } else {
             return new ServerCommandSender(sender);
         }
     }
 
-    private void processOption(CommandOption option, List<List<CommandParamData>> params, CommandParamData[] current) {
+    private void processOption(CommandOption option, List<CommandOverloadData> params, CommandParamData[] current) {
         CommandParamData data = new CommandParamData();
         data.setName(option.getName());
         data.setOptional(true);
@@ -58,9 +58,7 @@ public class WaterdogCommandRegistrar extends CommandRegistrar {
                 processOption(sub, params, newCurrent);
             }
         } else {
-            List<CommandParamData> newParams = new ArrayList<>(List.of(current));
-            newParams.add(data);
-            params.add(newParams);
+            params.add(new CommandOverloadData(false, current));
         }
     }
 
@@ -80,18 +78,14 @@ public class WaterdogCommandRegistrar extends CommandRegistrar {
             }
 
             @Override
-            protected CommandParamData[][] buildCommandOverloads() {
-                List<List<CommandParamData>> params = new ArrayList<>();
+            protected CommandOverloadData[] buildCommandOverloads() {
+                List<CommandOverloadData> params = new ArrayList<>();
 
                 for (CommandOption option : command.getOptions()) {
                     processOption(option, params, new CommandParamData[0]);
                 }
 
-                CommandParamData[][] out = new CommandParamData[params.size()][];
-                for (int i = 0; i < params.size(); i++) {
-                    out[i] = params.get(i).toArray(new CommandParamData[0]);
-                }
-                return out;
+                return params.toArray(new CommandOverloadData[0]);
             }
         });
     }

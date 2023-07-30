@@ -2,6 +2,7 @@ package com.connexal.ravelcraft.mod.server.commands.impl;
 
 import com.connexal.ravelcraft.mod.server.RavelModServer;
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
+import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.commands.CommandRegistrar;
 import com.connexal.ravelcraft.shared.commands.RavelCommand;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
@@ -25,7 +26,7 @@ public class FabricCommandRegistrar extends CommandRegistrar {
 
     private RavelCommandSender getSender(ServerCommandSource source) {
         if (source.isExecutedByPlayer()) {
-            return new FabricRavelPlayer(source.getPlayer());
+            return RavelInstance.getPlayerManager().getPlayer(source.getPlayer().getUuid());
         } else {
             return new ServerCommandSender(source);
         }

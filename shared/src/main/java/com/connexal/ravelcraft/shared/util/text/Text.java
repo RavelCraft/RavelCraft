@@ -35,7 +35,13 @@ public enum Text {
     COMMAND_RANK_LIST("ravelcraft.command.rank.list"),
     COMMAND_RANK_SET("ravelcraft.command.rank.set"),
     COMMAND_RANK_INVALID("ravelcraft.command.rank.invalid"),
-    COMMAND_RANK_GET("ravelcraft.command.rank.get");
+    COMMAND_RANK_GET("ravelcraft.command.rank.get"),
+
+    COMMAND_SERVER_INVALID("ravelcraft.command.server.invalid"),
+    COMMAND_SERVER_SUCCESS_OTHER("ravelcraft.command.server.success.other"),
+    COMMAND_SERVER_FAIL_SLEF("ravelcraft.command.server.fail.self"),
+    COMMAND_SERVER_FAIL_OTHER("ravelcraft.command.server.fail.other"),
+    COMMAND_SERVER_ALREADY("ravelcraft.command.server.already");
 
     private static final Map<Language, Properties> languages = new HashMap<>();
 

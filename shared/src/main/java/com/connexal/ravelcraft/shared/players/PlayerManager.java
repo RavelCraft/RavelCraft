@@ -46,9 +46,6 @@ public abstract class PlayerManager {
         if (server.isProxy()) {
             throw new IllegalArgumentException("Cannot set player server to a proxy server");
         }
-        if (server == RavelInstance.getServer()) {
-            throw new IllegalArgumentException("Cannot set player server to the current server");
-        }
         if (player.getServer() == server) {
             return true;
         }
