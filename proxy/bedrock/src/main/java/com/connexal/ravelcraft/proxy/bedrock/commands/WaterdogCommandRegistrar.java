@@ -64,6 +64,11 @@ public class WaterdogCommandRegistrar extends CommandRegistrar {
 
     @Override
     protected void register(RavelCommand command) {
+        BeProxy.getServer().getCommandMap().unregisterCommand(command.getName());
+        for (String alias : command.getAliases()) {
+            BeProxy.getServer().getCommandMap().unregisterCommand(alias);
+        }
+
         CommandSettings settings = CommandSettings.builder()
                 .setAliases(command.getAliases())
                 .setQuoteAware(false)

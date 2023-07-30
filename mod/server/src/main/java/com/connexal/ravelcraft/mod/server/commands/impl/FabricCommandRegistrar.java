@@ -35,14 +35,7 @@ public class FabricCommandRegistrar extends CommandRegistrar {
     @Override
     protected void register(RavelCommand command) {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            LiteralArgumentBuilder<ServerCommandSource> builder = literal(command.getName())
-                    .requires(source -> {
-                        if (command.requiresOp()) {
-                            return this.getSender(source).isOp();
-                        } else {
-                            return true;
-                        }
-                    });
+            LiteralArgumentBuilder<ServerCommandSource> builder = literal(command.getName());
 
             for (CommandOption option : command.getOptions()) {
                 this.processOption(command, option, builder);

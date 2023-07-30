@@ -37,6 +37,12 @@ public class VelocityCommandRegistrar extends CommandRegistrar {
 
     @Override
     protected void register(RavelCommand command) {
+        CommandManager commandManager = JeProxy.getServer().getCommandManager();
+        commandManager.unregister(command.getName());
+        for (String alias : command.getAliases()) {
+            commandManager.unregister(alias);
+        }
+
         LiteralArgumentBuilder<CommandSource> builder = LiteralArgumentBuilder.<CommandSource>literal(command.getName())
                 .requires(source -> {
                     if (command.requiresOp()) {
@@ -56,7 +62,6 @@ public class VelocityCommandRegistrar extends CommandRegistrar {
             return Command.SINGLE_SUCCESS;
         });
 
-        CommandManager commandManager = JeProxy.getServer().getCommandManager();
         CommandMeta commandMeta = commandManager.metaBuilder(command.getName())
                 .aliases(command.getAliases())
                 .build();

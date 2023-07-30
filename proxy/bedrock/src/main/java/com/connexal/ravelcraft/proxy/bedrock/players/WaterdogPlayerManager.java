@@ -25,7 +25,7 @@ public class WaterdogPlayerManager extends ProxyPlayerManager {
 
     @Override
     protected boolean transferPlayerInternal(RavelPlayer player, RavelServer server) {
-        ProxiedPlayer proxyPlayer = BeProxy.getServer().getPlayer(player.getUniqueID());
+        ProxiedPlayer proxyPlayer = ((WaterdogBedrockRavelPlayer) player).getPlayer();
         if (proxyPlayer == null) {
             RavelInstance.getLogger().error("Unable to transfer player to server! The player doesn't exist on the proxy!");
             return false;
@@ -37,7 +37,8 @@ public class WaterdogPlayerManager extends ProxyPlayerManager {
             return false;
         }
 
-        proxyPlayer.redirectServer(serverInfo);
+        //Don't use redirect here, because we want to keep the player on the proxy
+        proxyPlayer.connect(serverInfo);
         return true;
     }
 
