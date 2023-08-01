@@ -2,6 +2,7 @@ package com.connexal.ravelcraft.proxy.java;
 
 import com.connexal.ravelcraft.proxy.java.players.VelocityJavaRavelPlayer;
 import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.messaging.Messager;
 import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
@@ -26,7 +27,8 @@ public class JeEventListener {
 
     @Subscribe(order = PostOrder.FIRST)
     public void onLoginEvent(LoginEvent event) {
-        if (!RavelInstance.getMessager().attemptConnect()) {
+        Messager messager = RavelInstance.getMessager();
+        if (!messager.attemptConnect() || !messager.otherProxyConnected()) {
             event.setResult(ResultedEvent.ComponentResult.denied(Component.text("Network IPC connection establishment failed. Contact the server administrator.")));
             return;
         }

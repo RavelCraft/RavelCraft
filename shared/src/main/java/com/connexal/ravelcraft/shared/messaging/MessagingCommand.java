@@ -1,11 +1,11 @@
 package com.connexal.ravelcraft.shared.messaging;
 
 public enum MessagingCommand {
+    HEARTBEAT,
     RESPONSE,
 
     PROXY_PLAYER_JOINED, //When a player joins the other proxy server
     PROXY_PLAYER_LEFT, //When a player leaves the other proxy server
-    PROXY_QUERY_CONNECTED, //When a proxy connects to the network, it asks the other about online players
     PROXY_SEND_MESSAGE, //When a proxy wants to send a message to a player that it doesn't own
     PROXY_TRANSFER_PLAYER, //When wanting to transfer a player to another backend server
     PROXY_TRANSFER_PLAYER_COMPLETE, //When a player has been transferred to another backend server

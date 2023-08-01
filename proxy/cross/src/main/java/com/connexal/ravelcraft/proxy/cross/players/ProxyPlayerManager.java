@@ -19,36 +19,9 @@ public abstract class ProxyPlayerManager extends PlayerManager {
 
         this.messager.registerCommandHandler(MessagingCommand.PROXY_PLAYER_JOINED, this::playerJoinedProxyCommand);
         this.messager.registerCommandHandler(MessagingCommand.PROXY_PLAYER_LEFT, this::playerLeftProxyCommand);
-        this.messager.registerCommandHandler(MessagingCommand.PROXY_QUERY_CONNECTED, this::proxyQueryConnected);
         this.messager.registerCommandHandler(MessagingCommand.PROXY_SEND_MESSAGE, this::proxySendMessage);
         this.messager.registerCommandHandler(MessagingCommand.PROXY_TRANSFER_PLAYER, this::proxyTransferPlayer);
         this.messager.registerCommandHandler(MessagingCommand.PROXY_TRANSFER_PLAYER_COMPLETE, this::playerTransferComplete);
-    }
-
-    @Override
-    public void messagingConnected(RavelServer server) {
-        if (!server.isProxy() || this.messager == null) {
-            return;
-        }
-
-        RavelServer otherServer;
-        if (RavelInstance.getServer().isJavaProxy()) {
-            otherServer = RavelServer.BE_PROXY;
-        } else {
-            otherServer = RavelServer.JE_PROXY;
-        }
-        if (server != otherServer) {
-            return;
-        }
-
-        RavelInstance.getLogger().info("Querying connected server for player information");
-
-        String[] connected = this.messager.sendCommandWithResponse(otherServer, MessagingCommand.PROXY_QUERY_CONNECTED, this.generateConnectedPlayerList());
-        if (connected == null) {
-            RavelInstance.getLogger().error("Unable to query connected server for player information!");
-            return;
-        }
-        this.registerConnected(connected);
     }
 
     @Override
@@ -158,35 +131,6 @@ public abstract class ProxyPlayerManager extends PlayerManager {
     }
 
     protected abstract void playerLeftProxyCommand(UUID uuid);
-
-    private String[] generateConnectedPlayerList() {
-        List<String> connected = new ArrayList<>();
-        for (RavelPlayer player : RavelInstance.getPlayerManager().getConnectedPlayers()) {
-            if (player.getOwnerProxy() != RavelInstance.getServer()) {
-                //We're going to add all these players back again, who knows what happened to them since the servers last talked anyway
-                this.playerLeftProxyCommand(null, new String[]{player.getUniqueID().toString()});
-
-                continue;
-            }
-
-            connected.add(player.getUniqueID().toString() + "\n" + player.getName());
-        }
-
-        return connected.toArray(new String[0]);
-    }
-
-    private void registerConnected(String[] playerData) {
-        for (String player : playerData) {
-            this.playerJoinedProxyCommand(null, player.split("\n"));
-        }
-    }
-
-    private String[] proxyQueryConnected(RavelServer source, String[] args) {
-        String[] connected = this.generateConnectedPlayerList();
-        this.registerConnected(args);
-
-        return connected;
-    }
 
     private String[] proxySendMessage(RavelServer source, String[] args) {
         if (args.length < 2) {

@@ -18,6 +18,8 @@ public class MessagingServer extends Messager {
     public MessagingServer() {
         RavelInstance.getLogger().info("Starting plugin messaging server on port " + MessagingConstants.PORT + "...");
 
+        this.registerCommandHandler(MessagingCommand.HEARTBEAT, (server, args) -> new String[] {"PONG"});
+
         try {
             this.serverSocket = new ServerSocket(MessagingConstants.PORT);
         } catch (IOException e) {
@@ -110,6 +112,7 @@ public class MessagingServer extends Messager {
 
         client.close();
         if (server != null) {
+            this.disconnectedFromMessaging(server);
             this.clients.remove(server);
         }
     }
@@ -118,6 +121,12 @@ public class MessagingServer extends Messager {
     public boolean attemptConnect(int attempts) {
         // Do nothing, no need to connect to ourselves
         return true;
+    }
+
+    @Override
+    public boolean otherProxyConnected() {
+        RavelServer other = RavelInstance.getServer().isJavaProxy() ? RavelServer.BE_PROXY : RavelServer.JE_PROXY;
+        return this.clients.containsKey(other);
     }
 
     @Override

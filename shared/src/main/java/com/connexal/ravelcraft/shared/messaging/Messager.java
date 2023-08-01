@@ -29,6 +29,16 @@ public abstract class Messager {
 
     protected abstract boolean attemptConnect(int attempts);
 
+    public abstract boolean otherProxyConnected();
+
+    protected void disconnectedFromMessaging(RavelServer server) {
+        try {
+            RavelInstance.getPlayerManager().disconnectedFromMessaging(server);
+        } catch (Exception e) {
+            RavelInstance.getLogger().error("Not sure what to do, more errors because of messaging disconnect", e);
+        }
+    }
+
     public abstract DataOutputStream getServerOutputStream(RavelServer server);
 
     public abstract Lock getWriteLock(RavelServer server);

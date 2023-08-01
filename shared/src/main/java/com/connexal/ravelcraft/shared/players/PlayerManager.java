@@ -37,9 +37,6 @@ public abstract class PlayerManager {
         this.messager.registerCommandHandler(MessagingCommand.PLAYER_KICK, this::playerKickCommand);
     }
 
-    //This could also be a reconnect
-    public abstract void messagingConnected(RavelServer server);
-
     protected abstract boolean transferPlayerInternal(RavelPlayer player, RavelServer server);
 
     public boolean transferPlayerToServer(RavelPlayer player, RavelServer server) {
@@ -197,6 +194,37 @@ public abstract class PlayerManager {
         this.kick(player, reason, RavelInstance.getServer().isProxy());
 
         return new String[] {MessagingConstants.COMMAND_SUCCESS};
+    }
+
+    public void disconnectedFromMessaging(RavelServer server) {
+        RavelServer thisServer = RavelInstance.getServer();
+
+        if (server == thisServer) { //This is the server that disconnected
+            if (thisServer.isProxy()) {
+                for (RavelPlayer player : this.connectedPlayers.values()) {
+                    if (player.getOwnerProxy() != thisServer) { //Only kick players that were on this proxy, we can't communicate with the other
+                        continue;
+                    }
+
+                    this.kick(player, "Network IPC error", true);
+                }
+            } else {
+                for (RavelPlayer player : this.connectedPlayers.values()) {
+                    this.kick(player, "Network IPC error", false);
+                }
+            }
+        } else if (server.isProxy() && thisServer.isProxy()) { //A proxy disconnected, we need to kick our players
+            for (RavelPlayer player : this.connectedPlayers.values()) {
+                if (player.getOwnerProxy() != thisServer) {
+                    continue;
+                }
+
+                this.kick(player, "Network IPC error", true);
+            }
+        }
+
+        this.connectedPlayers.clear();
+        this.settingCache.clear();
     }
 
     public void broadcast(Text message, String... args) {

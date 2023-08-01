@@ -23,10 +23,6 @@ public class FabricPlayerManager extends PlayerManager {
     }
 
     @Override
-    public void messagingConnected(RavelServer server) {
-    }
-
-    @Override
     protected boolean transferPlayerInternal(RavelPlayer player, RavelServer server) {
         //Will never be run
         throw new IllegalStateException("This method should never be run on the server");

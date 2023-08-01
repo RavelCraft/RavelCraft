@@ -17,20 +17,37 @@ public class MessagingClient extends Messager {
     private DataInputStream input;
     private final Lock writeLock = new Lock();
 
+    private static final int MAX_CONNECT_ATTEMPTS = 3;
+
     public MessagingClient(String hostname) {
         this.serverHostname = hostname;
         this.attemptConnect();
+
+        new Thread(() -> {
+            long lastPing = System.currentTimeMillis() - (MessagingConstants.HEARTBEAT_INTERVAL + 1);
+            while (true) {
+                if (System.currentTimeMillis() - lastPing > MessagingConstants.HEARTBEAT_INTERVAL) {
+                    this.attemptConnect(MAX_CONNECT_ATTEMPTS - 1);
+
+                    String[] response = this.sendCommandWithResponse(MessagingConstants.MESSAGING_SERVER, MessagingCommand.HEARTBEAT, "PING");
+                    if (response != null && (response.length == 0 || !response[0].equals("PONG"))) {
+                        this.close();
+                    }
+                    lastPing = System.currentTimeMillis();
+                }
+            }
+        }).start();
     }
 
     @Override
     public boolean attemptConnect(int attempts) {
-        if (attempts >= 2) {
-            RavelInstance.getLogger().error("Too many attempts to connect to plugin messaging.");
-            return false;
-        }
-
         if (this.connected) {
             return true;
+        }
+
+        if (attempts >= MAX_CONNECT_ATTEMPTS) {
+            RavelInstance.getLogger().error("Too many attempts to connect to plugin messaging.");
+            return false;
         }
 
         this.connected = true;
@@ -84,12 +101,12 @@ public class MessagingClient extends Messager {
         }).start();
 
         RavelInstance.getLogger().info("Connected to plugin messaging server at " + this.serverHostname + ".");
-        PlayerManager playerManager = RavelInstance.getPlayerManager();
-        if (playerManager != null) {
-            playerManager.messagingConnected(MessagingConstants.MESSAGING_SERVER);
-        }
-
         return true;
+    }
+
+    @Override
+    public boolean otherProxyConnected() {
+        return this.connected;
     }
 
     @Override
@@ -108,6 +125,8 @@ public class MessagingClient extends Messager {
 
     @Override
     public void close() {
+        this.disconnectedFromMessaging(RavelInstance.getServer());
+
         this.connected = false;
         if (this.socket == null) {
             return;

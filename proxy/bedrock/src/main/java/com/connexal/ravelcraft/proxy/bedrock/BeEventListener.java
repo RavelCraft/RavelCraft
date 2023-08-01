@@ -2,6 +2,7 @@ package com.connexal.ravelcraft.proxy.bedrock;
 
 import com.connexal.ravelcraft.proxy.bedrock.players.WaterdogBedrockRavelPlayer;
 import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.messaging.Messager;
 import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
@@ -48,7 +49,8 @@ public class BeEventListener {
     }
 
     private void onPlayerAuthenticate(PlayerAuthenticatedEvent event) {
-        if (!RavelInstance.getMessager().attemptConnect()) {
+        Messager messager = RavelInstance.getMessager();
+        if (!messager.attemptConnect() || !messager.otherProxyConnected()) {
             event.setCancelReason("Network IPC connection establishment failed. Contact the server administrator.");
             event.setCancelled(true);
         }

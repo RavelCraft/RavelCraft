@@ -8,6 +8,8 @@ public class MessagingConstants {
     public static final String MAGIC = "RavelCraft Messaging System";
     public static final RavelServer MESSAGING_SERVER = RavelServer.JE_PROXY; //Changing this will probably break everything
 
+    public static final long HEARTBEAT_INTERVAL = 10000;
+
     public static final String COMMAND_FAILURE = "FAILURE";
     public static final String COMMAND_SUCCESS = "SUCCESS";
 
