@@ -31,6 +31,11 @@ public abstract class RavelCommand {
     protected abstract boolean run(RavelCommandSender sender, String[] args);
 
     protected void sendUsage(RavelCommandSender sender) {
+        if (this.getOptions().length == 0) {
+            sender.sendMessage(Text.COMMAND_HELP, "\n /" + this.getName());
+            return;
+        }
+
         StringBuilder builder = new StringBuilder();
         for (CommandOption option : this.getOptions()) {
             this.buildUsageNode(builder, "\n -", option);

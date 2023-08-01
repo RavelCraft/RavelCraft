@@ -1,0 +1,70 @@
+package com.connexal.ravelcraft.proxy.cross.commands;
+
+import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.commands.RavelCommand;
+import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
+import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.util.ChatColor;
+import com.connexal.ravelcraft.shared.util.text.Text;
+import com.google.auto.service.AutoService;
+
+import java.util.*;
+
+@AutoService(RavelCommand.class)
+public class ListCommand extends RavelCommand {
+    @Override
+    public boolean requiresOp() {
+        return false;
+    }
+
+    @Override
+    public String getName() {
+        return "proxylist";
+    }
+
+    @Override
+    public String[] getAliases() {
+        return new String[] { "plist" };
+    }
+
+    @Override
+    public CommandOption[] getOptions() {
+        return new CommandOption[0];
+    }
+
+    @Override
+    protected boolean run(RavelCommandSender sender, String[] args) {
+        if (args.length != 0) {
+            return false;
+        }
+
+        Set<RavelPlayer> players = RavelInstance.getPlayerManager().getConnectedPlayers();
+        if (players.isEmpty()) {
+            sender.sendMessage(Text.COMMAND_LIST_NO_PLAYERS);
+            return true;
+        }
+
+        Map<String, List<String>> serverToPlayers = new HashMap<>();
+        for (RavelPlayer player : players) {
+            String server = player.getServer().getName();
+            if (!serverToPlayers.containsKey(server)) {
+                serverToPlayers.put(server, new ArrayList<>());
+            }
+
+            serverToPlayers.get(server).add(player.getName());
+        }
+
+        StringBuilder builder = new StringBuilder();
+        for (Map.Entry<String, List<String>> entry : serverToPlayers.entrySet()) {
+            builder.append("\n");
+            builder.append(ChatColor.BLUE).append("[").append(entry.getKey()).append("] ");
+            builder.append(ChatColor.YELLOW).append("(").append(entry.getValue().size()).append("): ").append(ChatColor.RESET);
+            builder.append(String.join(" ", entry.getValue()));
+        }
+
+        sender.sendMessage(Text.COMMAND_LIST_PLAYERS, builder.toString());
+
+        return true;
+    }
+}

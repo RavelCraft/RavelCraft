@@ -5,7 +5,6 @@ import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
-import com.connexal.ravelcraft.shared.util.uuid.UUIDTools;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.event.Subscribe;
@@ -18,7 +17,6 @@ import net.kyori.adventure.text.Component;
 
 import java.util.Locale;
 import java.util.Optional;
-import java.util.UUID;
 
 public class JeEventListener {
     @Subscribe(order = PostOrder.FIRST)

@@ -1,7 +1,6 @@
 package com.connexal.ravelcraft.proxy.bedrock.commands;
 
 import com.connexal.ravelcraft.proxy.bedrock.BeProxy;
-import com.connexal.ravelcraft.proxy.bedrock.players.WaterdogBedrockRavelPlayer;
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.commands.CommandRegistrar;

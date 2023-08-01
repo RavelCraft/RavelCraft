@@ -87,9 +87,9 @@ public abstract class Messager {
             destination = null;
         }
 
-        if (destination == null || destination == RavelInstance.getServer()) {
+        /*if (destination == null || destination == RavelInstance.getServer()) {
             RavelInstance.getLogger().info("Received message " + format.getCommand() + " with response ID " + format.getResponseId() + " and args " + Arrays.toString(format.getArguments()) + " from " + format.getSource() + " redirect? " + destination);
-        }
+        }*/
 
         new Thread(() -> {
             this.processRead(destination, format.getSource(), format.getType(), format.getResponseId(), format.getCommand(), format.getArguments());
@@ -142,9 +142,9 @@ public abstract class Messager {
 
         writeLock.unlock();
 
-        if (source == RavelInstance.getServer()) {
+        /*if (source == RavelInstance.getServer()) {
             RavelInstance.getLogger().info("Sent message " + command + " with response ID " + responseId + " and args " + Arrays.toString(arguments) + " to " + destination + " from " + source);
-        }
+        }*/
 
         return true;
     }

@@ -41,7 +41,10 @@ public enum Text {
     COMMAND_SERVER_SUCCESS_OTHER("ravelcraft.command.server.success.other"),
     COMMAND_SERVER_FAIL_SLEF("ravelcraft.command.server.fail.self"),
     COMMAND_SERVER_FAIL_OTHER("ravelcraft.command.server.fail.other"),
-    COMMAND_SERVER_ALREADY("ravelcraft.command.server.already");
+    COMMAND_SERVER_ALREADY("ravelcraft.command.server.already"),
+
+    COMMAND_LIST_NO_PLAYERS("ravelcraft.command.list.no-players"),
+    COMMAND_LIST_PLAYERS("ravelcraft.command.list.players");
 
     private static final Map<Language, Properties> languages = new HashMap<>();
 

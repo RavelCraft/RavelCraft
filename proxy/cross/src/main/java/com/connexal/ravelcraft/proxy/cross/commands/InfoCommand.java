@@ -31,6 +31,10 @@ public class InfoCommand extends RavelCommand {
 
     @Override
     protected boolean run(RavelCommandSender sender, String[] args) {
+        if (args.length != 0) {
+            return false;
+        }
+
         sender.sendMessage(Text.COMMAND_INFO, BuildConstants.SERVER_IP, BuildConstants.VERSION);
         return true;
     }
