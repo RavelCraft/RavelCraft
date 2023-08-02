@@ -1,7 +1,9 @@
 package com.connexal.ravelcraft.mod.server;
 
+import com.connexal.ravelcraft.mod.cross.RavelModInstance;
 import com.connexal.ravelcraft.mod.server.commands.impl.FabricCommandRegistrar;
 import com.connexal.ravelcraft.mod.server.geyser.GeyserEventRegistration;
+import com.connexal.ravelcraft.mod.server.geyser.custom.GeyserCustomRegistration;
 import com.connexal.ravelcraft.mod.server.players.FabricPlayerManager;
 import com.connexal.ravelcraft.mod.server.util.FabricRavelLogger;
 import com.connexal.ravelcraft.mod.server.velocity.VelocityModernForwarding;
@@ -37,9 +39,13 @@ public class RavelModServer implements RavelMain, ModInitializer {
 
 		mod = FabricLoader.getInstance().getModContainer(BuildConstants.ID).orElseThrow();
 		RavelInstance.setup(this, FabricLoader.getInstance().getConfigDir().resolve(BuildConstants.ID), new FabricRavelLogger());
+		RavelModInstance.setup();
+
 		RavelInstance.init(new FabricCommandRegistrar(), new FabricPlayerManager());
+		RavelModInstance.init();
 
 		geyserEvents = new GeyserEventRegistration();
+		GeyserCustomRegistration.setup();
 
 		if (!RavelInstance.getConfig().contains("forwarding-key")) {
 			RavelInstance.getConfig().set("forwarding-key", "CHANGE ME");

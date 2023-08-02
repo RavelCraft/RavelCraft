@@ -22,8 +22,6 @@ dependencies {
     mappings("net.fabricmc:yarn:${yarnMappings}:v2")
     modCompileOnly("net.fabricmc:fabric-loader:${fabricLoaderVersion}")
     modCompileOnly("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
-
-    shadow(project(":shared"))
 }
 
 tasks {

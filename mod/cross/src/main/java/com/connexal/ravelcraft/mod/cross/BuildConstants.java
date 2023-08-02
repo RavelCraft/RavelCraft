@@ -1,6 +1,6 @@
-package com.connexal.ravelcraft.shared;
+package com.connexal.ravelcraft.mod.cross;
 
-//Remember to mirror this file in mod cross!!!!
+//Remember to mirror this file in shared!!!!
 public class BuildConstants {
     public static final String NAME = "RavelCraft";
     public static final String ID = "ravelcraft";
