@@ -19,6 +19,7 @@ public class ModBlocks {
     public static final List<Block> BLOCK_LIST = new ArrayList<>();
 
     public static final Block CONDENSED_DIRT = register(new Block(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRASS)), "condensed_dirt");
+    public static final Block MAGIC_BLOCK = register(new Block(AbstractBlock.Settings.create().sounds(BlockSoundGroup.AMETHYST_BLOCK)), "magic_block");
 
     public static <T extends Block> T register(T block, String name) {
         Identifier id = new Identifier(BuildConstants.ID, name);

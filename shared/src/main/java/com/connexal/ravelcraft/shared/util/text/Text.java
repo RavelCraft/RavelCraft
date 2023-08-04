@@ -44,7 +44,10 @@ public enum Text {
     COMMAND_SERVER_ALREADY("ravelcraft.command.server.already"),
 
     COMMAND_LIST_NO_PLAYERS("ravelcraft.command.list.no-players"),
-    COMMAND_LIST_PLAYERS("ravelcraft.command.list.players");
+    COMMAND_LIST_PLAYERS("ravelcraft.command.list.players"),
+
+    COMMAND_MOTD_GET("ravelcraft.command.motd.get"),
+    COMMAND_MOTD_SET("ravelcraft.command.motd.set");
 
     private static final Map<Language, Properties> languages = new HashMap<>();
 

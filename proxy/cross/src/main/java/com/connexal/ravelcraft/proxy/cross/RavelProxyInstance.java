@@ -1,5 +1,6 @@
 package com.connexal.ravelcraft.proxy.cross;
 
+import com.connexal.ravelcraft.proxy.cross.servers.MotdManager;
 import com.connexal.ravelcraft.proxy.cross.servers.ServerManager;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.util.server.ProxyType;
@@ -7,6 +8,7 @@ import com.connexal.ravelcraft.shared.util.server.ProxyType;
 public class RavelProxyInstance {
     private static ServerManager serverManager;
     private static ProxyType proxyType;
+    private static MotdManager motdManager;
 
     public static void setup() {
         //No-op
@@ -21,6 +23,8 @@ public class RavelProxyInstance {
         proxyType = RavelInstance.getServer().isJavaProxy() ? ProxyType.JAVA : ProxyType.BEDROCK;
 
         serverManager.init();
+
+        motdManager = new MotdManager();
     }
 
     public static ServerManager getServerManager() {
@@ -29,5 +33,9 @@ public class RavelProxyInstance {
 
     public static ProxyType getProxyType() {
         return proxyType;
+    }
+
+    public static MotdManager getMotdManager() {
+        return motdManager;
     }
 }

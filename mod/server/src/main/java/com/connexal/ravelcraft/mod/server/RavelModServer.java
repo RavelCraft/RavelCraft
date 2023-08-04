@@ -45,7 +45,7 @@ public class RavelModServer implements RavelMain, ModInitializer {
 		RavelModInstance.init();
 
 		geyserEvents = new GeyserEventRegistration();
-		GeyserCustomRegistration.setup();
+		//GeyserCustomRegistration.setup();
 
 		if (!RavelInstance.getConfig().contains("forwarding-key")) {
 			RavelInstance.getConfig().set("forwarding-key", "CHANGE ME");
