@@ -1,6 +1,7 @@
 package com.connexal.ravelcraft.proxy.bedrock;
 
 import com.connexal.ravelcraft.proxy.bedrock.players.WaterdogBedrockRavelPlayer;
+import com.connexal.ravelcraft.shared.BuildConstants;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.messaging.Messager;
 import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
@@ -12,6 +13,7 @@ import dev.waterdog.waterdogpe.ProxyServer;
 import dev.waterdog.waterdogpe.event.defaults.*;
 import dev.waterdog.waterdogpe.network.protocol.user.HandshakeUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -25,6 +27,8 @@ public class BeEventListener {
         server.getEventManager().subscribe(PlayerLoginEvent.class, this::onPlayerJoin);
         server.getEventManager().subscribe(PlayerDisconnectedEvent.class, this::onPlayerLeave);
         server.getEventManager().subscribe(TransferCompleteEvent.class, this::onPlayerTransfer);
+        server.getEventManager().subscribe(ProxyPingEvent.class, this::onPlayerPing);
+        server.getEventManager().subscribe(ProxyQueryEvent.class, this::onPlayerQuery);
     }
 
     private void onPreLogin(PreClientDataSetEvent event) {
@@ -87,5 +91,19 @@ public class BeEventListener {
 
         player.setServer(server);
         RavelInstance.getMessager().sendCommand(RavelServer.JE_PROXY, MessagingCommand.PROXY_TRANSFER_PLAYER_COMPLETE, player.getUniqueID().toString(), server.name());
+    }
+
+    private void onPlayerPing(ProxyPingEvent event) {
+        event.setPlayers(Collections.emptyList());
+        event.setPlayerCount(RavelInstance.getPlayerManager().getOnlineCount());
+        event.setMaximumPlayerCount(BuildConstants.MAX_PLAYERS);
+
+        event.setMotd("\uE015 ʀᴀᴠᴇʟᴄʀᴀғᴛ");
+        event.setSubMotd("Super secret second line!");
+    }
+
+    private void onPlayerQuery(ProxyQueryEvent event) {
+        event.setHasWhitelist(true);
+        this.onPlayerPing(event);
     }
 }
