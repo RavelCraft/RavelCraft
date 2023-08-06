@@ -6,6 +6,8 @@
   "mixins": [
     "PlayerManagerMixin",
     "ServerPlayNetworkHandlerMixin",
+    "geyser.SkinProviderInvoker",
+    "geyser.SkinProviderMixin",
     "velocity.ClientConnection_AddressAccessor",
     "velocity.ServerLoginNetworkHandlerAccessor"
   ],

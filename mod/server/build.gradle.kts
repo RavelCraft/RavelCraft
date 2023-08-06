@@ -25,6 +25,7 @@ dependencies {
 	implementation("com.google.auto.service:auto-service:1.0.1")
 	annotationProcessor("com.google.auto.service:auto-service:1.0.1")
 
+	implementation("org.geysermc.geyser:core:${geyserVersion}")
 	implementation("org.geysermc.geyser:api:${geyserVersion}")
 
 	shadow(project(":shared"))
