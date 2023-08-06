@@ -60,4 +60,8 @@ public abstract class RavelCommand {
             builder.append(current).append(" ").append(this.buildName(option));
         }
     }
+
+    protected void completeAsync(Runnable runnable) {
+        new Thread(runnable).start();
+    }
 }

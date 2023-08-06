@@ -1,6 +1,7 @@
 package com.connexal.ravelcraft.proxy.java;
 
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
+import com.connexal.ravelcraft.proxy.cross.servers.whitelist.WhitelistManager;
 import com.connexal.ravelcraft.proxy.java.players.VelocityJavaRavelPlayer;
 import com.connexal.ravelcraft.shared.BuildConstants;
 import com.connexal.ravelcraft.shared.RavelInstance;
@@ -9,6 +10,8 @@ import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.util.ChatColor;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.util.text.InitText;
+import com.connexal.ravelcraft.shared.util.text.Text;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.event.Subscribe;
@@ -16,6 +19,7 @@ import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.event.connection.PreLoginEvent;
 import com.velocitypowered.api.event.player.ServerPostConnectEvent;
+import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.ServerPing;
@@ -56,6 +60,7 @@ public class JeEventListener {
     @Subscribe(order = PostOrder.FIRST)
     public void onPreLoginEvent(PreLoginEvent event) {
         //TODO: Disallow players from joining on the wrong address
+        //TODO: Add forced hosts support
     }
 
     @Subscribe(order = PostOrder.FIRST)
@@ -67,18 +72,56 @@ public class JeEventListener {
         }
 
         RavelPlayer player = new VelocityJavaRavelPlayer(event.getPlayer());
+
+        if (!RavelProxyInstance.getWhitelistManager().isWhitelisted(player.getUniqueID())) {
+            event.setResult(ResultedEvent.ComponentResult.denied(Component.text(InitText.NOT_WHITELISTED)));
+            return;
+        }
+        if (1 == 2) { //TODO: Check if player is banned
+            event.setResult(ResultedEvent.ComponentResult.denied(Component.text(InitText.BANNED)));
+            return;
+        }
+
+        if (RavelInstance.getPlayerManager().getOnlineCount() >= BuildConstants.MAX_PLAYERS) {
+            event.setResult(ResultedEvent.ComponentResult.denied(Component.text(InitText.SERVER_FULL)));
+            return;
+        }
+
         RavelInstance.getPlayerManager().applyPlayerRank(player, player.getRank());
-
-        //TODO: Check if player is banned
-
-        //TODO: Check if player is whitelisted
-
         RavelInstance.getPlayerManager().playerJoined(player);
     }
 
     @Subscribe
     public void onDisconnectEvent(DisconnectEvent event) {
         RavelInstance.getPlayerManager().playerLeft(event.getPlayer().getUniqueId());
+    }
+
+
+    @Subscribe
+    public void onPlayerAskTransfer(ServerPreConnectEvent event) {
+        //Pre transfer checks...
+
+        //Check if player is whitelisted on the backend server
+        event.getResult().getServer().ifPresent(serverInfo -> {
+            RavelServer server;
+            try {
+                server = RavelServer.valueOf(serverInfo.getServerInfo().getName().toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException e) {
+                RavelInstance.getLogger().error("Failed to find player server!", e);
+                return;
+            }
+
+            WhitelistManager whitelistManager = RavelProxyInstance.getWhitelistManager();
+            if (!whitelistManager.isEnabled(server)) {
+                return;
+            }
+
+            if (!whitelistManager.isWhitelisted(event.getPlayer().getUniqueId(), server)) {
+                event.setResult(ServerPreConnectEvent.ServerResult.denied());
+                RavelPlayer player = RavelInstance.getPlayerManager().getPlayer(event.getPlayer().getUniqueId());
+                player.sendMessage(Text.PLAYERS_NOT_WHITELISTED_BACKEND);
+            }
+        });
     }
 
     @Subscribe
@@ -102,6 +145,7 @@ public class JeEventListener {
         player.setServer(server);
         RavelInstance.getMessager().sendCommand(RavelServer.BE_PROXY, MessagingCommand.PROXY_TRANSFER_PLAYER_COMPLETE, player.getUniqueID().toString(), server.name());
     }
+
 
     @Subscribe(order = PostOrder.FIRST)
     public void onProxyPingEvent(ProxyPingEvent event) {

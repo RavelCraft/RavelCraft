@@ -2,13 +2,18 @@ package com.connexal.ravelcraft.proxy.cross;
 
 import com.connexal.ravelcraft.proxy.cross.servers.MotdManager;
 import com.connexal.ravelcraft.proxy.cross.servers.ServerManager;
+import com.connexal.ravelcraft.proxy.cross.servers.whitelist.WhitelistManager;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.util.server.ProxyType;
+import com.connexal.ravelcraft.shared.util.server.RavelServer;
 
 public class RavelProxyInstance {
     private static ServerManager serverManager;
-    private static ProxyType proxyType;
     private static MotdManager motdManager;
+    private static WhitelistManager whitelistManager;
+
+    private static ProxyType proxyType;
+    private static RavelServer otherProxy;
 
     public static void setup() {
         //No-op
@@ -21,21 +26,32 @@ public class RavelProxyInstance {
             throw new IllegalStateException("RavelProxyInstance.init() called on non-proxy server");
         }
         proxyType = RavelInstance.getServer().isJavaProxy() ? ProxyType.JAVA : ProxyType.BEDROCK;
+        otherProxy = RavelInstance.getServer().isJavaProxy() ? RavelServer.BE_PROXY : RavelServer.JE_PROXY;
 
         serverManager.init();
 
         motdManager = new MotdManager();
-    }
-
-    public static ServerManager getServerManager() {
-        return serverManager;
+        whitelistManager = WhitelistManager.create();
     }
 
     public static ProxyType getProxyType() {
         return proxyType;
     }
 
+    public static RavelServer getOtherProxy() {
+        return otherProxy;
+    }
+
+
+    public static ServerManager getServerManager() {
+        return serverManager;
+    }
+
     public static MotdManager getMotdManager() {
         return motdManager;
+    }
+
+    public static WhitelistManager getWhitelistManager() {
+        return whitelistManager;
     }
 }

@@ -15,6 +15,7 @@ public enum Text {
     PLAYERS_JOIN_SERVER("ravelcraft.players.join.server"),
     PLAYERS_LEAVE_NETWORK("ravelcraft.players.leave.network"),
     PLAYERS_LEAVE_SERVER("ravelcraft.players.leave.server"),
+    PLAYERS_NOT_WHITELISTED_BACKEND("ravelcraft.players.not-whitelisted.backend"),
 
     COMMAND_REQUIRES_OP("ravelcraft.command.requires-op"),
     COMMAND_HELP("ravelcraft.command.help"),
@@ -47,7 +48,16 @@ public enum Text {
     COMMAND_LIST_PLAYERS("ravelcraft.command.list.players"),
 
     COMMAND_MOTD_GET("ravelcraft.command.motd.get"),
-    COMMAND_MOTD_SET("ravelcraft.command.motd.set");
+    COMMAND_MOTD_SET("ravelcraft.command.motd.set"),
+
+    COMMAND_WHITELIST_INVALID_SERVER("ravelcraft.command.whitelist.invalid-server"),
+    COMMAND_WHITELIST_ENABLE_BOOL_INVALID("ravelcraft.command.whitelist.enable-bool-invalid"),
+    COMMAND_WHITELIST_ENABLE_TRUE("ravelcraft.command.whitelist.enable-true"),
+    COMMAND_WHITELIST_ENABLE_FALSE("ravelcraft.command.whitelist.enable-false"),
+    COMMAND_WHITELIST_GLOBAL_ADD("ravelcraft.command.whitelist.global-add"),
+    COMMAND_WHITELIST_GLOBAL_REMOVE("ravelcraft.command.whitelist.global-remove"),
+    COMMAND_WHITELIST_BACKEND_ADD("ravelcraft.command.whitelist.backend-add"),
+    COMMAND_WHITELIST_BACKEND_REMOVE("ravelcraft.command.whitelist.backend-remove");
 
     private static final Map<Language, Properties> languages = new HashMap<>();
 

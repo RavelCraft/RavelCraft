@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.nio.file.Path;
 
 public class RavelModServer implements RavelMain, ModInitializer {
+	public static final String[] OVERRIDDEN_COMMANDS = new String[] { "ban", "kick", "list", "whitelist" };
+
 	private ModContainer mod;
 
 	private static MinecraftServer server;

@@ -20,12 +20,12 @@ public class ListCommand extends RavelCommand {
 
     @Override
     public String getName() {
-        return "proxylist";
+        return "list";
     }
 
     @Override
     public String[] getAliases() {
-        return new String[] { "plist" };
+        return new String[0];
     }
 
     @Override
@@ -39,31 +39,33 @@ public class ListCommand extends RavelCommand {
             return false;
         }
 
-        Set<RavelPlayer> players = RavelInstance.getPlayerManager().getConnectedPlayers();
-        if (players.isEmpty()) {
-            sender.sendMessage(Text.COMMAND_LIST_NO_PLAYERS);
-            return true;
-        }
-
-        Map<String, List<String>> serverToPlayers = new HashMap<>();
-        for (RavelPlayer player : players) {
-            String server = player.getServer().getName();
-            if (!serverToPlayers.containsKey(server)) {
-                serverToPlayers.put(server, new ArrayList<>());
+        this.completeAsync(() -> {
+            Set<RavelPlayer> players = RavelInstance.getPlayerManager().getConnectedPlayers();
+            if (players.isEmpty()) {
+                sender.sendMessage(Text.COMMAND_LIST_NO_PLAYERS);
+                return;
             }
 
-            serverToPlayers.get(server).add(player.getName());
-        }
+            Map<String, List<String>> serverToPlayers = new HashMap<>();
+            for (RavelPlayer player : players) {
+                String server = player.getServer().getName();
+                if (!serverToPlayers.containsKey(server)) {
+                    serverToPlayers.put(server, new ArrayList<>());
+                }
 
-        StringBuilder builder = new StringBuilder();
-        for (Map.Entry<String, List<String>> entry : serverToPlayers.entrySet()) {
-            builder.append("\n");
-            builder.append(ChatColor.BLUE).append("[").append(entry.getKey()).append("] ");
-            builder.append(ChatColor.YELLOW).append("(").append(entry.getValue().size()).append("): ").append(ChatColor.RESET);
-            builder.append(String.join(" ", entry.getValue()));
-        }
+                serverToPlayers.get(server).add(player.getName());
+            }
 
-        sender.sendMessage(Text.COMMAND_LIST_PLAYERS, builder.toString());
+            StringBuilder builder = new StringBuilder();
+            for (Map.Entry<String, List<String>> entry : serverToPlayers.entrySet()) {
+                builder.append("\n");
+                builder.append(ChatColor.BLUE).append("[").append(entry.getKey()).append("] ");
+                builder.append(ChatColor.YELLOW).append("(").append(entry.getValue().size()).append("): ").append(ChatColor.RESET);
+                builder.append(String.join(" ", entry.getValue()));
+            }
+
+            sender.sendMessage(Text.COMMAND_LIST_PLAYERS, builder.toString());
+        });
 
         return true;
     }

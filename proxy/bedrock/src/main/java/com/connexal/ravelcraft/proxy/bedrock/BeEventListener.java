@@ -1,17 +1,22 @@
 package com.connexal.ravelcraft.proxy.bedrock;
 
 import com.connexal.ravelcraft.proxy.bedrock.players.WaterdogBedrockRavelPlayer;
+import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
+import com.connexal.ravelcraft.proxy.cross.servers.whitelist.WhitelistManager;
 import com.connexal.ravelcraft.shared.BuildConstants;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.messaging.Messager;
 import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.util.text.InitText;
+import com.connexal.ravelcraft.shared.util.text.Text;
 import com.connexal.ravelcraft.shared.util.uuid.UUIDTools;
 import com.nimbusds.jwt.SignedJWT;
 import dev.waterdog.waterdogpe.ProxyServer;
 import dev.waterdog.waterdogpe.event.defaults.*;
 import dev.waterdog.waterdogpe.network.protocol.user.HandshakeUtils;
+import dev.waterdog.waterdogpe.network.serverinfo.ServerInfo;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +31,7 @@ public class BeEventListener {
         server.getEventManager().subscribe(PlayerAuthenticatedEvent.class, this::onPlayerAuthenticate);
         server.getEventManager().subscribe(PlayerLoginEvent.class, this::onPlayerJoin);
         server.getEventManager().subscribe(PlayerDisconnectedEvent.class, this::onPlayerLeave);
+        server.getEventManager().subscribe(ServerTransferRequestEvent.class, this::onPlayerAskTransfer);
         server.getEventManager().subscribe(TransferCompleteEvent.class, this::onPlayerTransfer);
         server.getEventManager().subscribe(ProxyPingEvent.class, this::onPlayerPing);
         server.getEventManager().subscribe(ProxyQueryEvent.class, this::onPlayerQuery);
@@ -48,8 +54,9 @@ public class BeEventListener {
         event.getExtraData().remove("displayName");
         event.getExtraData().addProperty("displayName", username);
 
-        //TODO: Note to self, client data contains a property called "ServerAddress" that contains something like "address:port". Can be used for forced hosts.
+        //Note to self, client data contains a property called "ServerAddress" that contains something like "address:port". Can be used for forced hosts.
         //TODO: Disallow players from joining on the wrong address
+        //TODO: Add forced hosts support
     }
 
     private void onPlayerAuthenticate(PlayerAuthenticatedEvent event) {
@@ -62,12 +69,25 @@ public class BeEventListener {
 
     private void onPlayerJoin(PlayerLoginEvent event) {
         RavelPlayer player = new WaterdogBedrockRavelPlayer(event.getPlayer());
+
+        if (!RavelProxyInstance.getWhitelistManager().isWhitelisted(player.getUniqueID())) {
+            event.setCancelReason(InitText.NOT_WHITELISTED);
+            event.setCancelled(true);
+            return;
+        }
+        if (1 == 2) { //TODO: Check if player is banned
+            event.setCancelReason(InitText.BANNED);
+            event.setCancelled(true);
+            return;
+        }
+
+        if (RavelInstance.getPlayerManager().getOnlineCount() >= BuildConstants.MAX_PLAYERS) {
+            event.setCancelReason(InitText.SERVER_FULL);
+            event.setCancelled(true);
+            return;
+        }
+
         RavelInstance.getPlayerManager().applyPlayerRank(player, player.getRank());
-
-        //TODO: Check if player is banned
-
-        //TODO: Check if player is whitelisted
-
         RavelInstance.getPlayerManager().playerJoined(player);
     }
 
@@ -75,6 +95,29 @@ public class BeEventListener {
         UUID uuid = UUIDTools.getJavaUUIDFromXUID(event.getPlayer().getXuid());
 
         RavelInstance.getPlayerManager().playerLeft(uuid);
+    }
+
+    private void onPlayerAskTransfer(ServerTransferRequestEvent event) {
+        ServerInfo serverInfo = event.getTargetServer();
+
+        RavelServer server;
+        try {
+            server = RavelServer.valueOf(serverInfo.getServerName().toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            RavelInstance.getLogger().error("Failed to find player server!", e);
+            return;
+        }
+
+        WhitelistManager whitelistManager = RavelProxyInstance.getWhitelistManager();
+        if (!whitelistManager.isEnabled(server)) {
+            return;
+        }
+
+        if (!whitelistManager.isWhitelisted(event.getPlayer().getUniqueId(), server)) {
+            event.setCancelled(true);
+            RavelPlayer player = RavelInstance.getPlayerManager().getPlayer(event.getPlayer().getUniqueId());
+            player.sendMessage(Text.PLAYERS_NOT_WHITELISTED_BACKEND);
+        }
     }
 
     private void onPlayerTransfer(TransferCompleteEvent event) {

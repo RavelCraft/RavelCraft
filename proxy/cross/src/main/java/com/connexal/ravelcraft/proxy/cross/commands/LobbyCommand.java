@@ -48,10 +48,12 @@ public class LobbyCommand extends RavelCommand {
             return true;
         }
 
-        boolean success = RavelInstance.getPlayerManager().transferPlayerToServer(player, RavelServer.DEFAULT_SERVER);
-        if (!success) {
-            sender.sendMessage(Text.COMMAND_SERVER_FAIL_SLEF, RavelServer.DEFAULT_SERVER.getName());
-        }
+        this.completeAsync(() -> {
+            boolean success = RavelInstance.getPlayerManager().transferPlayerToServer(player, RavelServer.DEFAULT_SERVER);
+            if (!success) {
+                sender.sendMessage(Text.COMMAND_SERVER_FAIL_SLEF, RavelServer.DEFAULT_SERVER.getName());
+            }
+        });
 
         return true;
     }

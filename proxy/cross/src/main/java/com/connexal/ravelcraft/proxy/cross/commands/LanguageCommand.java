@@ -41,30 +41,32 @@ public class LanguageCommand extends RavelCommand {
             return true;
         }
 
-        if (args.length == 0) { //List the available languages
-            StringBuilder builder = new StringBuilder();
-            for (Language language : Language.values()) {
-                builder.append("\n - ").append(language.getCode().toUpperCase(Locale.ROOT));
-            }
-
-            sender.sendMessage(Text.COMMAND_LANGUAGE_LIST, builder.toString());
-        } else { //Set the language
-            String code = args[0];
-            Language language = null;
-            for (Language lang : Language.values()) {
-                if (lang.getCode().equalsIgnoreCase(code)) {
-                    language = lang;
-                    break;
+        this.completeAsync(() -> {
+            if (args.length == 0) { //List the available languages
+                StringBuilder builder = new StringBuilder();
+                for (Language language : Language.values()) {
+                    builder.append("\n - ").append(language.getCode().toUpperCase(Locale.ROOT));
                 }
-            }
-            if (language == null) {
-                sender.sendMessage(Text.COMMAND_LANGUAGE_INVALID);
-                return true;
-            }
 
-            RavelInstance.getPlayerManager().languageUpdate(sender.asPlayer().getUniqueID(), language);
-            sender.sendMessage(Text.COMMAND_LANGUAGE_SET, language.name());
-        }
+                sender.sendMessage(Text.COMMAND_LANGUAGE_LIST, builder.toString());
+            } else { //Set the language
+                String code = args[0];
+                Language language = null;
+                for (Language lang : Language.values()) {
+                    if (lang.getCode().equalsIgnoreCase(code)) {
+                        language = lang;
+                        break;
+                    }
+                }
+                if (language == null) {
+                    sender.sendMessage(Text.COMMAND_LANGUAGE_INVALID);
+                    return;
+                }
+
+                RavelInstance.getPlayerManager().languageUpdate(sender.asPlayer().getUniqueID(), language);
+                sender.sendMessage(Text.COMMAND_LANGUAGE_SET, language.name());
+            }
+        });
 
         return true;
     }

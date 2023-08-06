@@ -8,6 +8,8 @@ import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.Text;
 import com.google.auto.service.AutoService;
 
+import java.util.Locale;
+
 @AutoService(RavelCommand.class)
 public class BackendServerCommand extends RavelCommand {
     @Override
@@ -40,7 +42,7 @@ public class BackendServerCommand extends RavelCommand {
 
         RavelServer server;
         try {
-            server = RavelServer.valueOf(args[0].toUpperCase());
+            server = RavelServer.valueOf(args[0].toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
             sender.sendMessage(Text.COMMAND_SERVER_INVALID);
             return true;

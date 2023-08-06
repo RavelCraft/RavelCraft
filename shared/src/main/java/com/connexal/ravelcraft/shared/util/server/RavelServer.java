@@ -82,7 +82,6 @@ public enum RavelServer {
         return lobby;
     }
 
-    //TODO: Add support for direct connect
     public String getDirectConnect() {
         return directConnect;
     }

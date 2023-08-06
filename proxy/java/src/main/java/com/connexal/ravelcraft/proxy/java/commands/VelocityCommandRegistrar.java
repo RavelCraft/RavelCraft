@@ -87,12 +87,7 @@ public class VelocityCommandRegistrar extends CommandRegistrar {
             RavelCommandSender sender = this.getSender(context.getSource());
 
             String argsUnparsed = context.getInput().substring(context.getInput().indexOf(' ') + 1); // Remove the command name from the input
-            String[] args;
-            if (argsUnparsed.contains(" ")) {
-                args = argsUnparsed.split(" ");
-            } else {
-                args = new String[]{argsUnparsed};
-            }
+            String[] args = argsUnparsed.split(" ");
 
             command.execute(sender, args);
             return Command.SINGLE_SUCCESS;

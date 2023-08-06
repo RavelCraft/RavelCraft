@@ -366,7 +366,7 @@ public abstract class PlayerManager {
     }
 
     public void playerLeft(UUID uuid) {
-        if (!RavelInstance.getServer().isProxy()) {
+        if (!RavelInstance.getServer().isProxy() && this.connectedPlayers.containsKey(uuid)) {
             String name = this.connectedPlayers.get(uuid).getName();
             this.broadcast(Text.PLAYERS_LEAVE_SERVER, name);
         }
@@ -387,7 +387,7 @@ public abstract class PlayerManager {
     }
 
     protected void playerLeftInternal(UUID uuid) {
-        if (RavelInstance.getServer().isProxy()) {
+        if (RavelInstance.getServer().isProxy() && this.connectedPlayers.containsKey(uuid)) {
             String name = this.connectedPlayers.get(uuid).getName();
 
             for (RavelPlayer otherPlayer : this.connectedPlayers.values()) {

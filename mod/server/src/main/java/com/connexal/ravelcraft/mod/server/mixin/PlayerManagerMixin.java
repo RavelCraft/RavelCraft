@@ -6,6 +6,7 @@ import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,5 +24,13 @@ public class PlayerManagerMixin {
         RavelPlayer ravelPlayer = new FabricRavelPlayer(player);
         RavelInstance.getPlayerManager().playerJoined(ravelPlayer);
         RavelInstance.getPlayerManager().applyPlayerRank(ravelPlayer, ravelPlayer.getRank());
+    }
+
+    @Inject(at = @At(value = "HEAD"), method = "broadcast(Lnet/minecraft/text/Text;Z)V", cancellable = true)
+    private void filterJoinedGameMessages(Text message, boolean overlay, CallbackInfo info) {
+        String key = ((TranslatableTextContent) message.getContent()).getKey();
+        if (key.equals("multiplayer.player.joined.renamed") || key.equals("multiplayer.player.joined") || key.equals("multiplayer.player.left")) {
+            info.cancel();
+        }
     }
 }

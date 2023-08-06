@@ -47,14 +47,15 @@ public class KickCommand extends RavelCommand {
         }
 
         String reason = String.join(" ", args).substring(args[0].length() + args[1].length() + 2);
+        this.completeAsync(() -> {
+            boolean success = RavelInstance.getPlayerManager().kick(player, reason, args[1].equalsIgnoreCase("network"));
+            if (success) {
+                sender.sendMessage(Text.COMMAND_KICK_SUCCESS, player.getName());
+            } else {
+                sender.sendMessage(Text.COMMAND_KICK_FAIL, player.getName());
+            }
+        });
 
-        boolean success = RavelInstance.getPlayerManager().kick(player, reason, args[1].equalsIgnoreCase("network"));
-        if (!success) {
-            sender.sendMessage(Text.COMMAND_KICK_FAIL, player.getName());
-            return true;
-        }
-
-        sender.sendMessage(Text.COMMAND_KICK_SUCCESS, player.getName());
         return true;
     }
 }

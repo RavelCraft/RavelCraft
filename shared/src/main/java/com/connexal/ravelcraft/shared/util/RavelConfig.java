@@ -401,6 +401,25 @@ public class RavelConfig {
         return result;
     }
 
+    public List<UUID> getUUIDList(String path) {
+        List<String> stringList = this.getStringList(path);
+        List<UUID> result = new ArrayList<>();
+
+        if (stringList == null) {
+            return result;
+        }
+
+        for (String string : stringList) {
+            try {
+                result.add(UUID.fromString(string));
+            } catch (Exception ex) {
+                RavelInstance.getLogger().error("Could not parse UUID in config: " + string, ex);
+            }
+        }
+
+        return result;
+    }
+
     public boolean contains(String key, boolean ignoreCase) {
         if (ignoreCase) {
             key = key.toLowerCase();
@@ -462,7 +481,7 @@ public class RavelConfig {
 
         public ConfigSection(LinkedHashMap<String, Object> map) {
             this();
-            if (map.isEmpty()) {
+            if (map == null || map.isEmpty()) {
                 return;
             }
 

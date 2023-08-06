@@ -10,9 +10,14 @@ import com.connexal.ravelcraft.shared.commands.arguments.CommandSubOption;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.mojang.brigadier.tree.CommandNode;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.ServerCommandSource;
+
+import java.lang.reflect.Field;
+import java.util.Map;
 
 import static com.mojang.brigadier.arguments.StringArgumentType.word;
 import static net.minecraft.server.command.CommandManager.argument;
@@ -21,6 +26,42 @@ import static net.minecraft.server.command.CommandManager.literal;
 public class FabricCommandRegistrar extends CommandRegistrar {
     public FabricCommandRegistrar() {
         super(RavelModServer.class.getClassLoader());
+
+        //Unregister overridden commands
+        // Thanks https://gist.github.com/Chocohead/f818e045e825484c241802f62b6a14fb
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+            final Field CHILDREN, LITERALS, ARGUMENTS;
+            try {
+                CHILDREN = CommandNode.class.getDeclaredField("children");
+                CHILDREN.setAccessible(true);
+                LITERALS = CommandNode.class.getDeclaredField("literals");
+                LITERALS.setAccessible(true);
+                ARGUMENTS = CommandNode.class.getDeclaredField("arguments");
+                ARGUMENTS.setAccessible(true);
+            } catch (ReflectiveOperationException e) {
+                throw new RuntimeException("Unable to get CommandNode fields", e);
+            }
+
+            CommandNode<?> rootNode = dispatcher.getRoot();
+
+            for (String command : RavelModServer.OVERRIDDEN_COMMANDS) {
+                Object child = rootNode.getChild(command);
+
+                if (child != null) {
+                    try {
+                        if (child instanceof LiteralCommandNode<?>) {
+                            ((Map<String, ?>) LITERALS.get(rootNode)).remove(command, child);
+                        } else if (child instanceof ArgumentCommandNode<?, ?>) {
+                            ((Map<String, ?>) ARGUMENTS.get(rootNode)).remove(command, child);
+                        }
+
+                        ((Map<String, ?>) CHILDREN.get(rootNode)).remove(command, child);
+                    } catch (ReflectiveOperationException e) {
+                        throw new RuntimeException("Error removing command: " + command, e);
+                    }
+                }
+            }
+        });
     }
 
     private RavelCommandSender getSender(ServerCommandSource source) {
@@ -79,12 +120,7 @@ public class FabricCommandRegistrar extends CommandRegistrar {
             RavelCommandSender sender = this.getSender(context.getSource());
 
             String argsUnparsed = context.getInput().substring(context.getInput().indexOf(' ') + 1); // Remove the command name from the input
-            String[] args;
-            if (argsUnparsed.contains(" ")) {
-                args = argsUnparsed.split(" ");
-            } else {
-                args = new String[]{argsUnparsed};
-            }
+            String[] args = argsUnparsed.split(" ");
 
             command.execute(sender, args);
             return Command.SINGLE_SUCCESS;
