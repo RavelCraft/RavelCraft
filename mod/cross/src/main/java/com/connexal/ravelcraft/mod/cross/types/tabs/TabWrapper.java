@@ -1,7 +1,6 @@
-package com.connexal.ravelcraft.mod.cross.custom.tabs;
+package com.connexal.ravelcraft.mod.cross.types.tabs;
 
 import com.connexal.ravelcraft.mod.cross.BuildConstants;
-import com.connexal.ravelcraft.mod.cross.custom.items.ModItems;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;

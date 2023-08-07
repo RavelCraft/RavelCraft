@@ -115,7 +115,8 @@ public class BeEventListener {
 
         if (!whitelistManager.isWhitelisted(event.getPlayer().getUniqueId(), server)) {
             event.setCancelled(true);
-            RavelPlayer player = RavelInstance.getPlayerManager().getPlayer(event.getPlayer().getUniqueId());
+            UUID uuid = UUIDTools.getJavaUUIDFromXUID(event.getPlayer().getXuid());
+            RavelPlayer player = RavelInstance.getPlayerManager().getPlayer(uuid);
             player.sendMessage(Text.PLAYERS_NOT_WHITELISTED_BACKEND);
         }
     }

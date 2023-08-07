@@ -1,8 +1,8 @@
 package com.connexal.ravelcraft.mod.cross;
 
-import com.connexal.ravelcraft.mod.cross.custom.tabs.ModTabs;
-import com.connexal.ravelcraft.mod.cross.custom.blocks.ModBlocks;
-import com.connexal.ravelcraft.mod.cross.custom.items.ModItems;
+import com.connexal.ravelcraft.mod.cross.registry.RavelBlockRegistry;
+import com.connexal.ravelcraft.mod.cross.registry.RavelItemRegistry;
+import com.connexal.ravelcraft.mod.cross.registry.RavelTabRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,10 +14,10 @@ public class RavelModInstance {
     }
 
     public static void init() {
-        ModTabs.initialize();
+        RavelTabRegistry.initialize();
 
-        ModItems.initialize();
-        ModBlocks.initialize();
+        RavelItemRegistry.initialize();
+        RavelBlockRegistry.initialize();
 
         logger.info("Modded components loaded!");
     }

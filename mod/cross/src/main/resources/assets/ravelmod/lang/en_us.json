@@ -1,8 +1,12 @@
 {
   "itemGroup.ravelcraft.ravel_tab": "RavelCraft",
 
-  "item.ravelcraft.wand": "Wand",
+  "item.ravelcraft.magic_ingot": "Magic Ingot",
+  "item.ravelcraft.magic_axe": "Magic Axe",
+  "item.ravelcraft.magic_hoe": "Magic Hoe",
+  "item.ravelcraft.magic_pickaxe": "Magic Pickaxe",
+  "item.ravelcraft.magic_shovel": "Magic Shovel",
+  "item.ravelcraft.magic_sword": "Magic Sword",
 
-  "block.ravelcraft.condensed_dirt": "Condensed Dirt",
   "block.ravelcraft.magic_block": "Magic Block"
 }

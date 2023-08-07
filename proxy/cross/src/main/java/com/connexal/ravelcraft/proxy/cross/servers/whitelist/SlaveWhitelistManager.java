@@ -55,7 +55,12 @@ class SlaveWhitelistManager extends WhitelistManager {
         //Backend whitelist
         this.backendWhitelist = new HashMap<>();
         for (int i = 1 ; i < whitelistResponse.length; i++) {
-            String serverName = whitelistResponse[i].split(";")[0];
+            String[] serverPart = whitelistResponse[i].split(";");
+            if (serverPart.length != 2) {
+                continue;
+            }
+
+            String serverName = serverPart[0];
             RavelServer server;
             try {
                 server = RavelServer.valueOf(serverName.toUpperCase(Locale.ROOT));
@@ -65,7 +70,7 @@ class SlaveWhitelistManager extends WhitelistManager {
             }
 
             List<UUID> serverWhitelist = new ArrayList<>();
-            String[] uuidStrings = whitelistResponse[i].split(";")[1].split(",");
+            String[] uuidStrings = serverPart[1].split(",");
             for (String uuidString : uuidStrings) {
                 if (uuidString.isEmpty()) {
                     continue;
