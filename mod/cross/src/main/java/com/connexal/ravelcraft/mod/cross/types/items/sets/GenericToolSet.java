@@ -1,13 +1,12 @@
-package com.connexal.ravelcraft.mod.cross.types.items.tools;
+package com.connexal.ravelcraft.mod.cross.types.items.sets;
 
-import com.connexal.ravelcraft.mod.cross.types.items.GenericSet;
 import com.connexal.ravelcraft.mod.cross.types.items.MiningLevel;
-import net.minecraft.item.Item;
-import net.minecraft.item.ToolMaterial;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.minecraft.item.*;
 import net.minecraft.recipe.Ingredient;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GenericToolSet extends GenericSet implements ToolMaterial {
     private final int durability;
@@ -31,26 +30,26 @@ public class GenericToolSet extends GenericSet implements ToolMaterial {
         this.enchantability = builder.enchantability;
         this.repairIngredient = Ingredient.ofItems(builder.repairIngredient);
 
-        List<Item> items = new ArrayList<>();
+        Map<String, Item> items = new HashMap<>();
 
         //TODO: Set attack damage and speed
         if (axe) {
-            items.add(new GenericAxe(this, 0, 0));
+            items.put("axe", new AxeItem(this, 0, 0, new FabricItemSettings()));
         }
         if (hoe) {
-            items.add(new GenericHoe(this, 0, 0));
+            items.put("hoe", new HoeItem(this, 0, 0, new FabricItemSettings()));
         }
         if (pickaxe) {
-            items.add(new GenericPickaxe(this, 0, 0));
+            items.put("pickaxe", new PickaxeItem(this, 0, 0, new FabricItemSettings()));
         }
         if (shovel) {
-            items.add(new GenericShovel(this, 0, 0));
+            items.put("shovel", new ShovelItem(this, 0, 0, new FabricItemSettings()));
         }
         if (sword) {
-            items.add(new GenericSword(this, 0, 0));
+            items.put("sword", new SwordItem(this, 0, 0, new FabricItemSettings()));
         }
 
-        this.setItems(items.toArray(new Item[0]));
+        this.setItems(items);
     }
 
     public GenericToolSet(String identifier, Builder builder) {

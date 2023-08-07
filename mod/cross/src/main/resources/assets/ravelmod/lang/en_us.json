@@ -7,6 +7,10 @@
   "item.ravelcraft.magic_pickaxe": "Magic Pickaxe",
   "item.ravelcraft.magic_shovel": "Magic Shovel",
   "item.ravelcraft.magic_sword": "Magic Sword",
+  "item.ravelcraft.magic_helmet": "Magic Helmet",
+  "item.ravelcraft.magic_chestplate": "Magic Chestplate",
+  "item.ravelcraft.magic_leggings": "Magic Leggings",
+  "item.ravelcraft.magic_boots": "Magic Boots",
 
   "block.ravelcraft.magic_block": "Magic Block"
 }

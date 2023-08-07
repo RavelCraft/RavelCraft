@@ -1,9 +1,10 @@
 package com.connexal.ravelcraft.mod.cross.registry;
 
 import com.connexal.ravelcraft.mod.cross.BuildConstants;
+import com.connexal.ravelcraft.mod.cross.items.MagicArmor;
 import com.connexal.ravelcraft.mod.cross.items.MagicIngot;
 import com.connexal.ravelcraft.mod.cross.items.MagicTools;
-import com.connexal.ravelcraft.mod.cross.types.items.GenericSet;
+import com.connexal.ravelcraft.mod.cross.types.items.sets.GenericSet;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -18,6 +19,7 @@ public class RavelItemRegistry {
 
     public static final Item MAGIC_INGOT = new MagicIngot().register();
     public static final GenericSet MAGIC_TOOLS = new MagicTools().register();
+    public static final GenericSet MAGIC_ARMOR = new MagicArmor().register();
 
     public static <T extends Item> T register(T item, String id) {
         Identifier itemID = new Identifier(BuildConstants.ID, id);

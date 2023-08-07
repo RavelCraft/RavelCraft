@@ -2,7 +2,7 @@ package com.connexal.ravelcraft.mod.cross.items;
 
 import com.connexal.ravelcraft.mod.cross.registry.RavelItemRegistry;
 import com.connexal.ravelcraft.mod.cross.types.items.MiningLevel;
-import com.connexal.ravelcraft.mod.cross.types.items.tools.GenericToolSet;
+import com.connexal.ravelcraft.mod.cross.types.items.sets.GenericToolSet;
 
 public class MagicTools extends GenericToolSet {
     public MagicTools() {
