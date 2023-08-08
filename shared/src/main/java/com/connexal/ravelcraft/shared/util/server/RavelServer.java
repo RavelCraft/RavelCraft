@@ -11,10 +11,10 @@ public enum RavelServer {
     LOBBY("Lobby", "lobby", 25565, true),
     SURVIVAL("Survival", "survival", 25565),
     MULTI("Creative", "multi", 25565),
-    LOULOU("Loulou", "backup.hughes123.co.uk", 25567, "loulou.connexal.com"),
+    LOULOU("Loulou", "loulou", 25565, "loulou." + BuildConstants.SERVER_IP),
 
     CHARLES("Charles", "oracle-carlito.chickenkiller.com", 25565),
-    TEST("Test", "backup.hughes123.co.uk", 25566);
+    TEST("Test", "loulou", 25565);
 
     public static final RavelServer DEFAULT_SERVER = LOBBY;
 

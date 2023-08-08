@@ -119,7 +119,7 @@ public class JeEventListener {
             if (!whitelistManager.isWhitelisted(event.getPlayer().getUniqueId(), server)) {
                 event.setResult(ServerPreConnectEvent.ServerResult.denied());
                 RavelPlayer player = RavelInstance.getPlayerManager().getPlayer(event.getPlayer().getUniqueId());
-                player.sendMessage(Text.PLAYERS_NOT_WHITELISTED_BACKEND);
+                player.sendMessage(Text.PLAYERS_NOT_WHITELISTED_BACKEND, server.getName());
             }
         });
     }

@@ -9,7 +9,7 @@ public class RavelModClient implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) {
-			throw new IllegalStateException("RavelModServer must be loaded on a client environment.");
+			throw new IllegalStateException("RavelModClient must be loaded on a client environment.");
 		}
 
 		RavelModInstance.setup();

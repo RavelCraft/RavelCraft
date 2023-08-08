@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(net.minecraft.server.PlayerManager.class)
 public class PlayerManagerMixin {
     @Inject(at = @At(value = "TAIL"), method = "onPlayerConnect")
-    private void playerJoinChecks(ClientConnection connection, ServerPlayerEntity player, CallbackInfo info) {
+    private void playerJoin(ClientConnection connection, ServerPlayerEntity player, CallbackInfo info) {
         if (!RavelInstance.getMessager().attemptConnect()) {
             connection.disconnect(Text.of("Network IPC connection establishment failed. Contact the server administrator."));
             return;

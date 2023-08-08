@@ -362,6 +362,7 @@ public abstract class PlayerManager {
             }
         }
 
+        //This should take name changed into account
         RavelInstance.getUUIDTools().registerPlayerData(player.getUniqueID(), player.getName());
     }
 

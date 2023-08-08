@@ -32,9 +32,15 @@ public class WhitelistCommand extends RavelCommand {
     @Override
     public CommandOption[] getOptions() {
         return new CommandOption[] {
-                CommandOption.literal("add", CommandOption.word("player"), CommandOption.word("player", CommandOption.word("server"))),
-                CommandOption.literal("remove", CommandOption.word("player"), CommandOption.word("player", CommandOption.word("server"))),
-                CommandOption.literal("enable", CommandOption.word("server", CommandOption.literal("true"), CommandOption.literal("false"))),
+                CommandOption.literal("add",
+                        CommandOption.word("player"),
+                        CommandOption.word("player", CommandOption.word("server"))),
+                CommandOption.literal("remove",
+                        CommandOption.word("player"),
+                        CommandOption.word("player", CommandOption.word("server"))),
+                CommandOption.literal("enable", CommandOption.word("server",
+                        CommandOption.literal("true"),
+                        CommandOption.literal("false"))),
         };
     }
 

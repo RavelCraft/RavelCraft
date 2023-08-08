@@ -1,5 +1,6 @@
 package com.connexal.ravelcraft.mod.server.mixin.geyser;
 
+import com.connexal.ravelcraft.shared.BuildConstants;
 import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.skin.SkinProvider;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,7 +17,7 @@ public class SkinProviderMixin {
     @Inject(at = @At(value = "TAIL"), method = "requestUnofficialCape", remap = false, cancellable = true)
     private static void getCape(SkinProvider.Cape officialCape, UUID playerId, String username, boolean newThread, CallbackInfoReturnable<CompletableFuture<SkinProvider.Cape>> info) {
         if (officialCape.failed() && GeyserImpl.getInstance().getConfig().isAllowThirdPartyCapes()) {
-            CompletableFuture<SkinProvider.Cape> capeFuture = SkinProviderInvoker.requestCape("http://db.connexal.com/capes/" + playerId.toString() + ".png", SkinProvider.CapeProvider.LABYMOD, newThread);
+            CompletableFuture<SkinProvider.Cape> capeFuture = SkinProviderInvoker.requestCape("http://db." + BuildConstants.SERVER_IP + "/capes/" + playerId.toString() + ".png", SkinProvider.CapeProvider.LABYMOD, newThread);
 
             SkinProvider.Cape cape;
             try {

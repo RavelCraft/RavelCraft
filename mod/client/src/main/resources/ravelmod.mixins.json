@@ -6,7 +6,8 @@
   "client": [
     "MultiplayerScreenMixin",
     "PlayerListEntryMixin",
-    "ServerListMixin"
+    "ServerListMixin",
+    "ToastManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

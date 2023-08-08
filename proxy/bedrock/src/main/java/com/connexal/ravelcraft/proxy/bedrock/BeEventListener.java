@@ -113,11 +113,11 @@ public class BeEventListener {
             return;
         }
 
-        if (!whitelistManager.isWhitelisted(event.getPlayer().getUniqueId(), server)) {
+        UUID uuid = UUIDTools.getJavaUUIDFromXUID(event.getPlayer().getXuid());
+        if (!whitelistManager.isWhitelisted(uuid, server)) {
             event.setCancelled(true);
-            UUID uuid = UUIDTools.getJavaUUIDFromXUID(event.getPlayer().getXuid());
             RavelPlayer player = RavelInstance.getPlayerManager().getPlayer(uuid);
-            player.sendMessage(Text.PLAYERS_NOT_WHITELISTED_BACKEND);
+            player.sendMessage(Text.PLAYERS_NOT_WHITELISTED_BACKEND, server.getName());
         }
     }
 
