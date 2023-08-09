@@ -9,7 +9,8 @@ import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.players.RavelRank;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
 
 public abstract class MaintenanceManager {
     protected Boolean globalEnabled = null;

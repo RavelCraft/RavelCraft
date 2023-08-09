@@ -1,5 +1,7 @@
 package com.connexal.ravelcraft.mod.server.players;
 
+import com.connexal.ravelcraft.mod.server.RavelModServer;
+import com.connexal.ravelcraft.mod.server.util.Location;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.players.PlayerManager;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
@@ -7,7 +9,9 @@ import com.connexal.ravelcraft.shared.players.RavelRank;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.Language;
 import com.connexal.ravelcraft.shared.util.text.Text;
+import net.minecraft.server.command.KillCommand;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import org.geysermc.geyser.api.GeyserApi;
 
 import java.util.UUID;
@@ -36,9 +40,30 @@ public class FabricRavelPlayer implements RavelPlayer {
         this.updateDisplayName();
     }
 
+    // --- Custom ---
+
     public ServerPlayerEntity getPlayer() {
         return this.player;
     }
+
+    public Location getLocation() {
+        return Location.of(this.player);
+    }
+
+    public void teleport(Location location) {
+        ServerWorld world = RavelModServer.getServer().getWorld(location.getWorld());
+        this.player.teleport(world, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+    }
+
+    public void teleport(FabricRavelPlayer player) {
+        this.teleport(player.getLocation());
+    }
+
+    public void kill() {
+        this.player.kill();
+    }
+
+    // --- Global ---
 
     @Override
     public void sendMessage(Text message, String... values) {

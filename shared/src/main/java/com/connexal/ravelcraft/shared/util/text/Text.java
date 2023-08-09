@@ -9,6 +9,13 @@ import java.util.Map;
 import java.util.Properties;
 
 public enum Text {
+    //--- General ---
+    COMMAND_REQUIRES_OP("ravelcraft.command.requires-op"),
+    COMMAND_HELP("ravelcraft.command.help"),
+    COMMAND_MUST_BE_PLAYER("ravelcraft.command.must-be-player"),
+    COMMAND_PLAYER_NOT_FOUND("ravelcraft.command.player-not-found"),
+
+    //--- Proxy ---
     CHAT_FORMAT("ravelcraft.chat.format"),
 
     PLAYERS_JOIN_NETWORK("ravelcraft.players.join.network"),
@@ -18,11 +25,6 @@ public enum Text {
 
     PLAYERS_NOT_WHITELISTED_BACKEND("ravelcraft.players.not-whitelisted.backend"),
     PLAYERS_MAINTENANCE("ravelcraft.players.maintenance"),
-
-    COMMAND_REQUIRES_OP("ravelcraft.command.requires-op"),
-    COMMAND_HELP("ravelcraft.command.help"),
-    COMMAND_MUST_BE_PLAYER("ravelcraft.command.must-be-player"),
-    COMMAND_PLAYER_NOT_FOUND("ravelcraft.command.player-not-found"),
 
     COMMAND_INFO("ravelcraft.command.info"),
 
@@ -72,7 +74,14 @@ public enum Text {
     COMMAND_MAINTENANCE_GLOBAL_ENABLED("ravelcraft.command.maintenance.global-enabled"),
     COMMAND_MAINTENANCE_GLOBAL_DISABLED("ravelcraft.command.maintenance.global-disabled"),
     COMMAND_MAINTENANCE_BACKEND_ENABLED("ravelcraft.command.maintenance.backend-enabled"),
-    COMMAND_MAINTENANCE_BACKEND_DISABLED("ravelcraft.command.maintenance.backend-disabled");
+    COMMAND_MAINTENANCE_BACKEND_DISABLED("ravelcraft.command.maintenance.backend-disabled"),
+
+    //--- Backend ---
+    COMMAND_SPAWN_NOT_SET("ravelcraft.command.spawn.not-set"),
+    COMMAND_SPAWN_SET("ravelcraft.command.spawn.set"),
+    COMMAND_SPAWN_TELEPORT("ravelcraft.command.spawn.teleport"),
+
+    COMMAND_SUICIDE("ravelcraft.command.suicide");
 
     private static final Map<Language, Properties> languages = new HashMap<>();
 

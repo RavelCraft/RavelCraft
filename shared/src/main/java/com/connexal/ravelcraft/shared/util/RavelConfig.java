@@ -126,6 +126,15 @@ public class RavelConfig {
         return val instanceof Double;
     }
 
+    public float getFloat(String path) {
+        return this.config.get(path, (Number) 0).floatValue();
+    }
+
+    public boolean isFloat(String path) {
+        Object val = this.config.get(path);
+        return val instanceof Float;
+    }
+
     public String getString(String path) {
         Object result = this.config.get(path, "");
         return String.valueOf(result);

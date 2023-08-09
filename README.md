@@ -7,7 +7,7 @@ All the code for RavelCraft
 Requirements:
 * WaterdogPE proxy
 * Velocity proxy
-* Fabric backends (Install GeyserMC & CrossSwitch)
+* Fabric backends (Install GeyserMC, CrossSwitch & Hydraulic)
 
 Installation steps:
 1. Install all the software and run it once, then stop it.

@@ -10,7 +10,6 @@ import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.messaging.Messager;
 import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.util.StringUtils;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.InitText;
 import com.connexal.ravelcraft.shared.util.text.Text;
@@ -21,7 +20,6 @@ import dev.waterdog.waterdogpe.event.defaults.*;
 import dev.waterdog.waterdogpe.network.protocol.user.HandshakeUtils;
 import dev.waterdog.waterdogpe.network.serverinfo.ServerInfo;
 
-import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
