@@ -20,6 +20,12 @@ public abstract class WhitelistManager {
         this.messager = RavelInstance.getMessager();
         this.messager.registerCommandHandler(MessagingCommand.PROXY_WHITELIST_ENABLED_SET, this::setEnabledCommand);
         this.messager.registerCommandHandler(MessagingCommand.PROXY_WHITELIST_SET, this::setWhitelistedCommand);
+
+        this.messager.registerDisconnectHandler(server -> {
+            this.whitelist = null;
+            this.enabledServers = null;
+            this.backendWhitelist = null;
+        });
     }
 
     public static WhitelistManager create() {

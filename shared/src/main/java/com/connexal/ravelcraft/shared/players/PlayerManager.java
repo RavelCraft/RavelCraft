@@ -35,6 +35,8 @@ public abstract class PlayerManager {
         this.messager.registerCommandHandler(MessagingCommand.PLAYER_LANGUAGE_UPDATE, this::languageUpdateCommand);
 
         this.messager.registerCommandHandler(MessagingCommand.PLAYER_KICK, this::playerKickCommand);
+
+        this.messager.registerDisconnectHandler(this::disconnectedFromMessaging);
     }
 
     protected abstract boolean transferPlayerInternal(RavelPlayer player, RavelServer server);

@@ -9,18 +9,23 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeoutException;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 public abstract class Messager {
     private static final Gson gson = new Gson();
 
     private final Map<String, CompletableFuture<String[]>> responseFutures = new HashMap<>();
     private final Map<MessagingCommand, BiFunction<RavelServer, String[], String[]>> commandHandlers = new HashMap<>();
+
+    private final List<Consumer<RavelServer>> disconnectHandlers = new ArrayList<>();
 
     public boolean attemptConnect() {
         return this.attemptConnect(0);
@@ -31,11 +36,17 @@ public abstract class Messager {
     public abstract boolean otherProxyConnected();
 
     protected void disconnectedFromMessaging(RavelServer server) {
-        try {
-            RavelInstance.getPlayerManager().disconnectedFromMessaging(server);
-        } catch (Exception e) {
-            RavelInstance.getLogger().error("Not sure what to do, more errors because of messaging disconnect", e);
+        for (Consumer<RavelServer> handler : this.disconnectHandlers) {
+            try {
+                handler.accept(server);
+            } catch (Exception e) {
+                RavelInstance.getLogger().error("Not sure what to do, more errors because of messaging disconnect", e);
+            }
         }
+    }
+
+    public void registerDisconnectHandler(Consumer<RavelServer> handler) {
+        this.disconnectHandlers.add(handler);
     }
 
     public abstract DataOutputStream getServerOutputStream(RavelServer server);

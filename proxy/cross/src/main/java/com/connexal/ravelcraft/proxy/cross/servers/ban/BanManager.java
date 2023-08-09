@@ -21,6 +21,10 @@ public abstract class BanManager {
         this.messager = RavelInstance.getMessager();
         this.messager.registerCommandHandler(MessagingCommand.PROXY_BAN_ADD, this::banAddCommand);
         this.messager.registerCommandHandler(MessagingCommand.PROXY_BAN_REMOVE, this::banRemoveCommand);
+
+        this.messager.registerDisconnectHandler(server -> {
+            this.banList = null;
+        });
     }
 
     public static BanManager create() {
