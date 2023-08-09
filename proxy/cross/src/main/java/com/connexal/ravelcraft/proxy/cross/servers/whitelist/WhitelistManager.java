@@ -110,7 +110,7 @@ public abstract class WhitelistManager {
 
             List<UUID> whitelist = this.backendWhitelist.get(server);
             if (whitelist == null) {
-                return true;
+                return false;
             } else {
                 return whitelist.contains(uuid);
             }

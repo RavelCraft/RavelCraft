@@ -117,15 +117,13 @@ public class BeEventListener {
         }
 
         WhitelistManager whitelistManager = RavelProxyInstance.getWhitelistManager();
-        if (!whitelistManager.isEnabled(server)) {
-            return;
-        }
-
-        UUID uuid = UUIDTools.getJavaUUIDFromXUID(event.getPlayer().getXuid());
-        if (!whitelistManager.isWhitelisted(uuid, server)) {
-            event.setCancelled(true);
-            RavelPlayer player = RavelInstance.getPlayerManager().getPlayer(uuid);
-            player.sendMessage(Text.PLAYERS_NOT_WHITELISTED_BACKEND, server.getName());
+        if (whitelistManager.isEnabled(server)) {
+            UUID uuid = UUIDTools.getJavaUUIDFromXUID(event.getPlayer().getXuid());
+            if (!whitelistManager.isWhitelisted(uuid, server)) {
+                event.setCancelled(true);
+                RavelPlayer player = RavelInstance.getPlayerManager().getPlayer(uuid);
+                player.sendMessage(Text.PLAYERS_NOT_WHITELISTED_BACKEND, server.getName());
+            }
         }
     }
 

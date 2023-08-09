@@ -130,26 +130,29 @@ public class JeEventListener {
         //Pre transfer checks...
 
         //Check if player is whitelisted on the backend server
-        event.getResult().getServer().ifPresent(serverInfo -> {
-            RavelServer server;
-            try {
-                server = RavelServer.valueOf(serverInfo.getServerInfo().getName().toUpperCase(Locale.ROOT));
-            } catch (IllegalArgumentException e) {
-                RavelInstance.getLogger().error("Failed to find player server!", e);
-                return;
-            }
+        Optional<RegisteredServer> optionalServer = event.getResult().getServer();
+        if (optionalServer.isEmpty()) {
+            RavelInstance.getLogger().error("Failed to find player server!");
+            return;
+        }
+        RegisteredServer serverInfo = optionalServer.get();
 
-            WhitelistManager whitelistManager = RavelProxyInstance.getWhitelistManager();
-            if (!whitelistManager.isEnabled(server)) {
-                return;
-            }
+        RavelServer server;
+        try {
+            server = RavelServer.valueOf(serverInfo.getServerInfo().getName().toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            RavelInstance.getLogger().error("Failed to find player server!", e);
+            return;
+        }
 
+        WhitelistManager whitelistManager = RavelProxyInstance.getWhitelistManager();
+        if (whitelistManager.isEnabled(server)) {
             if (!whitelistManager.isWhitelisted(event.getPlayer().getUniqueId(), server)) {
                 event.setResult(ServerPreConnectEvent.ServerResult.denied());
                 RavelPlayer player = RavelInstance.getPlayerManager().getPlayer(event.getPlayer().getUniqueId());
                 player.sendMessage(Text.PLAYERS_NOT_WHITELISTED_BACKEND, server.getName());
             }
-        });
+        }
     }
 
     @Subscribe
