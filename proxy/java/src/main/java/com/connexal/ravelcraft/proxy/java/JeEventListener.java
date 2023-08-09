@@ -1,6 +1,7 @@
 package com.connexal.ravelcraft.proxy.java;
 
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
+import com.connexal.ravelcraft.proxy.cross.servers.ban.BanManager;
 import com.connexal.ravelcraft.proxy.cross.servers.whitelist.WhitelistManager;
 import com.connexal.ravelcraft.proxy.java.players.VelocityJavaRavelPlayer;
 import com.connexal.ravelcraft.shared.BuildConstants;
@@ -9,6 +10,7 @@ import com.connexal.ravelcraft.shared.messaging.Messager;
 import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.util.ChatColor;
+import com.connexal.ravelcraft.shared.util.StringUtils;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.InitText;
 import com.connexal.ravelcraft.shared.util.text.Text;
@@ -18,10 +20,13 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.event.connection.PreLoginEvent;
+import com.velocitypowered.api.event.player.KickedFromServerEvent;
 import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
+import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ServerConnection;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
 import net.kyori.adventure.text.Component;
@@ -29,6 +34,7 @@ import net.kyori.adventure.text.Component;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
@@ -73,15 +79,21 @@ public class JeEventListener {
 
         RavelPlayer player = new VelocityJavaRavelPlayer(event.getPlayer());
 
+        //Whitelist check first
         if (!RavelProxyInstance.getWhitelistManager().isWhitelisted(player.getUniqueID())) {
             event.setResult(ResultedEvent.ComponentResult.denied(Component.text(InitText.NOT_WHITELISTED)));
             return;
         }
-        if (1 == 2) { //TODO: Check if player is banned
-            event.setResult(ResultedEvent.ComponentResult.denied(Component.text(InitText.BANNED)));
+
+        //Then a ban check
+        BanManager.BanData banData = RavelProxyInstance.getBanManager().isBanned(player.getUniqueID());
+        if (banData != null) {
+            String message = BanManager.generateBanString(banData.end(), banData.reason());
+            event.setResult(ResultedEvent.ComponentResult.denied(Component.text(message)));
             return;
         }
 
+        //Finally, check if the server is full
         if (RavelInstance.getPlayerManager().getOnlineCount() >= BuildConstants.MAX_PLAYERS) {
             event.setResult(ResultedEvent.ComponentResult.denied(Component.text(InitText.SERVER_FULL)));
             return;
@@ -94,6 +106,22 @@ public class JeEventListener {
     @Subscribe
     public void onDisconnectEvent(DisconnectEvent event) {
         RavelInstance.getPlayerManager().playerLeft(event.getPlayer().getUniqueId());
+    }
+
+    @Subscribe(order = PostOrder.FIRST)
+    public void onPlayerKickEvent(KickedFromServerEvent event) {
+        Player player = event.getPlayer();
+
+        if (event.getServer().getServerInfo().getName().equals(RavelServer.DEFAULT_SERVER.getIdentifier())) { //Kicked from lobby anyway
+            return;
+        }
+
+        Optional<RegisteredServer> lobby = JeProxy.getServer().getServer(RavelServer.DEFAULT_SERVER.getIdentifier());
+        if (lobby.isPresent()) {
+            RavelInstance.getLogger().info("Redirecting " + player.getUsername() + " to lobby, because of kick.");
+
+            event.setResult(KickedFromServerEvent.RedirectPlayer.create(lobby.get()));
+        }
     }
 
 

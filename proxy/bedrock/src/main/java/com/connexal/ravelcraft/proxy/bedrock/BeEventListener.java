@@ -2,12 +2,14 @@ package com.connexal.ravelcraft.proxy.bedrock;
 
 import com.connexal.ravelcraft.proxy.bedrock.players.WaterdogBedrockRavelPlayer;
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
+import com.connexal.ravelcraft.proxy.cross.servers.ban.BanManager;
 import com.connexal.ravelcraft.proxy.cross.servers.whitelist.WhitelistManager;
 import com.connexal.ravelcraft.shared.BuildConstants;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.messaging.Messager;
 import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.util.StringUtils;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.InitText;
 import com.connexal.ravelcraft.shared.util.text.Text;
@@ -18,6 +20,7 @@ import dev.waterdog.waterdogpe.event.defaults.*;
 import dev.waterdog.waterdogpe.network.protocol.user.HandshakeUtils;
 import dev.waterdog.waterdogpe.network.serverinfo.ServerInfo;
 
+import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -70,17 +73,22 @@ public class BeEventListener {
     private void onPlayerJoin(PlayerLoginEvent event) {
         RavelPlayer player = new WaterdogBedrockRavelPlayer(event.getPlayer());
 
+        //Whitelist check first
         if (!RavelProxyInstance.getWhitelistManager().isWhitelisted(player.getUniqueID())) {
             event.setCancelReason(InitText.NOT_WHITELISTED);
             event.setCancelled(true);
             return;
         }
-        if (1 == 2) { //TODO: Check if player is banned
-            event.setCancelReason(InitText.BANNED);
+
+        //Then a ban check
+        BanManager.BanData banData = RavelProxyInstance.getBanManager().isBanned(player.getUniqueID());
+        if (banData != null) {
+            event.setCancelReason(BanManager.generateBanString(banData.end(), banData.reason()));
             event.setCancelled(true);
             return;
         }
 
+        //Finally, check if the server is full
         if (RavelInstance.getPlayerManager().getOnlineCount() >= BuildConstants.MAX_PLAYERS) {
             event.setCancelReason(InitText.SERVER_FULL);
             event.setCancelled(true);

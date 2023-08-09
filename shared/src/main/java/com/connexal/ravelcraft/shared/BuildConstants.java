@@ -10,4 +10,6 @@ public class BuildConstants {
     public static final String SERVER_IP = "ravelcraft.fr";
     public static final String[] TEST_IPS = new String[] { "localhost", "minecraft.alnet", "ravelcraft.connexal.com" };
     public static final int MAX_PLAYERS = 100;
+
+    public static final String EMAIL = "contact@" + SERVER_IP;
 }

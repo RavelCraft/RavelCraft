@@ -57,7 +57,14 @@ public enum Text {
     COMMAND_WHITELIST_GLOBAL_ADD("ravelcraft.command.whitelist.global-add"),
     COMMAND_WHITELIST_GLOBAL_REMOVE("ravelcraft.command.whitelist.global-remove"),
     COMMAND_WHITELIST_BACKEND_ADD("ravelcraft.command.whitelist.backend-add"),
-    COMMAND_WHITELIST_BACKEND_REMOVE("ravelcraft.command.whitelist.backend-remove");
+    COMMAND_WHITELIST_BACKEND_REMOVE("ravelcraft.command.whitelist.backend-remove"),
+
+    COMMAND_BAN_INVALID_DAYS("ravelcraft.command.ban.invalid-days"),
+    COMMAND_BAN_ALREADY_BANNED("ravelcraft.command.ban.already-banned"),
+    COMMAND_BAN_SUCCESS("ravelcraft.command.ban.success"),
+
+    COMMAND_PARDON_NOT_BANNED("ravelcraft.command.pardon.not-banned"),
+    COMMAND_PARDON_SUCCESS("ravelcraft.command.pardon.success");
 
     private static final Map<Language, Properties> languages = new HashMap<>();
 

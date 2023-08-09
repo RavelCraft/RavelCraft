@@ -6,17 +6,19 @@ public enum MessagingCommand {
 
     PROXY_PLAYER_JOINED, //When a player joins the other proxy server
     PROXY_PLAYER_LEFT, //When a player leaves the other proxy server
+
     PROXY_SEND_MESSAGE, //When a proxy wants to send a message to a player that it doesn't own
     PROXY_TRANSFER_PLAYER, //When wanting to transfer a player to another backend server
     PROXY_TRANSFER_PLAYER_COMPLETE, //When a player has been transferred to another backend server
-
     PROXY_MOTD_GET, //When a proxy wants to get the message of the day
     PROXY_MOTD_SET, //When a proxy wants to set the message of the day
-
     PROXY_WHITELIST_ENABLED_GET, //When a proxy wants to get the servers on which the whitelist is enabled
     PROXY_WHITELIST_ENABLED_SET, //When a proxy wants to set the servers on which the whitelist is enabled
     PROXY_WHITELIST_SET, //When a proxy wants to set the whitelisted players for a server or the proxy
     PROXY_WHITELIST_GET, //When a proxy wants to get the whitelisted players for everything
+    PROXY_BAN_ADD, //When a proxy wants to add a ban
+    PROXY_BAN_REMOVE, //When a proxy wants to remove a ban
+    PROXY_BAN_GET, //When a proxy wants to get the ban list
 
     PLAYER_GET_INFO, //When a server wants to get info about a player
     PLAYER_GET_UUID_FROM_NAME, //When a server wants to get a player's UUID from their name

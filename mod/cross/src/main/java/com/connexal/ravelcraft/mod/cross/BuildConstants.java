@@ -1,7 +1,5 @@
 package com.connexal.ravelcraft.mod.cross;
 
-import net.minecraft.util.Identifier;
-
 //Remember to mirror this file in shared!!!!
 public class BuildConstants {
     public static final String NAME = "RavelCraft Network";
@@ -13,6 +11,5 @@ public class BuildConstants {
     public static final String[] TEST_IPS = new String[] { "localhost", "minecraft.alnet", "ravelcraft.connexal.com" };
     public static final int MAX_PLAYERS = 100;
 
-    //Specific to the mod
-    public static final Identifier RAVEL_PACKET = new Identifier(ID, "ravel_packet");
+    public static final String EMAIL = "contact@" + SERVER_IP;
 }
