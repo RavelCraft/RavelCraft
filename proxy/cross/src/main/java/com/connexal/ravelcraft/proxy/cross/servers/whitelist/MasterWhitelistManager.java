@@ -15,9 +15,20 @@ class MasterWhitelistManager extends WhitelistManager {
 
         this.messager.registerCommandHandler(MessagingCommand.PROXY_WHITELIST_ENABLED_GET, this::getEnabledCommand);
         this.messager.registerCommandHandler(MessagingCommand.PROXY_WHITELIST_GET, this::getWhitelistedCommand);
-
         this.config = RavelInstance.getConfig("whitelist");
+
         this.ensureVariables();
+    }
+
+    @Override
+    protected void ensureVariables() {
+        if (this.whitelist != null) {
+            return;
+        }
+
+        this.whitelist = new ArrayList<>();
+        this.enabledServers = new ArrayList<>();
+        this.backendWhitelist = new HashMap<>();
 
         if (this.config.contains("whitelist") && this.config.isList("whitelist")) {
             this.whitelist.addAll(this.config.getUUIDList("whitelist"));
@@ -45,17 +56,6 @@ class MasterWhitelistManager extends WhitelistManager {
                 this.backendWhitelist.put(server, this.config.getUUIDList(path));
             }
         }
-    }
-
-    @Override
-    protected void ensureVariables() {
-        if (this.whitelist != null) {
-            return;
-        }
-
-        this.whitelist = new ArrayList<>();
-        this.enabledServers = new ArrayList<>();
-        this.backendWhitelist = new HashMap<>();
     }
 
     @Override

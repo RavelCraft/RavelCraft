@@ -62,13 +62,13 @@ public class MaintenanceCommand extends RavelCommand {
                 if (server == null) {
                     sender.sendMessage(Text.COMMAND_MAINTENANCE_GLOBAL_ENABLED);
                 } else {
-                    sender.sendMessage(Text.COMMAND_MAINTENANCE_BACKEND_ENABLED);
+                    sender.sendMessage(Text.COMMAND_MAINTENANCE_BACKEND_ENABLED, server.getName());
                 }
             } else {
                 if (server == null) {
                     sender.sendMessage(Text.COMMAND_MAINTENANCE_GLOBAL_DISABLED);
                 } else {
-                    sender.sendMessage(Text.COMMAND_MAINTENANCE_BACKEND_DISABLED);
+                    sender.sendMessage(Text.COMMAND_MAINTENANCE_BACKEND_DISABLED, server.getName());
                 }
             }
         });

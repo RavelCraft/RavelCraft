@@ -14,9 +14,19 @@ class MasterMaintenanceManager extends MaintenanceManager {
         super();
 
         this.messager.registerCommandHandler(MessagingCommand.PROXY_MAINTENANCE_GET, this::getEnabledCommand);
-
         this.config = RavelInstance.getConfig();
+
         this.ensureVariables();
+    }
+
+    @Override
+    protected void ensureVariables() {
+        if (this.globalEnabled != null) {
+            return;
+        }
+
+        this.globalEnabled = false;
+        this.serversEnabled = new ArrayList<>();
 
         if (this.config.contains("maintenance-mode") && this.config.isBoolean("maintenance-mode")) {
             this.globalEnabled = this.config.getBoolean("maintenance-mode");
@@ -32,16 +42,6 @@ class MasterMaintenanceManager extends MaintenanceManager {
                 }
             }
         }
-    }
-
-    @Override
-    protected void ensureVariables() {
-        if (this.globalEnabled != null) {
-            return;
-        }
-
-        this.globalEnabled = false;
-        this.serversEnabled = new ArrayList<>();
     }
 
     @Override
