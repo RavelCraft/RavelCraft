@@ -2,6 +2,7 @@ package com.connexal.ravelcraft.proxy.java;
 
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
 import com.connexal.ravelcraft.proxy.cross.servers.ban.BanManager;
+import com.connexal.ravelcraft.proxy.cross.servers.maintenance.MaintenanceManager;
 import com.connexal.ravelcraft.proxy.cross.servers.whitelist.WhitelistManager;
 import com.connexal.ravelcraft.proxy.java.players.VelocityJavaRavelPlayer;
 import com.connexal.ravelcraft.shared.BuildConstants;
@@ -14,6 +15,7 @@ import com.connexal.ravelcraft.shared.util.StringUtils;
 import com.connexal.ravelcraft.shared.util.server.RavelServer;
 import com.connexal.ravelcraft.shared.util.text.InitText;
 import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.util.uuid.UUIDTools;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.event.Subscribe;
@@ -56,11 +58,11 @@ public class JeEventListener {
         }
 
         samplePlayers = new ServerPing.SamplePlayer[5];
-        samplePlayers[0] = new ServerPing.SamplePlayer(ChatColor.GREEN + "---------- Ravel Craft Network ----------", emptyUUID);
+        samplePlayers[0] = new ServerPing.SamplePlayer(ChatColor.GREEN + "---------- " + BuildConstants.NAME + " ----------", emptyUUID);
         samplePlayers[1] = new ServerPing.SamplePlayer(ChatColor.YELLOW + "          A friendly community server!", emptyUUID);
         samplePlayers[2] = new ServerPing.SamplePlayer("", emptyUUID);
         samplePlayers[3] = new ServerPing.SamplePlayer(ChatColor.YELLOW + "            Maintained with " + ChatColor.RED + "❤" + ChatColor.YELLOW + " by Alex!", emptyUUID);
-        samplePlayers[4] = new ServerPing.SamplePlayer(ChatColor.GREEN + "---------------------------------------", emptyUUID);
+        samplePlayers[4] = new ServerPing.SamplePlayer(ChatColor.GREEN + "-------------------------------------", emptyUUID);
     }
 
     @Subscribe(order = PostOrder.FIRST)
@@ -91,6 +93,14 @@ public class JeEventListener {
             String message = BanManager.generateBanString(banData.end(), banData.reason());
             event.setResult(ResultedEvent.ComponentResult.denied(Component.text(message)));
             return;
+        }
+
+        //And a maintenance check
+        if (RavelProxyInstance.getMaintenanceManager().isEnabled()) {
+            if (!RavelProxyInstance.getMaintenanceManager().canBypass(player)) {
+                event.setResult(ResultedEvent.ComponentResult.denied(Component.text(InitText.MAINTENANCE)));
+                return;
+            }
         }
 
         //Finally, check if the server is full
@@ -151,6 +161,18 @@ public class JeEventListener {
                 event.setResult(ServerPreConnectEvent.ServerResult.denied());
                 RavelPlayer player = RavelInstance.getPlayerManager().getPlayer(event.getPlayer().getUniqueId());
                 player.sendMessage(Text.PLAYERS_NOT_WHITELISTED_BACKEND, server.getName());
+                return;
+            }
+        }
+
+        MaintenanceManager maintenanceManager = RavelProxyInstance.getMaintenanceManager();
+        if (maintenanceManager.isEnabled(server)) {
+            RavelPlayer player = RavelInstance.getPlayerManager().getPlayer(event.getPlayer().getUniqueId());
+
+            if (!maintenanceManager.canBypass(player)) {
+                event.setResult(ServerPreConnectEvent.ServerResult.denied());
+                player.sendMessage(Text.PLAYERS_MAINTENANCE);
+                return;
             }
         }
     }
@@ -216,19 +238,18 @@ public class JeEventListener {
             }
         }
 
-        /* --- Maintenance ---
-        if (EasyVelocity.getMaintenanceManager().isMaintenance()) {
+        if (RavelProxyInstance.getMaintenanceManager().isEnabled()) {
             ServerPing.Builder serverPing = ServerPing.builder()
                     .onlinePlayers(RavelInstance.getPlayerManager().getOnlineCount())
                     .maximumPlayers(BuildConstants.MAX_PLAYERS)
                     .samplePlayers(samplePlayers)
                     .version(new ServerPing.Version(0, ChatColor.RED + "You need permissions to join!"))
                     .favicon(serverFavicon)
-                    .description(Component.text(ChatColor.AQUA + "The server is currently under maintenance...\nIf this message stays here for too long, please talk to an admin."));
+                    .description(Component.text(ChatColor.AQUA + "The server is currently under maintenance...\nIf this message stays here too long, please talk!"));
 
             event.setPing(serverPing.build());
             return;
-        }*/
+        }
 
         ServerPing.Builder serverPing = ServerPing.builder()
                 .onlinePlayers(RavelInstance.getPlayerManager().getOnlineCount())

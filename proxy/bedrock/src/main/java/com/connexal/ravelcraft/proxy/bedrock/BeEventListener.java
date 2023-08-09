@@ -3,6 +3,7 @@ package com.connexal.ravelcraft.proxy.bedrock;
 import com.connexal.ravelcraft.proxy.bedrock.players.WaterdogBedrockRavelPlayer;
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
 import com.connexal.ravelcraft.proxy.cross.servers.ban.BanManager;
+import com.connexal.ravelcraft.proxy.cross.servers.maintenance.MaintenanceManager;
 import com.connexal.ravelcraft.proxy.cross.servers.whitelist.WhitelistManager;
 import com.connexal.ravelcraft.shared.BuildConstants;
 import com.connexal.ravelcraft.shared.RavelInstance;
@@ -88,6 +89,15 @@ public class BeEventListener {
             return;
         }
 
+        //And a maintenance check
+        if (RavelProxyInstance.getMaintenanceManager().isEnabled()) {
+            if (!RavelProxyInstance.getMaintenanceManager().canBypass(player)) {
+                event.setCancelReason(InitText.MAINTENANCE);
+                event.setCancelled(true);
+                return;
+            }
+        }
+
         //Finally, check if the server is full
         if (RavelInstance.getPlayerManager().getOnlineCount() >= BuildConstants.MAX_PLAYERS) {
             event.setCancelReason(InitText.SERVER_FULL);
@@ -123,6 +133,19 @@ public class BeEventListener {
                 event.setCancelled(true);
                 RavelPlayer player = RavelInstance.getPlayerManager().getPlayer(uuid);
                 player.sendMessage(Text.PLAYERS_NOT_WHITELISTED_BACKEND, server.getName());
+                return;
+            }
+        }
+
+        MaintenanceManager maintenanceManager = RavelProxyInstance.getMaintenanceManager();
+        if (maintenanceManager.isEnabled(server)) {
+            UUID uuid = UUIDTools.getJavaUUIDFromXUID(event.getPlayer().getXuid());
+            RavelPlayer player = RavelInstance.getPlayerManager().getPlayer(uuid);
+
+            if (!maintenanceManager.canBypass(player)) {
+                event.setCancelled(true);
+                player.sendMessage(Text.PLAYERS_MAINTENANCE);
+                return;
             }
         }
     }

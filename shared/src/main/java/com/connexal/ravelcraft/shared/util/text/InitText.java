@@ -11,4 +11,7 @@ public class InitText {
 
     public static final String BANNED = ChatColor.RED + "You are banned from this server! See end date and reason below. If you do not agree with this decision, please contact us at " + BuildConstants.EMAIL + "\n\n" +
             ChatColor.RED + "Vous êtes banni de ce serveur ! Voir date de fin et raison ci-dessous. Si vous n'êtes pas d'accord avec cette décision, veuillez nous contacter à l'adresse suivante : " + BuildConstants.EMAIL + ChatColor.RESET + "\n\n\n";
+
+    public static final String MAINTENANCE = ChatColor.RED + "The server is currently in maintenance mode. Please try again later.\n\n" +
+            ChatColor.RED + "Le serveur est actuellement en mode maintenance. Veuillez réessayer plus tard.";
 }

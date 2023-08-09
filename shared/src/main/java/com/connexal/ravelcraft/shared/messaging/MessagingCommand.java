@@ -19,6 +19,8 @@ public enum MessagingCommand {
     PROXY_BAN_ADD, //When a proxy wants to add a ban
     PROXY_BAN_REMOVE, //When a proxy wants to remove a ban
     PROXY_BAN_GET, //When a proxy wants to get the ban list
+    PROXY_MAINTENANCE_SET, //When a proxy wants to set the maintenance status of a server or the proxy
+    PROXY_MAINTENANCE_GET, //When a proxy wants to get the maintenance statuses of everything
 
     PLAYER_GET_INFO, //When a server wants to get info about a player
     PLAYER_GET_UUID_FROM_NAME, //When a server wants to get a player's UUID from their name

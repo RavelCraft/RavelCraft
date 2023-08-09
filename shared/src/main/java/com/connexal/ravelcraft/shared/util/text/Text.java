@@ -15,7 +15,9 @@ public enum Text {
     PLAYERS_JOIN_SERVER("ravelcraft.players.join.server"),
     PLAYERS_LEAVE_NETWORK("ravelcraft.players.leave.network"),
     PLAYERS_LEAVE_SERVER("ravelcraft.players.leave.server"),
+
     PLAYERS_NOT_WHITELISTED_BACKEND("ravelcraft.players.not-whitelisted.backend"),
+    PLAYERS_MAINTENANCE("ravelcraft.players.maintenance"),
 
     COMMAND_REQUIRES_OP("ravelcraft.command.requires-op"),
     COMMAND_HELP("ravelcraft.command.help"),
@@ -64,7 +66,13 @@ public enum Text {
     COMMAND_BAN_SUCCESS("ravelcraft.command.ban.success"),
 
     COMMAND_PARDON_NOT_BANNED("ravelcraft.command.pardon.not-banned"),
-    COMMAND_PARDON_SUCCESS("ravelcraft.command.pardon.success");
+    COMMAND_PARDON_SUCCESS("ravelcraft.command.pardon.success"),
+
+    COMMAND_MAINTENANCE_INVALID_SERVER("ravelcraft.command.maintenance.invalid-server"),
+    COMMAND_MAINTENANCE_GLOBAL_ENABLED("ravelcraft.command.maintenance.global-enabled"),
+    COMMAND_MAINTENANCE_GLOBAL_DISABLED("ravelcraft.command.maintenance.global-disabled"),
+    COMMAND_MAINTENANCE_BACKEND_ENABLED("ravelcraft.command.maintenance.backend-enabled"),
+    COMMAND_MAINTENANCE_BACKEND_DISABLED("ravelcraft.command.maintenance.backend-disabled");
 
     private static final Map<Language, Properties> languages = new HashMap<>();
 

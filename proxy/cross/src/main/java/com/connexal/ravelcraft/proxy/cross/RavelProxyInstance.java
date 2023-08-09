@@ -3,6 +3,7 @@ package com.connexal.ravelcraft.proxy.cross;
 import com.connexal.ravelcraft.proxy.cross.servers.MotdManager;
 import com.connexal.ravelcraft.proxy.cross.servers.ServerManager;
 import com.connexal.ravelcraft.proxy.cross.servers.ban.BanManager;
+import com.connexal.ravelcraft.proxy.cross.servers.maintenance.MaintenanceManager;
 import com.connexal.ravelcraft.proxy.cross.servers.whitelist.WhitelistManager;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.util.server.ProxyType;
@@ -13,6 +14,7 @@ public class RavelProxyInstance {
     private static MotdManager motdManager;
     private static WhitelistManager whitelistManager;
     private static BanManager banManager;
+    private static MaintenanceManager maintenanceManager;
 
     private static ProxyType proxyType;
     private static RavelServer otherProxy;
@@ -35,6 +37,7 @@ public class RavelProxyInstance {
         motdManager = new MotdManager();
         whitelistManager = WhitelistManager.create();
         banManager = BanManager.create();
+        maintenanceManager = MaintenanceManager.create();
     }
 
     public static ProxyType getProxyType() {
@@ -60,5 +63,9 @@ public class RavelProxyInstance {
 
     public static BanManager getBanManager() {
         return banManager;
+    }
+
+    public static MaintenanceManager getMaintenanceManager() {
+        return maintenanceManager;
     }
 }

@@ -83,7 +83,7 @@ class MasterWhitelistManager extends WhitelistManager {
 
     private String[] getEnabledCommand(RavelServer source, String[] args) {
         if (args.length != 0) {
-            RavelInstance.getLogger().error("Invalid server enable command!");
+            RavelInstance.getLogger().error("Invalid whitelist servers get command!");
             return new String[0];
         }
 
@@ -93,7 +93,7 @@ class MasterWhitelistManager extends WhitelistManager {
 
     private String[] getWhitelistedCommand(RavelServer source, String[] args) {
         if (args.length != 0) {
-            RavelInstance.getLogger().error("Invalid server enable command!");
+            RavelInstance.getLogger().error("Invalid whitelisted get command!");
             return new String[0];
         }
 
