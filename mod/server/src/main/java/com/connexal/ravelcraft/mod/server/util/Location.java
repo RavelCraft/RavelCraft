@@ -130,4 +130,8 @@ public class Location {
     public Location copy() {
         return new Location(this.position, this.pitch, this.yaw, this.world);
     }
+
+    public String chatFormat() {
+        return Math.round(this.getX()) + " " + Math.round(this.getY()) + " " + Math.round(this.getZ()) + " " + this.getWorld().getValue().toString();
+    }
 }

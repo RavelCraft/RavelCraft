@@ -81,7 +81,15 @@ public enum Text {
     COMMAND_SPAWN_SET("ravelcraft.command.spawn.set"),
     COMMAND_SPAWN_TELEPORT("ravelcraft.command.spawn.teleport"),
 
-    COMMAND_SUICIDE("ravelcraft.command.suicide");
+    COMMAND_KILL("ravelcraft.command.kill"),
+
+    COMMAND_HOME_INVALID_NUMBER("ravelcraft.command.home.invalid-number"),
+    COMMAND_HOME_OUT_OF_BOUNDS("ravelcraft.command.home.out-of-bounds"),
+    COMMAND_HOME_NOT_SET("ravelcraft.command.home.not-set"),
+    COMMAND_HOME_TELEPORTED("ravelcraft.command.home.teleported"),
+    COMMAND_HOME_SET("ravelcraft.command.home.set"),
+    COMMAND_HOME_GET("ravelcraft.command.home.get"),
+    COMMAND_HOME_DELETED("ravelcraft.command.home.deleted");
 
     private static final Map<Language, Properties> languages = new HashMap<>();
 

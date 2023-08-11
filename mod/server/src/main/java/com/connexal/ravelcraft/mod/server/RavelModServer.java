@@ -3,6 +3,7 @@ package com.connexal.ravelcraft.mod.server;
 import com.connexal.ravelcraft.mod.cross.RavelModInstance;
 import com.connexal.ravelcraft.mod.server.commands.impl.FabricCommandRegistrar;
 import com.connexal.ravelcraft.mod.server.geyser.GeyserEventRegistration;
+import com.connexal.ravelcraft.mod.server.managers.HomeManager;
 import com.connexal.ravelcraft.mod.server.players.FabricPlayerManager;
 import com.connexal.ravelcraft.mod.server.util.FabricRavelLogger;
 import com.connexal.ravelcraft.mod.server.velocity.VelocityModernForwarding;
@@ -29,6 +30,8 @@ public class RavelModServer implements RavelMain, ModInitializer {
 	private static MinecraftServer server;
 	private static GeyserEventRegistration geyserEvents;
 
+	private static HomeManager homeManager;
+
 	@Override
 	public void onInitialize() {
 		if (FabricLoader.getInstance().getEnvironmentType() != EnvType.SERVER) {
@@ -54,6 +57,8 @@ public class RavelModServer implements RavelMain, ModInitializer {
 		}
 
 		VelocityModernForwarding.init();
+
+		homeManager = new HomeManager();
 
 		ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
 			RavelModServer.server = server;
@@ -86,5 +91,10 @@ public class RavelModServer implements RavelMain, ModInitializer {
 
 	public static MinecraftServer getServer() {
 		return server;
+	}
+
+
+	public static HomeManager getHomeManager() {
+		return homeManager;
 	}
 }

@@ -49,37 +49,41 @@ public class SpawnCommand extends RavelCommand {
         RavelConfig config = RavelInstance.getConfig();
 
         if (args.length == 0) { //Teleport
-            if (!config.contains("spawn.world")) {
-                player.sendMessage(Text.COMMAND_SPAWN_NOT_SET);
-                return true;
-            }
+            this.completeAsync(() -> {
+                if (!config.contains("spawn.world")) {
+                    player.sendMessage(Text.COMMAND_SPAWN_NOT_SET);
+                    return;
+                }
 
-            double x = config.getDouble("spawn.x");
-            double y = config.getDouble("spawn.y");
-            double z = config.getDouble("spawn.z");
-            float pitch = config.getFloat("spawn.pitch");
-            float yaw = config.getFloat("spawn.yaw");
-            RegistryKey<World> world = RegistryKey.of(RegistryKeys.WORLD, new Identifier(config.getString("spawn.world")));
+                double x = config.getDouble("spawn.x");
+                double y = config.getDouble("spawn.y");
+                double z = config.getDouble("spawn.z");
+                float pitch = config.getFloat("spawn.pitch");
+                float yaw = config.getFloat("spawn.yaw");
+                RegistryKey<World> world = RegistryKey.of(RegistryKeys.WORLD, new Identifier(config.getString("spawn.world")));
 
-            player.teleport(new Location(x, y, z, pitch, yaw, world));
-            player.sendMessage(Text.COMMAND_SPAWN_TELEPORT);
+                player.teleport(new Location(x, y, z, pitch, yaw, world));
+                player.sendMessage(Text.COMMAND_SPAWN_TELEPORT);
+            });
         } else if (args.length == 1 && args[0].equalsIgnoreCase("set")) { //Set
-            if (!player.isOp()) {
-                player.sendMessage(Text.COMMAND_REQUIRES_OP);
-                return true;
-            }
+            this.completeAsync(() -> {
+                if (!player.isOp()) {
+                    player.sendMessage(Text.COMMAND_REQUIRES_OP);
+                    return;
+                }
 
-            Location location = player.getLocation();
+                Location location = player.getLocation();
 
-            config.set("spawn.world", location.getWorld().getValue().toString());
-            config.set("spawn.x", location.getX());
-            config.set("spawn.y", location.getY());
-            config.set("spawn.z", location.getZ());
-            config.set("spawn.pitch", location.getPitch());
-            config.set("spawn.yaw", location.getYaw());
+                config.set("spawn.world", location.getWorld().getValue().toString());
+                config.set("spawn.x", location.getX());
+                config.set("spawn.y", location.getY());
+                config.set("spawn.z", location.getZ());
+                config.set("spawn.pitch", location.getPitch());
+                config.set("spawn.yaw", location.getYaw());
 
-            config.save();
-            player.sendMessage(Text.COMMAND_SPAWN_SET);
+                config.save();
+                player.sendMessage(Text.COMMAND_SPAWN_SET);
+            });
         } else {
             return false;
         }

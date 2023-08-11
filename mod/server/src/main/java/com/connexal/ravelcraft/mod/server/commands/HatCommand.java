@@ -43,10 +43,12 @@ public class HatCommand extends RavelCommand {
             return false;
         }
 
-        ServerPlayerEntity player = ((FabricRavelPlayer) sender).getPlayer();
-        ItemStack head = player.getEquippedStack(EquipmentSlot.HEAD);
-        player.equipStack(EquipmentSlot.HEAD, player.getStackInHand(Hand.MAIN_HAND));
-        player.setStackInHand(Hand.MAIN_HAND, head);
+        this.completeAsync(() -> {
+            ServerPlayerEntity player = ((FabricRavelPlayer) sender).getPlayer();
+            ItemStack head = player.getEquippedStack(EquipmentSlot.HEAD);
+            player.equipStack(EquipmentSlot.HEAD, player.getStackInHand(Hand.MAIN_HAND));
+            player.setStackInHand(Hand.MAIN_HAND, head);
+        });
 
         return true;
     }
