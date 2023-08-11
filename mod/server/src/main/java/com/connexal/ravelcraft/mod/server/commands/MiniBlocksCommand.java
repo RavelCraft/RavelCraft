@@ -1,15 +1,18 @@
-package com.connexal.ravelcraft.mod.server.commands.home;
+package com.connexal.ravelcraft.mod.server.commands;
 
 import com.connexal.ravelcraft.mod.server.RavelModServer;
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
+import com.connexal.ravelcraft.mod.server.util.gui.MenuGui;
 import com.connexal.ravelcraft.shared.commands.RavelCommand;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
 import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
 import com.connexal.ravelcraft.shared.util.text.Text;
 import com.google.auto.service.AutoService;
+import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 @AutoService(RavelCommand.class)
-public class DelHomeCommand extends RavelCommand {
+public class MiniBlocksCommand extends RavelCommand {
     @Override
     public boolean requiresOp() {
         return false;
@@ -17,7 +20,7 @@ public class DelHomeCommand extends RavelCommand {
 
     @Override
     public String getName() {
-        return "delhome";
+        return "miniblocks";
     }
 
     @Override
@@ -27,9 +30,7 @@ public class DelHomeCommand extends RavelCommand {
 
     @Override
     public CommandOption[] getOptions() {
-        return new CommandOption[] {
-                CommandOption.word("number")
-        };
+        return new CommandOption[0];
     }
 
     @Override
@@ -38,29 +39,16 @@ public class DelHomeCommand extends RavelCommand {
             sender.sendMessage(Text.COMMAND_MUST_BE_PLAYER);
             return true;
         }
-        if (args.length != 1) {
+        if (args.length != 0) {
             return false;
         }
 
-        this.completeAsync(() -> {
-            int number;
-            try {
-                number = Integer.parseInt(args[0]);
-            } catch (NumberFormatException e) {
-                sender.sendMessage(Text.COMMAND_HOME_INVALID_NUMBER);
-                return;
-            }
+        ServerPlayerEntity player = ((FabricRavelPlayer) sender).getPlayer();
 
-            int max = RavelModServer.getHomeManager().getMaxHomes();
-            if (number <= 0 || number > max) {
-                sender.sendMessage(Text.COMMAND_HOME_OUT_OF_BOUNDS, Integer.toString(max));
-                return;
-            }
-
-            FabricRavelPlayer player = (FabricRavelPlayer) sender;
-            RavelModServer.getHomeManager().deleteHome(player.getUniqueID(), number);
-            player.sendMessage(Text.COMMAND_HOME_DELETED);
-        });
+        MenuGui gui = new MenuGui(player, RavelModServer.getMiniBlockManager().getMiniBlocks().toArray(new ItemStack[0]), (item) -> {
+            player.getInventory().offerOrDrop(item);
+        }, "Mini Blocks");
+        gui.open();
 
         return true;
     }

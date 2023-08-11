@@ -1,15 +1,20 @@
-package com.connexal.ravelcraft.mod.server.commands.home;
+package com.connexal.ravelcraft.mod.server.commands;
 
-import com.connexal.ravelcraft.mod.server.RavelModServer;
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
+import com.connexal.ravelcraft.mod.server.util.gui.PlayerInvGui;
+import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.commands.RavelCommand;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
 import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
 import com.connexal.ravelcraft.shared.util.text.Text;
 import com.google.auto.service.AutoService;
+import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.server.network.ServerPlayerEntity;
+
+import java.util.UUID;
 
 @AutoService(RavelCommand.class)
-public class DelHomeCommand extends RavelCommand {
+public class OpenInvCommand extends RavelCommand {
     @Override
     public boolean requiresOp() {
         return false;
@@ -17,18 +22,18 @@ public class DelHomeCommand extends RavelCommand {
 
     @Override
     public String getName() {
-        return "delhome";
+        return "openinv";
     }
 
     @Override
     public String[] getAliases() {
-        return new String[0];
+        return new String[] { "inv" };
     }
 
     @Override
     public CommandOption[] getOptions() {
         return new CommandOption[] {
-                CommandOption.word("number")
+                CommandOption.word("player")
         };
     }
 
@@ -43,23 +48,16 @@ public class DelHomeCommand extends RavelCommand {
         }
 
         this.completeAsync(() -> {
-            int number;
-            try {
-                number = Integer.parseInt(args[0]);
-            } catch (NumberFormatException e) {
-                sender.sendMessage(Text.COMMAND_HOME_INVALID_NUMBER);
+            UUID uuid = RavelInstance.getUUIDTools().getUUID(args[0]);
+            if (uuid == null) {
+                sender.sendMessage(Text.COMMAND_PLAYER_NOT_FOUND);
                 return;
             }
 
-            int max = RavelModServer.getHomeManager().getMaxHomes();
-            if (number <= 0 || number > max) {
-                sender.sendMessage(Text.COMMAND_HOME_OUT_OF_BOUNDS, Integer.toString(max));
-                return;
-            }
+            ServerPlayerEntity player = ((FabricRavelPlayer) sender).getPlayer();
 
-            FabricRavelPlayer player = (FabricRavelPlayer) sender;
-            RavelModServer.getHomeManager().deleteHome(player.getUniqueID(), number);
-            player.sendMessage(Text.COMMAND_HOME_DELETED);
+            PlayerInvGui gui = new PlayerInvGui(ScreenHandlerType.GENERIC_9X5, player, uuid);
+            gui.open();
         });
 
         return true;

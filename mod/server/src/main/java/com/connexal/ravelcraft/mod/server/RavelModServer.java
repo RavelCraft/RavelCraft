@@ -4,6 +4,7 @@ import com.connexal.ravelcraft.mod.cross.RavelModInstance;
 import com.connexal.ravelcraft.mod.server.commands.impl.FabricCommandRegistrar;
 import com.connexal.ravelcraft.mod.server.geyser.GeyserEventRegistration;
 import com.connexal.ravelcraft.mod.server.managers.HomeManager;
+import com.connexal.ravelcraft.mod.server.managers.MiniBlockManager;
 import com.connexal.ravelcraft.mod.server.players.FabricPlayerManager;
 import com.connexal.ravelcraft.mod.server.util.FabricRavelLogger;
 import com.connexal.ravelcraft.mod.server.velocity.VelocityModernForwarding;
@@ -31,6 +32,7 @@ public class RavelModServer implements RavelMain, ModInitializer {
 	private static GeyserEventRegistration geyserEvents;
 
 	private static HomeManager homeManager;
+	private static MiniBlockManager miniBlockManager;
 
 	@Override
 	public void onInitialize() {
@@ -59,6 +61,7 @@ public class RavelModServer implements RavelMain, ModInitializer {
 		VelocityModernForwarding.init();
 
 		homeManager = new HomeManager();
+		miniBlockManager = new MiniBlockManager();
 
 		ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
 			RavelModServer.server = server;
@@ -96,5 +99,9 @@ public class RavelModServer implements RavelMain, ModInitializer {
 
 	public static HomeManager getHomeManager() {
 		return homeManager;
+	}
+
+	public static MiniBlockManager getMiniBlockManager() {
+		return miniBlockManager;
 	}
 }
