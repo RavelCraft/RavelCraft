@@ -129,4 +129,12 @@ public class RavelInstance {
     public static RavelConfig getConfig() {
         return getConfig("config");
     }
+
+    public static void runTask(Runnable runnable) {
+        main.runTask(runnable);
+    }
+
+    public static void runTask(Runnable runnable, int secondsDelay) {
+        main.runTask(runnable, secondsDelay);
+    }
 }

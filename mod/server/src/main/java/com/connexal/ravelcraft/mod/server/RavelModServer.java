@@ -5,6 +5,7 @@ import com.connexal.ravelcraft.mod.server.commands.impl.FabricCommandRegistrar;
 import com.connexal.ravelcraft.mod.server.geyser.GeyserEventRegistration;
 import com.connexal.ravelcraft.mod.server.managers.HomeManager;
 import com.connexal.ravelcraft.mod.server.managers.MiniBlockManager;
+import com.connexal.ravelcraft.mod.server.managers.TpaManager;
 import com.connexal.ravelcraft.mod.server.players.FabricPlayerManager;
 import com.connexal.ravelcraft.mod.server.util.FabricRavelLogger;
 import com.connexal.ravelcraft.mod.server.velocity.VelocityModernForwarding;
@@ -17,6 +18,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.ServerTask;
 import org.geysermc.api.Geyser;
 
 import java.io.IOException;
@@ -28,11 +30,12 @@ public class RavelModServer implements RavelMain, ModInitializer {
 
 	private ModContainer mod;
 
-	private static MinecraftServer server;
+	private static MinecraftServer server = null;
 	private static GeyserEventRegistration geyserEvents;
 
 	private static HomeManager homeManager;
 	private static MiniBlockManager miniBlockManager;
+	private static TpaManager tpaManager;
 
 	@Override
 	public void onInitialize() {
@@ -62,6 +65,7 @@ public class RavelModServer implements RavelMain, ModInitializer {
 
 		homeManager = new HomeManager();
 		miniBlockManager = new MiniBlockManager();
+		tpaManager = new TpaManager();
 
 		ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
 			RavelModServer.server = server;
@@ -88,6 +92,23 @@ public class RavelModServer implements RavelMain, ModInitializer {
 		}
 	}
 
+	@Override
+	public void runTask(Runnable runnable) {
+		new Thread(runnable).start();
+	}
+
+	@Override
+	public void runTask(Runnable runnable, int secondsDelay) {
+		new Thread(() -> {
+			try {
+				Thread.sleep(1000L * secondsDelay);
+			} catch (InterruptedException e) {
+				RavelInstance.getLogger().error("Interrupted while waiting to run task", e);
+			}
+			runnable.run();
+		}).start();
+	}
+
 	public static GeyserEventRegistration getGeyserEvents() {
 		return geyserEvents;
 	}
@@ -103,5 +124,9 @@ public class RavelModServer implements RavelMain, ModInitializer {
 
 	public static MiniBlockManager getMiniBlockManager() {
 		return miniBlockManager;
+	}
+
+	public static TpaManager getTpaManager() {
+		return tpaManager;
 	}
 }

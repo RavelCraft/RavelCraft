@@ -14,6 +14,7 @@ public enum Text {
     COMMAND_HELP("ravelcraft.command.help"),
     COMMAND_MUST_BE_PLAYER("ravelcraft.command.must-be-player"),
     COMMAND_PLAYER_NOT_FOUND("ravelcraft.command.player-not-found"),
+    COMMAND_PLAYER_NOT_ONLINE("ravelcraft.command.player-not-online"),
 
     //--- Proxy ---
     CHAT_FORMAT("ravelcraft.chat.format"),
@@ -89,7 +90,21 @@ public enum Text {
     COMMAND_HOME_TELEPORTED("ravelcraft.command.home.teleported"),
     COMMAND_HOME_SET("ravelcraft.command.home.set"),
     COMMAND_HOME_GET("ravelcraft.command.home.get"),
-    COMMAND_HOME_DELETED("ravelcraft.command.home.deleted");
+    COMMAND_HOME_DELETED("ravelcraft.command.home.deleted"),
+
+    COMMAND_TPA_STR_SENT("ravelcraft.command.tpa.str.sent"),
+    COMMAND_TPA_STR_RECEIVED("ravelcraft.command.tpa.str.received"),
+    COMMAND_TPA_RTS_SENT("ravelcraft.command.tpa.rts.sent"),
+    COMMAND_TPA_RTS_RECEIVED("ravelcraft.command.tpa.rts.received"),
+    COMMAND_TPA_DENY_SENT("ravelcraft.command.tpa.deny.sent"),
+    COMMAND_TPA_DENY_RECEIVED("ravelcraft.command.tpa.deny.received"),
+    COMMAND_TPA_ACCEPT_SENT("ravelcraft.command.tpa.accept.sent"),
+    COMMAND_TPA_ACCEPT_RECEIVED("ravelcraft.command.tpa.accept.received"),
+    COMMAND_TPA_EXPIRED_SENDER("ravelcraft.command.tpa.expired.sender"),
+    COMMAND_TPA_EXPIRED_RECEIVER("ravelcraft.command.tpa.expired.receiver"),
+    COMMAND_TPA_NO_REQUESTS("ravelcraft.command.tpa.no-requests"),
+    COMMAND_TPA_REQUEST_PENDING("ravelcraft.command.tpa.request-pending"),
+    COMMAND_TPA_SELF("ravelcraft.command.tpa.self");
 
     private static final Map<Language, Properties> languages = new HashMap<>();
 

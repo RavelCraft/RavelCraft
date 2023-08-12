@@ -1,5 +1,6 @@
 package com.connexal.ravelcraft.shared.commands;
 
+import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
 import com.connexal.ravelcraft.shared.commands.arguments.CommandSubOption;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
@@ -62,6 +63,6 @@ public abstract class RavelCommand {
     }
 
     protected void completeAsync(Runnable runnable) {
-        new Thread(runnable).start();
+        RavelInstance.runTask(runnable);
     }
 }

@@ -43,7 +43,7 @@ public class BeEventListener {
         //Upload player skin to the Geyser global API
         SignedJWT signedClientData = HandshakeUtils.createExtraData(event.getKeyPair(), event.getExtraData());
         SignedJWT signedExtraData = HandshakeUtils.encodeJWT(event.getKeyPair(), event.getClientData());
-        BeProxy.getSkinUploadManager().uploadSkin(List.of(signedClientData), signedExtraData.getParsedString());
+        BeProxy.getSkinUploader().uploadSkin(List.of(signedClientData), signedExtraData.getParsedString());
 
         //Change username to a valid Java username
         String username = RavelPlayer.BEDROCK_PREFIX + event.getExtraData().get("displayName").getAsString();

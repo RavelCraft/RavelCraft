@@ -111,9 +111,9 @@ public abstract class Messager {
             RavelInstance.getLogger().info("Received message " + format.getCommand() + " with response ID " + format.getResponseId() + " and args " + Arrays.toString(format.getArguments()) + " from " + format.getSource() + " redirect? " + destination);
         }*/
 
-        new Thread(() -> {
+        RavelInstance.runTask(() -> {
             this.processRead(destination, format.getSource(), format.getType(), format.getResponseId(), format.getCommand(), format.getArguments());
-        }).start();
+        });
     }
 
     private boolean writeStream(RavelServer destination, RavelServer source, MessageType type, String responseId, MessagingCommand command, String[] arguments) {
@@ -208,18 +208,12 @@ public abstract class Messager {
         }
 
         //Add a timeout
-        new Thread(() -> {
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                return;
-            }
-
+        RavelInstance.runTask(() -> {
             if (this.responseFutures.containsKey(responseId)) {
                 this.responseFutures.remove(responseId);
                 future.completeExceptionally(new TimeoutException("Response timed out"));
             }
-        }).start();
+        }, 5);
 
         try {
             return future.join();

@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import javax.inject.Inject;
 import java.io.InputStream;
 import java.nio.file.Paths;
+import java.util.concurrent.TimeUnit;
 
 @Plugin(id = BuildConstants.ID, name = BuildConstants.NAME, version = BuildConstants.VERSION,
         url = BuildConstants.SERVER_IP, description = BuildConstants.DESCRIPTION, authors = { BuildConstants.NAME })
@@ -50,6 +51,16 @@ public class JeProxy implements RavelMain {
     @Override
     public InputStream getResource(String name) {
         return JeProxy.class.getClassLoader().getResourceAsStream(name);
+    }
+
+    @Override
+    public void runTask(Runnable runnable) {
+        server.getScheduler().buildTask(this, runnable).schedule();
+    }
+
+    @Override
+    public void runTask(Runnable runnable, int secondsDelay) {
+        server.getScheduler().buildTask(this, runnable).delay(secondsDelay, TimeUnit.SECONDS).schedule();
     }
 
     public static ProxyServer getServer() {

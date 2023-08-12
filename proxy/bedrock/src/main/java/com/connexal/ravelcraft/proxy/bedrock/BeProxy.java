@@ -46,11 +46,21 @@ public class BeProxy extends Plugin implements RavelMain {
         return this.getResourceFile(name);
     }
 
+    @Override
+    public void runTask(Runnable runnable) {
+        server.getScheduler().scheduleAsync(runnable);
+    }
+
+    @Override
+    public void runTask(Runnable runnable, int secondsDelay) {
+        server.getScheduler().scheduleDelayed(runnable, secondsDelay * 20, true);
+    }
+
     public static ProxyServer getServer() {
         return server;
     }
 
-    public static SkinUploader getSkinUploadManager() {
+    public static SkinUploader getSkinUploader() {
         return skinUploader;
     }
 }
