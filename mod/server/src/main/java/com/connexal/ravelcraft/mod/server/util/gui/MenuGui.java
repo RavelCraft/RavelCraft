@@ -10,7 +10,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.function.Consumer;
 
-//TODO: Figure out why clicking items doesn't trigger an event
 public class MenuGui extends SimpleGui {
     private final ItemStack[] displayItems;
     private final Consumer<ItemStack> itemClicked;
@@ -39,18 +38,18 @@ public class MenuGui extends SimpleGui {
             this.clearSlot(i);
         }
 
-        //Fill with the page's items
+        //Fill with the page's items - make sure to always copy the item stacks
         for (int i = 0; i < maxItemsPerPage; i++) {
             int index = this.currentPage * maxItemsPerPage + i;
 
             if (index >= this.displayItems.length) {
                 this.setSlot(i, ItemStack.EMPTY);
             } else {
-                this.setSlot(i, new GuiElement(this.displayItems[index], (itemIndex, type, action) -> {
+                this.setSlot(i, new GuiElement(this.displayItems[index].copy(), (itemIndex, type, action) -> {
                     int indexInArray = this.currentPage * maxItemsPerPage + itemIndex;
 
                     if (indexInArray < this.displayItems.length) {
-                        this.itemClicked.accept(this.displayItems[indexInArray]);
+                        this.itemClicked.accept(this.displayItems[indexInArray].copy());
                         this.close();
                     }
                 }));
@@ -59,21 +58,32 @@ public class MenuGui extends SimpleGui {
 
         //Add navigation buttons
         if (this.currentPage > 0) {
-            this.setSlot(36, new GuiElementBuilder(Items.ARROW).setName(net.minecraft.text.Text.literal("Previous")).setCallback((index, type, action) -> {
-                this.previousPage();
-            }));
+            this.setSlot(37, new GuiElementBuilder(Items.ARROW)
+                    .setName(net.minecraft.text.Text.literal("Previous"))
+                    .setCallback((index, type, action) -> {
+                        this.previousPage();
+                    })
+                    .setCount(this.currentPage) //We don't need to add 1 because we start at 0
+            );
         }
-        this.setSlot(40, new GuiElementBuilder(Items.BARRIER).setName(net.minecraft.text.Text.literal("Close")).setCallback((index, type, action) -> {
-            this.close();
-        }));
+        this.setSlot(40, new GuiElementBuilder(Items.BARRIER)
+                .setName(net.minecraft.text.Text.literal("Close"))
+                .setCallback((index, type, action) -> {
+                    this.close();
+                })
+        );
         if (this.currentPage < this.totalPages) {
-            this.setSlot(44, new GuiElementBuilder(Items.ARROW).setName(net.minecraft.text.Text.literal("Next")).setCallback((index, type, action) -> {
-                this.nextPage();
-            }));
+            this.setSlot(43, new GuiElementBuilder(Items.ARROW)
+                    .setName(net.minecraft.text.Text.literal("Next"))
+                    .setCallback((index, type, action) -> {
+                        this.nextPage();
+                    })
+                    .setCount(this.currentPage + 2) //We need to add 2 because we start at 0
+            );
         }
 
         //Set title
-        this.setTitle(net.minecraft.text.Text.literal(this.title + " - " + (this.currentPage + 1) + "/" + this.totalPages));
+        this.setTitle(net.minecraft.text.Text.literal(this.title + " - " + (this.currentPage + 1) + "/" + (this.totalPages + 1)));
     }
 
     private void nextPage() {

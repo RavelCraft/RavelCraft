@@ -1,4 +1,4 @@
-package com.connexal.ravelcraft.mod.server.libs.sgui.mixin;
+package com.connexal.ravelcraft.mod.server.mixin.libs.sgui;
 
 import com.connexal.ravelcraft.mod.server.libs.sgui.impl.PlayerExtensions;
 import com.connexal.ravelcraft.mod.server.libs.sgui.virtual.SguiScreenHandlerFactory;

@@ -4,12 +4,10 @@ import com.connexal.ravelcraft.mod.server.util.SkullUtils;
 import com.connexal.ravelcraft.shared.util.ChatColor;
 import net.minecraft.item.ItemStack;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class MiniBlockManager {
-    private final Map<String, ItemStack> miniBlocks = new HashMap<>();
+    private final List<ItemStack> miniBlocks = new ArrayList<>();
 
     public MiniBlockManager() {
         this.addMiniBlock("Oak Planks", "1a0271812019405a9ca9fb6afa76b171e1cec691e24b6f0dc50042f363c0b660");
@@ -121,24 +119,11 @@ public class MiniBlockManager {
         this.addMiniBlock("Blue Axolotl", "f473a49513b06f3274624025f83324fef4116b5c431084671ded928f59d5a291");
     }
 
-    public Collection<ItemStack> getMiniBlocks() {
-        return this.miniBlocks.values();
+    public List<ItemStack> getMiniBlocks() {
+        return this.miniBlocks;
     }
 
     private void addMiniBlock(String name, String texture) {
-        this.miniBlocks.put(name, SkullUtils.getSkull(ChatColor.GREEN + "Mini " + name, "http://textures.minecraft.net/texture/" + texture));
+        this.miniBlocks.add(SkullUtils.getSkull("http://textures.minecraft.net/texture/" + texture, ChatColor.GREEN + "Mini " + name));
     }
-
-    private static class MiniBlock {
-        private final ItemStack item;
-
-        public MiniBlock(String blockName, String url) {
-            this.item = SkullUtils.getSkull(ChatColor.GREEN + "Mini " + blockName, url);
-        }
-
-        public ItemStack getItem() {
-            return this.item;
-        }
-    }
-
 }

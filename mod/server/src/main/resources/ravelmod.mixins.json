@@ -9,6 +9,10 @@
     "ServerPlayNetworkHandlerMixin",
     "geyser.SkinProviderInvoker",
     "geyser.SkinProviderMixin",
+    "libs.sgui.ScreenHandlerMixin",
+    "libs.sgui.ServerPlayerEntityMixin",
+    "libs.sgui.ServerPlayNetworkHandlerMixin",
+    "libs.sgui.SignBlockEntityAccessor",
     "velocity.ClientConnection_AddressAccessor",
     "velocity.ServerLoginNetworkHandlerAccessor"
   ],

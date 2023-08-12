@@ -1,4 +1,4 @@
-package com.connexal.ravelcraft.mod.server.libs.sgui.mixin;
+package com.connexal.ravelcraft.mod.server.mixin.libs.sgui;
 
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;

@@ -1,6 +1,6 @@
 package com.connexal.ravelcraft.mod.server.libs.sgui.virtual.sign;
 
-import com.connexal.ravelcraft.mod.server.libs.sgui.mixin.SignBlockEntityAccessor;
+import com.connexal.ravelcraft.mod.server.mixin.libs.sgui.SignBlockEntityAccessor;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;

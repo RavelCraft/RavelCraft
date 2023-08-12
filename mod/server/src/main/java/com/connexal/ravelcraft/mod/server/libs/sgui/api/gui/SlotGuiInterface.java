@@ -3,6 +3,7 @@ package com.connexal.ravelcraft.mod.server.libs.sgui.api.gui;
 import com.connexal.ravelcraft.mod.server.libs.sgui.api.ClickType;
 import com.connexal.ravelcraft.mod.server.libs.sgui.api.SlotHolder;
 import com.connexal.ravelcraft.mod.server.libs.sgui.api.elements.GuiElementInterface;
+import com.connexal.ravelcraft.shared.RavelInstance;
 import net.minecraft.screen.slot.SlotActionType;
 import org.jetbrains.annotations.ApiStatus;
 
