@@ -111,7 +111,7 @@ public abstract class Messager {
             RavelInstance.getLogger().info("Received message " + format.getCommand() + " with response ID " + format.getResponseId() + " and args " + Arrays.toString(format.getArguments()) + " from " + format.getSource() + " redirect? " + destination);
         }*/
 
-        RavelInstance.runTask(() -> {
+        RavelInstance.scheduleTask(() -> {
             this.processRead(destination, format.getSource(), format.getType(), format.getResponseId(), format.getCommand(), format.getArguments());
         });
     }
@@ -208,7 +208,7 @@ public abstract class Messager {
         }
 
         //Add a timeout
-        RavelInstance.runTask(() -> {
+        RavelInstance.scheduleTask(() -> {
             if (this.responseFutures.containsKey(responseId)) {
                 this.responseFutures.remove(responseId);
                 future.completeExceptionally(new TimeoutException("Response timed out"));

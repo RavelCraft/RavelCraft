@@ -63,6 +63,6 @@ public abstract class RavelCommand {
     }
 
     protected void completeAsync(Runnable runnable) {
-        RavelInstance.runTask(runnable);
+        RavelInstance.scheduleTask(runnable);
     }
 }

@@ -47,13 +47,18 @@ public class BeProxy extends Plugin implements RavelMain {
     }
 
     @Override
-    public void runTask(Runnable runnable) {
+    public void scheduleTask(Runnable runnable) {
         server.getScheduler().scheduleAsync(runnable);
     }
 
     @Override
-    public void runTask(Runnable runnable, int secondsDelay) {
+    public void scheduleTask(Runnable runnable, int secondsDelay) {
         server.getScheduler().scheduleDelayed(runnable, secondsDelay * 20, true);
+    }
+
+    @Override
+    public void scheduleRepeatingTask(Runnable runnable, int secondsInterval) {
+        server.getScheduler().scheduleRepeating(runnable, secondsInterval * 20, true);
     }
 
     public static ProxyServer getServer() {

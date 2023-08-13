@@ -24,6 +24,9 @@ import org.geysermc.api.Geyser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class RavelModServer implements RavelMain, ModInitializer {
 	public static final String[] OVERRIDDEN_COMMANDS = new String[] { "ban", "ban-ip", "banlist", "pardon", "pardon-ip", "kick", "list", "whitelist" };
@@ -32,6 +35,7 @@ public class RavelModServer implements RavelMain, ModInitializer {
 
 	private static MinecraftServer server = null;
 	private static GeyserEventRegistration geyserEvents;
+	private static ScheduledExecutorService scheduler;
 
 	private static HomeManager homeManager;
 	private static MiniBlockManager miniBlockManager;
@@ -45,6 +49,8 @@ public class RavelModServer implements RavelMain, ModInitializer {
 		if (!Geyser.isRegistered()) {
 			RavelInstance.getLogger().error("Geyser is not registered! Your server won't understand Bedrock clients!");
 		}
+
+		scheduler = Executors.newScheduledThreadPool(3);
 
 		mod = FabricLoader.getInstance().getModContainer(BuildConstants.ID).orElseThrow();
 		RavelInstance.setup(this, FabricLoader.getInstance().getConfigDir().resolve(BuildConstants.ID), new FabricRavelLogger());
@@ -93,20 +99,18 @@ public class RavelModServer implements RavelMain, ModInitializer {
 	}
 
 	@Override
-	public void runTask(Runnable runnable) {
-		new Thread(runnable).start();
+	public void scheduleTask(Runnable runnable) {
+		scheduler.execute(runnable);
 	}
 
 	@Override
-	public void runTask(Runnable runnable, int secondsDelay) {
-		new Thread(() -> {
-			try {
-				Thread.sleep(1000L * secondsDelay);
-			} catch (InterruptedException e) {
-				RavelInstance.getLogger().error("Interrupted while waiting to run task", e);
-			}
-			runnable.run();
-		}).start();
+	public void scheduleTask(Runnable runnable, int secondsDelay) {
+		scheduler.schedule(runnable, secondsDelay, TimeUnit.SECONDS);
+	}
+
+	@Override
+	public void scheduleRepeatingTask(Runnable runnable, int secondsInterval) {
+		scheduler.scheduleAtFixedRate(runnable, 0, secondsInterval, TimeUnit.SECONDS);
 	}
 
 	public static GeyserEventRegistration getGeyserEvents() {

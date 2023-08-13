@@ -54,13 +54,18 @@ public class JeProxy implements RavelMain {
     }
 
     @Override
-    public void runTask(Runnable runnable) {
+    public void scheduleTask(Runnable runnable) {
         server.getScheduler().buildTask(this, runnable).schedule();
     }
 
     @Override
-    public void runTask(Runnable runnable, int secondsDelay) {
+    public void scheduleTask(Runnable runnable, int secondsDelay) {
         server.getScheduler().buildTask(this, runnable).delay(secondsDelay, TimeUnit.SECONDS).schedule();
+    }
+
+    @Override
+    public void scheduleRepeatingTask(Runnable runnable, int secondsInterval) {
+        server.getScheduler().buildTask(this, runnable).repeat(secondsInterval, TimeUnit.SECONDS).schedule();
     }
 
     public static ProxyServer getServer() {

@@ -23,7 +23,7 @@ public class TpaManager {
         this.requests.put(receiver.getUniqueID(), request);
 
         int timeout = 30;
-        RavelInstance.runTask(() -> {
+        RavelInstance.scheduleTask(() -> {
             TpaRequest expiredReq = this.requests.get(receiver.getUniqueID());
             if (expiredReq == null) {
                 return;

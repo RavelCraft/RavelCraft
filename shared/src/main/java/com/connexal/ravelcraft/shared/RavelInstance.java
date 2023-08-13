@@ -130,11 +130,15 @@ public class RavelInstance {
         return getConfig("config");
     }
 
-    public static void runTask(Runnable runnable) {
-        main.runTask(runnable);
+    public static void scheduleTask(Runnable runnable) {
+        main.scheduleTask(runnable);
     }
 
-    public static void runTask(Runnable runnable, int secondsDelay) {
-        main.runTask(runnable, secondsDelay);
+    public static void scheduleTask(Runnable runnable, int secondsDelay) {
+        main.scheduleTask(runnable, secondsDelay);
+    }
+
+    public static void scheduleRepeatingTask(Runnable runnable, int secondsInterval) {
+        main.scheduleRepeatingTask(runnable, secondsInterval);
     }
 }

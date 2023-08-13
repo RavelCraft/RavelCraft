@@ -22,20 +22,14 @@ public class MessagingClient extends Messager {
         this.serverHostname = hostname;
         this.attemptConnect();
 
-        new Thread(() -> {
-            long lastPing = System.currentTimeMillis() - (MessagingConstants.HEARTBEAT_INTERVAL + 1);
-            while (true) {
-                if (System.currentTimeMillis() - lastPing > MessagingConstants.HEARTBEAT_INTERVAL) {
-                    this.attemptConnect(MAX_CONNECT_ATTEMPTS - 1);
+        RavelInstance.scheduleRepeatingTask(() -> {
+            this.attemptConnect(MAX_CONNECT_ATTEMPTS - 1);
 
-                    String[] response = this.sendCommandWithResponse(MessagingConstants.MESSAGING_SERVER, MessagingCommand.HEARTBEAT, "PING");
-                    if (response != null && (response.length == 0 || !response[0].equals("PONG"))) {
-                        this.close();
-                    }
-                    lastPing = System.currentTimeMillis();
-                }
+            String[] response = this.sendCommandWithResponse(MessagingConstants.MESSAGING_SERVER, MessagingCommand.HEARTBEAT, "PING");
+            if (response != null && (response.length == 0 || !response[0].equals("PONG"))) {
+                this.close();
             }
-        }).start();
+        }, MessagingConstants.HEARTBEAT_INTERVAL);
     }
 
     @Override
