@@ -8,13 +8,12 @@ import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
 import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
 import com.connexal.ravelcraft.shared.util.text.Text;
 import com.google.auto.service.AutoService;
-import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.UUID;
 
 @AutoService(RavelCommand.class)
-public class OpenInvCommand extends RavelCommand {
+public class OpenEnderCommand extends RavelCommand {
     @Override
     public boolean requiresOp() {
         return false;
@@ -22,12 +21,12 @@ public class OpenInvCommand extends RavelCommand {
 
     @Override
     public String getName() {
-        return "openinv";
+        return "openender";
     }
 
     @Override
     public String[] getAliases() {
-        return new String[] { "inv" };
+        return new String[0];
     }
 
     @Override
@@ -56,7 +55,7 @@ public class OpenInvCommand extends RavelCommand {
 
             ServerPlayerEntity player = ((FabricRavelPlayer) sender).getPlayer();
 
-            PlayerInvGui gui = new PlayerInvGui(player, PlayerInvGui.Type.PLAYER, uuid);
+            PlayerInvGui gui = new PlayerInvGui(player, PlayerInvGui.Type.ENDER, uuid);
             gui.open();
         });
 
