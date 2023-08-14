@@ -4,7 +4,8 @@ import com.connexal.ravelcraft.mod.server.util.SkullUtils;
 import com.connexal.ravelcraft.shared.util.ChatColor;
 import net.minecraft.item.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MiniBlockManager {
     private final List<ItemStack> miniBlocks = new ArrayList<>();

@@ -2,8 +2,8 @@ package com.connexal.ravelcraft.proxy.bedrock;
 
 import com.connexal.ravelcraft.proxy.bedrock.commands.WaterdogCommandRegistrar;
 import com.connexal.ravelcraft.proxy.bedrock.players.WaterdogPlayerManager;
+import com.connexal.ravelcraft.proxy.bedrock.players.skin.SkinUploader;
 import com.connexal.ravelcraft.proxy.bedrock.servers.WaterdogServerManager;
-import com.connexal.ravelcraft.proxy.bedrock.skin.SkinUploader;
 import com.connexal.ravelcraft.proxy.bedrock.util.WaterdogRavelLogger;
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
 import com.connexal.ravelcraft.shared.RavelInstance;

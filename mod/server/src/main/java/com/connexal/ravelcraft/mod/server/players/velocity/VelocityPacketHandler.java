@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.connexal.ravelcraft.mod.server.velocity;
+package com.connexal.ravelcraft.mod.server.players.velocity;
 
 import com.connexal.ravelcraft.mod.server.geyser.GeyserSkinGetter;
 import com.connexal.ravelcraft.mod.server.mixin.velocity.ClientConnection_AddressAccessor;

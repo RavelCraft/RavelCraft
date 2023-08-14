@@ -1,4 +1,4 @@
-package com.connexal.ravelcraft.mod.server.mixin;
+package com.connexal.ravelcraft.mod.server.mixin.accessors;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;

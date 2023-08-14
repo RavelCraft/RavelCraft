@@ -22,14 +22,14 @@
  * SOFTWARE.
  */
 
-package com.connexal.ravelcraft.mod.server.velocity;
+package com.connexal.ravelcraft.mod.server.players.velocity;
 
 import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
 import org.geysermc.geyser.api.event.EventRegistrar;
 
-import static com.connexal.ravelcraft.mod.server.velocity.VelocityLib.PLAYER_INFO_CHANNEL;
-import static com.connexal.ravelcraft.mod.server.velocity.VelocityLib.PLAYER_INFO_PACKET;
+import static com.connexal.ravelcraft.mod.server.players.velocity.VelocityLib.PLAYER_INFO_CHANNEL;
+import static com.connexal.ravelcraft.mod.server.players.velocity.VelocityLib.PLAYER_INFO_PACKET;
 
 public class VelocityModernForwarding implements EventRegistrar {
     private static VelocityPacketHandler handler;

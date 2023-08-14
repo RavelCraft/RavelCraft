@@ -23,7 +23,7 @@
  * @link https://github.com/GeyserMC/Geyser
  */
 
-package com.connexal.ravelcraft.proxy.bedrock.skin;
+package com.connexal.ravelcraft.proxy.bedrock.players.skin;
 
 public enum WebsocketEventType {
     /**

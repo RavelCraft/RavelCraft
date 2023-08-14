@@ -3,19 +3,13 @@ package com.connexal.ravelcraft.mod.server.commands.tpa;
 import com.connexal.ravelcraft.mod.server.RavelModServer;
 import com.connexal.ravelcraft.mod.server.managers.TpaManager;
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
-import com.connexal.ravelcraft.mod.server.util.Location;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.commands.RavelCommand;
 import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
 import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.util.RavelConfig;
 import com.connexal.ravelcraft.shared.util.text.Text;
 import com.google.auto.service.AutoService;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
 
 @AutoService(RavelCommand.class)
 public class TpaCommand extends RavelCommand {

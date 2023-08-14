@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.connexal.ravelcraft.mod.server.velocity;
+package com.connexal.ravelcraft.mod.server.players.velocity;
 
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.util.RavelConfig;

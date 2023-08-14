@@ -12,7 +12,6 @@ import com.connexal.ravelcraft.mod.server.libs.sgui.virtual.book.BookScreenHandl
 import com.connexal.ravelcraft.mod.server.libs.sgui.virtual.hotbar.HotbarScreenHandler;
 import com.connexal.ravelcraft.mod.server.libs.sgui.virtual.inventory.VirtualScreenHandler;
 import com.connexal.ravelcraft.mod.server.libs.sgui.virtual.merchant.VirtualMerchantScreenHandler;
-import com.connexal.ravelcraft.shared.RavelInstance;
 import io.netty.buffer.Unpooled;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;

@@ -4,7 +4,9 @@ import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.util.text.Text;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class TpaManager {
     private final Map<UUID, TpaRequest> requests = new HashMap<>();

@@ -6,9 +6,10 @@ import com.connexal.ravelcraft.mod.server.geyser.GeyserEventRegistration;
 import com.connexal.ravelcraft.mod.server.managers.HomeManager;
 import com.connexal.ravelcraft.mod.server.managers.MiniBlockManager;
 import com.connexal.ravelcraft.mod.server.managers.TpaManager;
+import com.connexal.ravelcraft.mod.server.managers.npc.NpcManager;
 import com.connexal.ravelcraft.mod.server.players.FabricPlayerManager;
+import com.connexal.ravelcraft.mod.server.players.velocity.VelocityModernForwarding;
 import com.connexal.ravelcraft.mod.server.util.FabricRavelLogger;
-import com.connexal.ravelcraft.mod.server.velocity.VelocityModernForwarding;
 import com.connexal.ravelcraft.shared.BuildConstants;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.RavelMain;
@@ -18,7 +19,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.ServerTask;
 import org.geysermc.api.Geyser;
 
 import java.io.IOException;
@@ -40,6 +40,7 @@ public class RavelModServer implements RavelMain, ModInitializer {
 	private static HomeManager homeManager;
 	private static MiniBlockManager miniBlockManager;
 	private static TpaManager tpaManager;
+	private static NpcManager npcManager;
 
 	@Override
 	public void onInitialize() {
@@ -72,6 +73,7 @@ public class RavelModServer implements RavelMain, ModInitializer {
 		homeManager = new HomeManager();
 		miniBlockManager = new MiniBlockManager();
 		tpaManager = new TpaManager();
+		npcManager = new NpcManager();
 
 		ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
 			RavelModServer.server = server;
@@ -132,5 +134,9 @@ public class RavelModServer implements RavelMain, ModInitializer {
 
 	public static TpaManager getTpaManager() {
 		return tpaManager;
+	}
+
+	public static NpcManager getNpcManager() {
+		return npcManager;
 	}
 }

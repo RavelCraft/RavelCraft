@@ -1,6 +1,5 @@
 package com.connexal.ravelcraft.mod.server.util;
 
-import com.connexal.ravelcraft.shared.RavelInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;

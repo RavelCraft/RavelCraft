@@ -23,7 +23,7 @@
  * @link https://github.com/GeyserMC/Floodgate
  */
 
-package com.connexal.ravelcraft.proxy.bedrock.skin;
+package com.connexal.ravelcraft.proxy.bedrock.players.skin;
 
 import com.connexal.ravelcraft.proxy.bedrock.BeProxy;
 import com.connexal.ravelcraft.shared.RavelInstance;
