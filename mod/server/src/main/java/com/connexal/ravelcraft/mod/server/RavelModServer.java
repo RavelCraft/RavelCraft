@@ -2,9 +2,10 @@ package com.connexal.ravelcraft.mod.server;
 
 import com.connexal.ravelcraft.mod.cross.RavelModInstance;
 import com.connexal.ravelcraft.mod.server.commands.impl.FabricCommandRegistrar;
-import com.connexal.ravelcraft.mod.server.geyser.GeyserEventRegistration;
+import com.connexal.ravelcraft.mod.server.listeners.PlayerListener;
 import com.connexal.ravelcraft.mod.server.managers.HomeManager;
 import com.connexal.ravelcraft.mod.server.managers.MiniBlockManager;
+import com.connexal.ravelcraft.mod.server.managers.Ravel1984Manager;
 import com.connexal.ravelcraft.mod.server.managers.TpaManager;
 import com.connexal.ravelcraft.mod.server.managers.npc.NpcManager;
 import com.connexal.ravelcraft.mod.server.players.FabricPlayerManager;
@@ -34,13 +35,12 @@ public class RavelModServer implements RavelMain, ModInitializer {
 	private ModContainer mod;
 
 	private static MinecraftServer server = null;
-	private static GeyserEventRegistration geyserEvents;
 	private static ScheduledExecutorService scheduler;
 
 	private static HomeManager homeManager;
 	private static MiniBlockManager miniBlockManager;
 	private static TpaManager tpaManager;
-	private static NpcManager npcManager;
+	private static Ravel1984Manager ravel1984Manager;
 
 	@Override
 	public void onInitialize() {
@@ -60,26 +60,30 @@ public class RavelModServer implements RavelMain, ModInitializer {
 		RavelInstance.init(new FabricCommandRegistrar(), new FabricPlayerManager());
 		RavelModInstance.init();
 
-		geyserEvents = new GeyserEventRegistration();
-
 		if (!RavelInstance.getConfig().contains("forwarding-key")) {
 			RavelInstance.getConfig().set("forwarding-key", "CHANGE ME");
 			RavelInstance.getConfig().save();
 			RavelInstance.getLogger().error("No forwarding key specified in config.yml! Please set one and restart the server.");
 		}
-
 		VelocityModernForwarding.init();
 
+		NpcManager.setup();
 		homeManager = new HomeManager();
 		miniBlockManager = new MiniBlockManager();
 		tpaManager = new TpaManager();
-		npcManager = new NpcManager();
+		ravel1984Manager = Ravel1984Manager.create();
+
+		PlayerListener.register();
 
 		ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
 			RavelModServer.server = server;
 		});
 
 		ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
+			if (ravel1984Manager != null) {
+				ravel1984Manager.flushCache();
+			}
+
 			RavelInstance.shutdown();
 		});
 	}
@@ -115,10 +119,6 @@ public class RavelModServer implements RavelMain, ModInitializer {
 		scheduler.scheduleAtFixedRate(runnable, 0, secondsInterval, TimeUnit.SECONDS);
 	}
 
-	public static GeyserEventRegistration getGeyserEvents() {
-		return geyserEvents;
-	}
-
 	public static MinecraftServer getServer() {
 		return server;
 	}
@@ -136,7 +136,7 @@ public class RavelModServer implements RavelMain, ModInitializer {
 		return tpaManager;
 	}
 
-	public static NpcManager getNpcManager() {
-		return npcManager;
+	public static Ravel1984Manager getRavel1984Manager() {
+		return ravel1984Manager;
 	}
 }

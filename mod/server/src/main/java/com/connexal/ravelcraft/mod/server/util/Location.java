@@ -1,5 +1,6 @@
 package com.connexal.ravelcraft.mod.server.util;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;
@@ -25,8 +26,8 @@ public class Location {
         this.world = world;
     }
 
-    public static Location of(ServerPlayerEntity player) {
-        return new Location(Vec3d.ZERO.add(player.getPos()), player.getPitch(), player.getHeadYaw(), player.getWorld().getRegistryKey());
+    public static Location of(Entity entity) {
+        return new Location(Vec3d.ZERO.add(entity.getPos()), entity.getPitch(), entity.getHeadYaw(), entity.getWorld().getRegistryKey());
     }
 
     public Vec3d getPosition() {
@@ -132,6 +133,6 @@ public class Location {
     }
 
     public String chatFormat() {
-        return Math.round(this.getX()) + " " + Math.round(this.getY()) + " " + Math.round(this.getZ()) + " " + this.getWorld().getValue().toString();
+        return this.getWorld().getValue().toString() + ": " + Math.round(this.getX()) + " " + Math.round(this.getY()) + " " + Math.round(this.getZ());
     }
 }

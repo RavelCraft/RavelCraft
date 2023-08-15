@@ -4,7 +4,12 @@
   "package": "com.connexal.ravelcraft.mod.server.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "BucketItemMixin",
+    "ItemEntityMixin",
+    "LivingEntityMixin",
     "PlayerManagerMixin",
+    "ServerPlayerEntityMixin",
+    "ServerPlayerInteractionManagerMixin",
     "ServerPlayNetworkHandlerMixin",
     "ServerPlayNetworkHandlerMixin_NPC",
     "accessors.EntityAccessor",

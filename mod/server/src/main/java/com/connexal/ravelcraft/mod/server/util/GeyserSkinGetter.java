@@ -1,4 +1,4 @@
-package com.connexal.ravelcraft.mod.server.geyser;
+package com.connexal.ravelcraft.mod.server.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

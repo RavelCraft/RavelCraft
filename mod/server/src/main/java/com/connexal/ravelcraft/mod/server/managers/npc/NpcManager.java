@@ -21,7 +21,7 @@ public class NpcManager {
     public static final Identifier NPC_ID = new Identifier(BuildConstants.ID, "npc");
     public static Supplier<EntityType<NpcEntity>> NPC_TYPE;
 
-    public NpcManager() {
+    public static void setup() {
         //Register the entity type
         final EntityType<NpcEntity> type = Registry.register(
                 Registries.ENTITY_TYPE,
@@ -46,6 +46,7 @@ public class NpcManager {
         npc.setCustomName(Text.of(name));
         npc.applySkin(new String(skinData), null);
 
+        //TODO: Figure out why this doesn't work
         world.tryLoadEntity(npc);
 
         return npc;
