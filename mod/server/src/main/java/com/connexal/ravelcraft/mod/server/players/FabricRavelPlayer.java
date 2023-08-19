@@ -62,6 +62,10 @@ public class FabricRavelPlayer implements RavelPlayer {
         this.player.kill();
     }
 
+    public boolean isCreative() {
+        return this.player.isCreative();
+    }
+
     // --- Global ---
 
     @Override

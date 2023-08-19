@@ -2,11 +2,9 @@ package com.connexal.ravelcraft.mod.server;
 
 import com.connexal.ravelcraft.mod.cross.RavelModInstance;
 import com.connexal.ravelcraft.mod.server.commands.impl.FabricCommandRegistrar;
+import com.connexal.ravelcraft.mod.server.listeners.LobbyListener;
 import com.connexal.ravelcraft.mod.server.listeners.PlayerListener;
-import com.connexal.ravelcraft.mod.server.managers.HomeManager;
-import com.connexal.ravelcraft.mod.server.managers.MiniBlockManager;
-import com.connexal.ravelcraft.mod.server.managers.Ravel1984Manager;
-import com.connexal.ravelcraft.mod.server.managers.TpaManager;
+import com.connexal.ravelcraft.mod.server.managers.*;
 import com.connexal.ravelcraft.mod.server.managers.npc.NpcManager;
 import com.connexal.ravelcraft.mod.server.players.FabricPlayerManager;
 import com.connexal.ravelcraft.mod.server.players.velocity.VelocityModernForwarding;
@@ -41,6 +39,7 @@ public class RavelModServer implements RavelMain, ModInitializer {
 	private static MiniBlockManager miniBlockManager;
 	private static TpaManager tpaManager;
 	private static Ravel1984Manager ravel1984Manager;
+	private static SpawnManager spawnManager;
 
 	@Override
 	public void onInitialize() {
@@ -72,8 +71,14 @@ public class RavelModServer implements RavelMain, ModInitializer {
 		miniBlockManager = new MiniBlockManager();
 		tpaManager = new TpaManager();
 		ravel1984Manager = Ravel1984Manager.create();
+		spawnManager = new SpawnManager();
 
 		PlayerListener.register();
+
+		if (RavelInstance.getServer().isLobby()) {
+			RavelInstance.getLogger().info("Detected lobby server, registering lobby protections.");
+			LobbyListener.register();
+		}
 
 		ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
 			RavelModServer.server = server;
@@ -138,5 +143,9 @@ public class RavelModServer implements RavelMain, ModInitializer {
 
 	public static Ravel1984Manager getRavel1984Manager() {
 		return ravel1984Manager;
+	}
+
+	public static SpawnManager getSpawnManager() {
+		return spawnManager;
 	}
 }

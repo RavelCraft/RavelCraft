@@ -42,10 +42,15 @@ public class ServerPlayerEntityMixin {
         }
     }
 
-    @Inject(at = @At(value = "TAIL"), method = "onDeath")
+    @Inject(at = @At(value = "HEAD"), method = "onDeath")
     private void onPlayerDeath(DamageSource source, CallbackInfo info) {
-        if (this.updateData()) {
-            PlayerEvents.DEATH.invoker().onPlayerDeath(this.ravelPlayer, source);
+        if (!this.updateData()) {
+            return;
+        }
+
+        boolean allowed = PlayerEvents.DEATH.invoker().onPlayerDeath(this.ravelPlayer, source);
+        if (!allowed) {
+            info.cancel();
         }
     }
 
@@ -57,6 +62,18 @@ public class ServerPlayerEntityMixin {
 
         if (this.updateData()) {
             ItemEvents.ITEM_DROP.invoker().onItemDrop(this.ravelPlayer, stack, Location.of(entity));
+        }
+    }
+
+    @Inject(method = "attack", at = @At(value = "HEAD"), cancellable = true)
+    private void onPlayerAttack(Entity target, CallbackInfo ci) {
+        if (!this.updateData()) {
+            return;
+        }
+
+        boolean allowed = PlayerEvents.ATTACK_ENTITY.invoker().onPlayerAttackEntity(this.ravelPlayer, target);
+        if (!allowed) {
+            ci.cancel();
         }
     }
 }

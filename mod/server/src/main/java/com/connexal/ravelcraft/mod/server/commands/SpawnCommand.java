@@ -1,5 +1,6 @@
 package com.connexal.ravelcraft.mod.server.commands;
 
+import com.connexal.ravelcraft.mod.server.RavelModServer;
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
 import com.connexal.ravelcraft.mod.server.util.Location;
 import com.connexal.ravelcraft.shared.RavelInstance;
@@ -46,23 +47,17 @@ public class SpawnCommand extends RavelCommand {
         }
 
         FabricRavelPlayer player = (FabricRavelPlayer) sender;
-        RavelConfig config = RavelInstance.getConfig();
 
         if (args.length == 0) { //Teleport
             this.completeAsync(() -> {
-                if (!config.contains("spawn.world")) {
+                Location spawn = RavelModServer.getSpawnManager().getSpawn();
+
+                if (spawn == null) {
                     player.sendMessage(Text.COMMAND_SPAWN_NOT_SET);
                     return;
                 }
 
-                double x = config.getDouble("spawn.x");
-                double y = config.getDouble("spawn.y");
-                double z = config.getDouble("spawn.z");
-                float pitch = config.getFloat("spawn.pitch");
-                float yaw = config.getFloat("spawn.yaw");
-                RegistryKey<World> world = RegistryKey.of(RegistryKeys.WORLD, new Identifier(config.getString("spawn.world")));
-
-                player.teleport(new Location(x, y, z, pitch, yaw, world));
+                player.teleport(spawn);
                 player.sendMessage(Text.COMMAND_SPAWN_TELEPORT);
             });
         } else if (args.length == 1 && args[0].equalsIgnoreCase("set")) { //Set
@@ -72,16 +67,7 @@ public class SpawnCommand extends RavelCommand {
                     return;
                 }
 
-                Location location = player.getLocation();
-
-                config.set("spawn.world", location.getWorld().getValue().toString());
-                config.set("spawn.x", location.getX());
-                config.set("spawn.y", location.getY());
-                config.set("spawn.z", location.getZ());
-                config.set("spawn.pitch", location.getPitch());
-                config.set("spawn.yaw", location.getYaw());
-
-                config.save();
+                RavelModServer.getSpawnManager().setSpawn(player.getLocation());
                 player.sendMessage(Text.COMMAND_SPAWN_SET);
             });
         } else {

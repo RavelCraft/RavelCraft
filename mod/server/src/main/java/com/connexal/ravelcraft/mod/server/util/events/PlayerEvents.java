@@ -48,12 +48,17 @@ public class PlayerEvents {
 
     @FunctionalInterface
     public interface PlayerChatEvent {
-        void onPlayerChat(FabricRavelPlayer player, String message);
+        boolean onPlayerChat(FabricRavelPlayer player, String message);
     }
     public static final Event<PlayerChatEvent> CHAT = EventFactory.createArrayBacked(PlayerChatEvent.class, listeners -> (player, message) -> {
         for (PlayerChatEvent listener : listeners) {
-            listener.onPlayerChat(player, message);
+            boolean out = listener.onPlayerChat(player, message);
+            if (!out) {
+                return false;
+            }
         }
+
+        return true;
     });
 
     @FunctionalInterface
@@ -78,12 +83,17 @@ public class PlayerEvents {
 
     @FunctionalInterface
     public interface PlayerDeathEvent {
-        void onPlayerDeath(FabricRavelPlayer player, DamageSource source);
+        boolean onPlayerDeath(FabricRavelPlayer player, DamageSource source);
     }
     public static final Event<PlayerDeathEvent> DEATH = EventFactory.createArrayBacked(PlayerDeathEvent.class, listeners -> (player, source) -> {
         for (PlayerDeathEvent listener : listeners) {
-            listener.onPlayerDeath(player, source);
+            boolean out = listener.onPlayerDeath(player, source);
+            if (!out) {
+                return false;
+            }
         }
+
+        return true;
     });
 
     @FunctionalInterface
@@ -104,5 +114,20 @@ public class PlayerEvents {
         for (PlayerKillEntityEvent listener : listeners) {
             listener.onPlayerKillEntity(player, entity);
         }
+    });
+
+    @FunctionalInterface
+    public interface PlayerAttackEntityEvent {
+        boolean onPlayerAttackEntity(FabricRavelPlayer player, Entity entity);
+    }
+    public static final Event<PlayerAttackEntityEvent> ATTACK_ENTITY = EventFactory.createArrayBacked(PlayerAttackEntityEvent.class, listeners -> (player, entity) -> {
+        for (PlayerAttackEntityEvent listener : listeners) {
+            boolean out = listener.onPlayerAttackEntity(player, entity);
+            if (!out) {
+                return false;
+            }
+        }
+
+        return true;
     });
 }

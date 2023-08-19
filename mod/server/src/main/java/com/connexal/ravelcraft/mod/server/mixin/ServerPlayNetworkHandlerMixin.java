@@ -50,8 +50,10 @@ public abstract class ServerPlayNetworkHandlerMixin {
         this.updateData();
 
         String message = packet.chatMessage();
-        this.playerManager.broadcast(Text.CHAT_FORMAT, this.ravelPlayer.displayName(), message);
-        PlayerEvents.CHAT.invoker().onPlayerChat(this.ravelPlayer, message);
+        boolean allowed = PlayerEvents.CHAT.invoker().onPlayerChat(this.ravelPlayer, message);
+        if (allowed) {
+            this.playerManager.broadcast(Text.CHAT_FORMAT, this.ravelPlayer.displayName(), message);
+        }
 
         cir.setReturnValue(null);
     }

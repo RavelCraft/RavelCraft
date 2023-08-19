@@ -78,6 +78,8 @@ public enum Text {
     COMMAND_MAINTENANCE_BACKEND_DISABLED("ravelcraft.command.maintenance.backend-disabled"),
 
     //--- Backend ---
+    PLAYER_DISPLAY_SERVER_NAME("ravelcraft.player.display.server-name"),
+
     COMMAND_SPAWN_NOT_SET("ravelcraft.command.spawn.not-set"),
     COMMAND_SPAWN_SET("ravelcraft.command.spawn.set"),
     COMMAND_SPAWN_TELEPORT("ravelcraft.command.spawn.teleport"),

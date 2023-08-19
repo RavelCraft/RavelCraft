@@ -174,8 +174,9 @@ public class Ravel1984Manager {
         this.logData("connections", "Left the server: \"" + reason + "\"", player.getUniqueID());
     }
 
-    private void playerChat(FabricRavelPlayer player, String message) {
+    private boolean playerChat(FabricRavelPlayer player, String message) {
         this.logData("chat", message, player.getUniqueID());
+        return true;
     }
 
     private void playerCommand(FabricRavelPlayer player, String command) {
@@ -195,16 +196,19 @@ public class Ravel1984Manager {
         this.logData("kills", "Killed player " + target.getName() + " at " + target.getLocation().chatFormat(), killer.getUniqueID());
     }
 
-    private void playerDeath(FabricRavelPlayer player, DamageSource damageSource) {
+    private boolean playerDeath(FabricRavelPlayer player, DamageSource damageSource) {
         this.logData("death", "Died at " + player.getLocation().chatFormat() + " from " + damageSource.getName(), player.getUniqueID());
+        return true;
     }
 
-    private void blockPlace(FabricRavelPlayer player, BlockState futureState, BlockPos blockPos) {
+    private boolean blockPlace(FabricRavelPlayer player, BlockState futureState, BlockPos blockPos) {
         this.logData("block", "Place: " + futureState.getBlock().getName().getString() + " at " + this.formatLocation(player, blockPos), player.getUniqueID());
+        return true;
     }
 
-    private void blockBreak(FabricRavelPlayer player, Block block, BlockPos blockPos) {
+    private boolean blockBreak(FabricRavelPlayer player, Block block, BlockPos blockPos) {
         this.logData("block", "Break: " + block.getName().getString() + " at " + this.formatLocation(player, blockPos), player.getUniqueID());
+        return true;
     }
 
     private void bucketFill(FabricRavelPlayer player, BlockPos blockPos, ItemStack itemStack) {
