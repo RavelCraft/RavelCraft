@@ -27,6 +27,20 @@ public class LivingEntityMixin {
         }
     }
 
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/damage/DamageSource;getAttacker()Lnet/minecraft/entity/Entity;"),
+            method = "onDeath", locals = LocalCapture.CAPTURE_FAILSOFT)
+    private void onKilledByEntity(DamageSource damageSource, CallbackInfo ci) {
+        EntityEvents.DEATH.invoker().onEntityDeath((LivingEntity) (Object) this, damageSource);
+    }
+
+    @Inject(method = "drop", at = @At("HEAD"), cancellable = true)
+    private void onDrop(DamageSource source, CallbackInfo ci) {
+        boolean allowed = EntityEvents.DROP_LOOT.invoker().onEntityDropLoot((LivingEntity) (Object) this, source);
+        if (!allowed) {
+            ci.cancel();
+        }
+    }
+
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;applyDamage(Lnet/minecraft/entity/damage/DamageSource;F)V", shift = At.Shift.BEFORE), method = "damage", cancellable = true)
     private void onEntityDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         boolean allowed = EntityEvents.DAMAGE.invoker().onEntityDamage((LivingEntity) (Object) this, source, amount);

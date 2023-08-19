@@ -24,6 +24,7 @@
 
 package com.connexal.ravelcraft.mod.server.players.velocity;
 
+import com.connexal.ravelcraft.shared.RavelInstance;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
 import org.geysermc.geyser.api.event.EventRegistrar;
@@ -35,6 +36,13 @@ public class VelocityModernForwarding implements EventRegistrar {
     private static VelocityPacketHandler handler;
 
     public static void init() {
+        if (!RavelInstance.getConfig().contains("forwarding-key")) {
+            RavelInstance.getConfig().set("forwarding-key", "CHANGE ME");
+            RavelInstance.getConfig().save();
+            RavelInstance.getLogger().error("No forwarding key specified in config.yml! Please set one and restart the server.");
+            return;
+        }
+
         handler = new VelocityPacketHandler();
 
         ServerLoginNetworking.registerGlobalReceiver(PLAYER_INFO_CHANNEL, handler::handleVelocityPacket);

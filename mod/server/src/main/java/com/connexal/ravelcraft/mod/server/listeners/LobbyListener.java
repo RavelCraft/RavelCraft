@@ -21,8 +21,8 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class LobbyListener {
-    public static void register() {
+class LobbyListener {
+    static void register() {
         PlayerEvents.JOINED.register(LobbyListener::spawnRedirect);
         PlayerEvents.JOINED.register(LobbyListener::builderPermissions);
         EntityEvents.DAMAGE.register(LobbyListener::damageSuppress);

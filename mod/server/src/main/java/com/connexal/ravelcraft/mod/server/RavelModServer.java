@@ -2,8 +2,7 @@ package com.connexal.ravelcraft.mod.server;
 
 import com.connexal.ravelcraft.mod.cross.RavelModInstance;
 import com.connexal.ravelcraft.mod.server.commands.impl.FabricCommandRegistrar;
-import com.connexal.ravelcraft.mod.server.listeners.LobbyListener;
-import com.connexal.ravelcraft.mod.server.listeners.PlayerListener;
+import com.connexal.ravelcraft.mod.server.listeners.Listeners;
 import com.connexal.ravelcraft.mod.server.managers.*;
 import com.connexal.ravelcraft.mod.server.managers.npc.NpcManager;
 import com.connexal.ravelcraft.mod.server.players.FabricPlayerManager;
@@ -59,11 +58,6 @@ public class RavelModServer implements RavelMain, ModInitializer {
 		RavelInstance.init(new FabricCommandRegistrar(), new FabricPlayerManager());
 		RavelModInstance.init();
 
-		if (!RavelInstance.getConfig().contains("forwarding-key")) {
-			RavelInstance.getConfig().set("forwarding-key", "CHANGE ME");
-			RavelInstance.getConfig().save();
-			RavelInstance.getLogger().error("No forwarding key specified in config.yml! Please set one and restart the server.");
-		}
 		VelocityModernForwarding.init();
 
 		NpcManager.setup();
@@ -73,12 +67,7 @@ public class RavelModServer implements RavelMain, ModInitializer {
 		ravel1984Manager = Ravel1984Manager.create();
 		spawnManager = new SpawnManager();
 
-		PlayerListener.register();
-
-		if (RavelInstance.getServer().isLobby()) {
-			RavelInstance.getLogger().info("Detected lobby server, registering lobby protections.");
-			LobbyListener.register();
-		}
+		Listeners.register();
 
 		ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
 			RavelModServer.server = server;
