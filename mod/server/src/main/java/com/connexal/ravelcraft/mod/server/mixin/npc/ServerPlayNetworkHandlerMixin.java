@@ -1,4 +1,4 @@
-package com.connexal.ravelcraft.mod.server.mixin;
+package com.connexal.ravelcraft.mod.server.mixin.npc;
 
 import com.connexal.ravelcraft.mod.server.managers.npc.NpcEntity;
 import com.connexal.ravelcraft.mod.server.managers.npc.NpcPlayerUpdate;
@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.*;
 
 @Mixin(ServerPlayNetworkHandler.class)
-public abstract class ServerPlayNetworkHandlerMixin_NPC {
+public abstract class ServerPlayNetworkHandlerMixin {
     @Unique
     private final Map<UUID, NpcPlayerUpdate> tablistQueue = new LinkedHashMap<>();
     @Shadow

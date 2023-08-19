@@ -1,4 +1,4 @@
-package com.connexal.ravelcraft.mod.server.mixin;
+package com.connexal.ravelcraft.mod.server.mixin.events;
 
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
 import com.connexal.ravelcraft.mod.server.util.events.BlockEvents;
@@ -68,7 +68,7 @@ public class ServerPlayerInteractionManagerMixin {
             boolean allowed = BlockEvents.PLACE.invoker().onBlockPlace(this.ravelPlayer, futureState, hitResult.getBlockPos().offset(hitResult.getSide()));
             if (!allowed) {
                 player.getInventory().markDirty();
-                cir.setReturnValue(ActionResult.FAIL); //TODO: Figure out why this makes items disappear client side
+                cir.setReturnValue(ActionResult.FAIL);
             }
         }
     }

@@ -106,7 +106,11 @@ public enum Text {
     COMMAND_TPA_EXPIRED_RECEIVER("ravelcraft.command.tpa.expired.receiver"),
     COMMAND_TPA_NO_REQUESTS("ravelcraft.command.tpa.no-requests"),
     COMMAND_TPA_REQUEST_PENDING("ravelcraft.command.tpa.request-pending"),
-    COMMAND_TPA_SELF("ravelcraft.command.tpa.self");
+    COMMAND_TPA_SELF("ravelcraft.command.tpa.self"),
+
+    JOIN_INFO_RULES("ravelcraft.join-info.rules"),
+    JOIN_INFO_ANNOUNCEMENTS("ravelcraft.join-info.announcements"),
+    JOIN_INFO_LANGUAGES("ravelcraft.join-info.languages");
 
     private static final Map<Language, Properties> languages = new HashMap<>();
 

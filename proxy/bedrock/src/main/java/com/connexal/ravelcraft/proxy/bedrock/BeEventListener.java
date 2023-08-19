@@ -56,7 +56,11 @@ public class BeEventListener {
         event.getExtraData().remove("displayName");
         event.getExtraData().addProperty("displayName", username);
 
-        //Note to self, client data contains a property called "ServerAddress" that contains something like "address:port". Can be used for forced hosts.
+        String joinAddress = event.getClientData().get("ServerAddress").getAsString();
+        if (joinAddress.contains(":")) {
+            joinAddress = joinAddress.split(":")[0];
+        }
+
         //TODO: Disallow players from joining on the wrong address
         //TODO: Add forced hosts support
     }
