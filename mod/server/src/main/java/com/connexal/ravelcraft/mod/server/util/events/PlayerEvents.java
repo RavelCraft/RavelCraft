@@ -7,6 +7,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.world.World;
 
 public class PlayerEvents {
@@ -123,6 +125,51 @@ public class PlayerEvents {
     public static final Event<PlayerAttackEntityEvent> ATTACK_ENTITY = EventFactory.createArrayBacked(PlayerAttackEntityEvent.class, listeners -> (player, entity) -> {
         for (PlayerAttackEntityEvent listener : listeners) {
             boolean out = listener.onPlayerAttackEntity(player, entity);
+            if (!out) {
+                return false;
+            }
+        }
+
+        return true;
+    });
+
+    @FunctionalInterface
+    public interface PlayerInteractBlockEvent {
+        boolean onPlayerInteractBlock(FabricRavelPlayer player, World world, Hand hand, BlockHitResult blockHitResult);
+    }
+    public static final Event<PlayerInteractBlockEvent> INTERACT_BLOCK = EventFactory.createArrayBacked(PlayerInteractBlockEvent.class, listeners -> (player, world, hand, blockHitResult) -> {
+        for (PlayerInteractBlockEvent listener : listeners) {
+            boolean out = listener.onPlayerInteractBlock(player, world, hand, blockHitResult);
+            if (!out) {
+                return false;
+            }
+        }
+
+        return true;
+    });
+
+    @FunctionalInterface
+    public interface PlayerInteractEntityEvent {
+        boolean onPlayerInteractEntity(FabricRavelPlayer player, Entity entity);
+    }
+    public static final Event<PlayerInteractEntityEvent> INTERACT_ENTITY = EventFactory.createArrayBacked(PlayerInteractEntityEvent.class, listeners -> (player, entity) -> {
+        for (PlayerInteractEntityEvent listener : listeners) {
+            boolean out = listener.onPlayerInteractEntity(player, entity);
+            if (!out) {
+                return false;
+            }
+        }
+
+        return true;
+    });
+
+    @FunctionalInterface
+    public interface PlayerInteractItemEvent {
+        boolean onPlayerInteractItem(FabricRavelPlayer player, World world, Hand hand);
+    }
+    public static final Event<PlayerInteractItemEvent> INTERACT_ITEM = EventFactory.createArrayBacked(PlayerInteractItemEvent.class, listeners -> (player, world, hand) -> {
+        for (PlayerInteractItemEvent listener : listeners) {
+            boolean out = listener.onPlayerInteractItem(player, world, hand);
             if (!out) {
                 return false;
             }

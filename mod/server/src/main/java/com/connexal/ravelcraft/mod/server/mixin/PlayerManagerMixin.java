@@ -2,8 +2,6 @@ package com.connexal.ravelcraft.mod.server.mixin;
 
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
 import com.connexal.ravelcraft.mod.server.util.events.PlayerEvents;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;

@@ -2,16 +2,14 @@ package com.connexal.ravelcraft.mod.server.mixin;
 
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
 import com.connexal.ravelcraft.mod.server.util.events.BlockEvents;
+import com.connexal.ravelcraft.mod.server.util.events.PlayerEvents;
 import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.players.PlayerManager;
-import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.*;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -54,7 +52,7 @@ public class ServerPlayerInteractionManagerMixin {
         }
     }
 
-    @Inject(method = "interactBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;onUse(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;Lnet/minecraft/util/hit/BlockHitResult;)Lnet/minecraft/util/ActionResult;", shift = At.Shift.BEFORE), cancellable = true)
+    @Inject(method = "interactBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;useOnBlock(Lnet/minecraft/item/ItemUsageContext;)Lnet/minecraft/util/ActionResult;", shift = At.Shift.BEFORE), cancellable = true)
     private void beforeBlockPlace(ServerPlayerEntity player, World world, ItemStack stack, Hand hand, BlockHitResult hitResult, CallbackInfoReturnable<ActionResult> cir) {
         final Item item = stack.getItem();
 
@@ -69,8 +67,35 @@ public class ServerPlayerInteractionManagerMixin {
 
             boolean allowed = BlockEvents.PLACE.invoker().onBlockPlace(this.ravelPlayer, futureState, hitResult.getBlockPos().offset(hitResult.getSide()));
             if (!allowed) {
+                player.getInventory().markDirty();
                 cir.setReturnValue(ActionResult.FAIL); //TODO: Figure out why this makes items disappear client side
             }
+        }
+    }
+
+    @Inject(at = @At("HEAD"), method = "interactBlock", cancellable = true)
+    public void interactBlock(ServerPlayerEntity player, World world, ItemStack stack, Hand hand, BlockHitResult blockHitResult, CallbackInfoReturnable<ActionResult> cir) {
+        if (!this.updateData()) {
+            return;
+        }
+
+        boolean allowed = PlayerEvents.INTERACT_BLOCK.invoker().onPlayerInteractBlock(this.ravelPlayer, world, hand, blockHitResult);
+        if (!allowed) {
+            player.getInventory().markDirty();
+            cir.setReturnValue(ActionResult.FAIL);
+        }
+    }
+
+    @Inject(at = @At("HEAD"), method = "interactItem", cancellable = true)
+    public void interactItem(ServerPlayerEntity player, World world, ItemStack stack, Hand hand, CallbackInfoReturnable<ActionResult> info) {
+        if (!this.updateData()) {
+            return;
+        }
+
+        boolean allowed = PlayerEvents.INTERACT_ITEM.invoker().onPlayerInteractItem(this.ravelPlayer, world, hand);
+        if (!allowed) {
+            player.getInventory().markDirty();
+            info.setReturnValue(ActionResult.FAIL);
         }
     }
 }

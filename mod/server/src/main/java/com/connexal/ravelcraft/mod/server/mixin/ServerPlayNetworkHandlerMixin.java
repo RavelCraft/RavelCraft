@@ -1,27 +1,27 @@
 package com.connexal.ravelcraft.mod.server.mixin;
 
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
-import com.connexal.ravelcraft.mod.server.util.events.ItemEvents;
 import com.connexal.ravelcraft.mod.server.util.events.PlayerEvents;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.players.PlayerManager;
-import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.util.text.Text;
-import net.minecraft.inventory.Inventory;
+import net.minecraft.entity.Entity;
 import net.minecraft.network.message.LastSeenMessageList;
 import net.minecraft.network.message.SignedMessage;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
-import net.minecraft.network.packet.c2s.play.ClickSlotC2SPacket;
 import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
+import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.network.packet.s2c.play.PositionFlag;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Set;
 
@@ -32,6 +32,8 @@ public abstract class ServerPlayNetworkHandlerMixin {
 
     @Shadow
     public abstract ServerPlayerEntity getPlayer();
+
+    @Shadow public ServerPlayerEntity player;
 
     private boolean updateData() {
         if (this.ravelPlayer == null) {
@@ -78,6 +80,19 @@ public abstract class ServerPlayNetworkHandlerMixin {
     private void onTeleport(double x, double y, double z, float yaw, float pitch, Set<PositionFlag> flags, CallbackInfo ci) {
         if (this.updateData()) {
             PlayerEvents.TELEPORT.invoker().onPlayerTeleport(this.ravelPlayer, this.getPlayer().getWorld(), x, y, z, yaw, pitch);
+        }
+    }
+
+    @Inject(method = "onPlayerInteractEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;setSneaking(Z)V", shift = At.Shift.AFTER), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
+    private void handleEntityInteraction(PlayerInteractEntityC2SPacket packet, CallbackInfo ci, ServerWorld world, Entity target) {
+        if (target == null || !this.updateData()) {
+            return;
+        }
+
+        boolean allowed = PlayerEvents.INTERACT_ENTITY.invoker().onPlayerInteractEntity(this.ravelPlayer, target);
+        if (!allowed) {
+            this.player.getInventory().markDirty();
+            ci.cancel();
         }
     }
 }

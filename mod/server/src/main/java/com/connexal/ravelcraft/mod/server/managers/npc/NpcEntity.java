@@ -1,6 +1,5 @@
 package com.connexal.ravelcraft.mod.server.managers.npc;
 
-import com.connexal.ravelcraft.mod.server.RavelModServer;
 import com.connexal.ravelcraft.mod.server.mixin.accessors.EntityTrackerAccessor;
 import com.connexal.ravelcraft.mod.server.mixin.accessors.PlayerEntityAccessor;
 import com.connexal.ravelcraft.mod.server.mixin.accessors.PlayerSpawnS2CPacketAccessor;

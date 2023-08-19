@@ -28,8 +28,8 @@ public class LivingEntityMixin {
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;applyDamage(Lnet/minecraft/entity/damage/DamageSource;F)V", shift = At.Shift.BEFORE), method = "damage", cancellable = true)
-    private void onPlayerDamaged(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        boolean allowed = EntityEvents.DAMAGE.invoker().onPlayerDamage((Entity) (Object) this, source, amount);
+    private void onEntityDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        boolean allowed = EntityEvents.DAMAGE.invoker().onEntityDamage((LivingEntity) (Object) this, source, amount);
         if (!allowed) {
             cir.setReturnValue(false);
         }

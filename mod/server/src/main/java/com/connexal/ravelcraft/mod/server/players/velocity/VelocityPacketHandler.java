@@ -24,9 +24,9 @@
 
 package com.connexal.ravelcraft.mod.server.players.velocity;
 
-import com.connexal.ravelcraft.mod.server.util.GeyserSkinGetter;
 import com.connexal.ravelcraft.mod.server.mixin.velocity.ClientConnection_AddressAccessor;
 import com.connexal.ravelcraft.mod.server.mixin.velocity.ServerLoginNetworkHandlerAccessor;
+import com.connexal.ravelcraft.mod.server.util.GeyserSkinGetter;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.players.RavelPlayer;
 import com.connexal.ravelcraft.shared.util.uuid.UUIDTools;

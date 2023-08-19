@@ -20,21 +20,6 @@ public class ItemEvents {
     });
 
     @FunctionalInterface
-    public interface BucketPreFillEvent {
-        boolean onBucketPreFill(FabricRavelPlayer player, BlockPos blockPos, ItemStack itemStack);
-    }
-    public static final Event<BucketPreFillEvent> BUCKET_PRE_FILL = EventFactory.createArrayBacked(BucketPreFillEvent.class, listeners -> (player, blockPos, itemStack) -> {
-        for (BucketPreFillEvent listener : listeners) {
-            boolean out = listener.onBucketPreFill(player, blockPos, itemStack);
-            if (!out) {
-                return false;
-            }
-        }
-
-        return true;
-    });
-
-    @FunctionalInterface
     public interface BucketEmptyEvent {
         void onBucketEmpty(FabricRavelPlayer player, BlockPos blockPos, ItemStack itemStack);
     }
@@ -42,21 +27,6 @@ public class ItemEvents {
         for (BucketEmptyEvent listener : listeners) {
             listener.onBucketEmpty(player, blockPos, itemStack);
         }
-    });
-
-    @FunctionalInterface
-    public interface BucketPreEmptyEvent {
-        boolean onBucketPreEmpty(FabricRavelPlayer player, BlockPos blockPos, ItemStack itemStack);
-    }
-    public static final Event<BucketPreEmptyEvent> BUCKET_PRE_EMPTY = EventFactory.createArrayBacked(BucketPreEmptyEvent.class, listeners -> (player, blockPos, itemStack) -> {
-        for (BucketPreEmptyEvent listener : listeners) {
-            boolean out = listener.onBucketPreEmpty(player, blockPos, itemStack);
-            if (!out) {
-                return false;
-            }
-        }
-
-        return true;
     });
 
     @FunctionalInterface
