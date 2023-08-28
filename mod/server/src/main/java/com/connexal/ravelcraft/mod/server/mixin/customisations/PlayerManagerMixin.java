@@ -1,4 +1,4 @@
-package com.connexal.ravelcraft.mod.server.mixin;
+package com.connexal.ravelcraft.mod.server.mixin.customisations;
 
 import net.minecraft.server.PlayerManager;
 import net.minecraft.text.Text;

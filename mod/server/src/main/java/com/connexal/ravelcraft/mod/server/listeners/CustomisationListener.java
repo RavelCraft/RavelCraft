@@ -20,4 +20,8 @@ public class CustomisationListener {
 
         return true;
     }
+
+    //FarmlandBlockMixin: remove trampling
+
+    //ItemFrameEntityMixin: invisible item frames
 }
