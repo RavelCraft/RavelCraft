@@ -18,6 +18,26 @@ public enum RavelServer {
 
     public static final RavelServer DEFAULT_SERVER = LOBBY;
 
+    public static RavelServer getServerByAddress(String address) {
+        if (address.equals(BuildConstants.SERVER_IP)) {
+            return JE_PROXY;
+        }
+
+        for (String server : BuildConstants.TEST_IPS) {
+            if (address.equals(server)) {
+                return JE_PROXY;
+            }
+        }
+
+        for (RavelServer server : RavelServer.values()) {
+            if (address.equals(server.getDirectConnect())) {
+                return server;
+            }
+        }
+
+        return null;
+    }
+
     private final String name;
     private final String address;
     private final int port;

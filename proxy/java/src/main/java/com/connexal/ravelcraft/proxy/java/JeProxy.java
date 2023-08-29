@@ -5,6 +5,7 @@ import com.connexal.ravelcraft.proxy.java.commands.VelocityCommandRegistrar;
 import com.connexal.ravelcraft.proxy.java.players.VelocityPlayerManager;
 import com.connexal.ravelcraft.proxy.java.servers.ServerManagerImpl;
 import com.connexal.ravelcraft.proxy.java.util.VelocityRavelLogger;
+import com.connexal.ravelcraft.proxy.java.website.WebServer;
 import com.connexal.ravelcraft.shared.BuildConstants;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.RavelMain;
@@ -26,6 +27,8 @@ public class JeProxy implements RavelMain {
     private static ProxyServer server = null;
     private static Logger logger = null;
 
+    private static WebServer webServer;
+
     @Inject
     public JeProxy(ProxyServer server, Logger logger) {
         JeProxy.server = server;
@@ -41,6 +44,8 @@ public class JeProxy implements RavelMain {
         RavelProxyInstance.init(new ServerManagerImpl());
 
         server.getEventManager().register(this, new JeEventListener());
+
+        webServer = WebServer.create();
     }
 
     @Subscribe
@@ -70,5 +75,9 @@ public class JeProxy implements RavelMain {
 
     public static ProxyServer getServer() {
         return server;
+    }
+
+    public static WebServer getWebServer() {
+        return webServer;
     }
 }

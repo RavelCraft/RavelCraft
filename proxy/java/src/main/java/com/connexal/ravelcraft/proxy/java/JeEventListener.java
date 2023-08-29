@@ -33,6 +33,7 @@ import net.kyori.adventure.text.Component;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.Optional;
@@ -64,7 +65,15 @@ public class JeEventListener {
 
     @Subscribe(order = PostOrder.FIRST)
     public void onPreLoginEvent(PreLoginEvent event) {
-        //TODO: Disallow players from joining on the wrong address
+        InetSocketAddress connectSocket = event.getConnection().getVirtualHost().orElse(null);
+        String joinAddress = connectSocket == null ? BuildConstants.SERVER_IP : connectSocket.getHostString();
+
+        RavelServer selectedServer = RavelServer.getServerByAddress(joinAddress);
+        if (selectedServer == null) {
+            event.setResult(PreLoginEvent.PreLoginComponentResult.denied(Component.text("This server is private!\nIf you think you should be able to join, you know how to contact us!")));
+            return;
+        }
+
         //TODO: Add forced hosts support
     }
 
@@ -208,20 +217,12 @@ public class JeEventListener {
         for (String server : BuildConstants.TEST_IPS) {
             if (host.equals(server)) {
                 isTestServer = true;
+                break;
             }
         }
 
-        RavelServer pingedServer = null;
+        RavelServer pingedServer = RavelServer.getServerByAddress(host);
         if (!isTestServer) {
-            for (RavelServer server : RavelServer.values()) {
-                if (host.equals(server.getDirectConnect())) {
-                    pingedServer = server;
-                }
-            }
-            if (pingedServer == null && host.equals(RavelServer.JE_PROXY.getAddress())) {
-                pingedServer = RavelServer.JE_PROXY;
-            }
-
             if (pingedServer == null) {
                 ServerPing.Builder serverPing = ServerPing.builder()
                         .onlinePlayers(0)
@@ -257,7 +258,7 @@ public class JeEventListener {
 
         if (isTestServer) {
             serverPing.description(Component.text(ChatColor.AQUA + "RavelCraft test instance!\n" + ChatColor.YELLOW + "v" + BuildConstants.VERSION + " @" + host));
-        } else if (pingedServer == RavelServer.JE_PROXY) {
+        } else if (pingedServer.isProxy()) {
             serverPing.description(Component.text(ChatColor.GREEN + "Welcome to the " + ChatColor.RED + BuildConstants.NAME + " Network!\n" + ChatColor.YELLOW + RavelProxyInstance.getMotdManager().getMotd()));
         } else {
             serverPing.description(Component.text(ChatColor.GREEN + BuildConstants.NAME + " " + ChatColor.RED + pingedServer.getName() + " server!\n" + ChatColor.YELLOW + RavelProxyInstance.getMotdManager().getMotd()));

@@ -18,6 +18,7 @@ import com.nimbusds.jwt.SignedJWT;
 import dev.waterdog.waterdogpe.ProxyServer;
 import dev.waterdog.waterdogpe.event.defaults.*;
 import dev.waterdog.waterdogpe.network.protocol.user.HandshakeUtils;
+import dev.waterdog.waterdogpe.network.protocol.user.LoginData;
 import dev.waterdog.waterdogpe.network.serverinfo.ServerInfo;
 
 import java.util.Collections;
@@ -40,11 +41,6 @@ public class BeEventListener {
     }
 
     private void onPreLogin(PreClientDataSetEvent event) {
-        //Upload player skin to the Geyser global API
-        SignedJWT signedClientData = HandshakeUtils.createExtraData(event.getKeyPair(), event.getExtraData());
-        SignedJWT signedExtraData = HandshakeUtils.encodeJWT(event.getKeyPair(), event.getClientData());
-        BeProxy.getSkinUploader().uploadSkin(List.of(signedClientData), signedExtraData.getParsedString());
-
         //Change username to a valid Java username
         String username = RavelPlayer.BEDROCK_PREFIX + event.getExtraData().get("displayName").getAsString();
         if (username.contains(" ")) {
@@ -55,14 +51,6 @@ public class BeEventListener {
         event.getClientData().addProperty("ThirdPartyName", username);
         event.getExtraData().remove("displayName");
         event.getExtraData().addProperty("displayName", username);
-
-        String joinAddress = event.getClientData().get("ServerAddress").getAsString();
-        if (joinAddress.contains(":")) {
-            joinAddress = joinAddress.split(":")[0];
-        }
-
-        //TODO: Disallow players from joining on the wrong address
-        //TODO: Add forced hosts support
     }
 
     private void onPlayerAuthenticate(PlayerAuthenticatedEvent event) {
@@ -71,6 +59,27 @@ public class BeEventListener {
             event.setCancelReason("Network IPC connection establishment failed. Contact the server administrator.");
             event.setCancelled(true);
         }
+
+        LoginData loginData = event.getLoginData();
+
+        //Check join address - kick if not allowed
+        String joinAddress = loginData.getClientData().get("ServerAddress").getAsString();
+        if (joinAddress.contains(":")) {
+            joinAddress = joinAddress.split(":")[0];
+        }
+        RavelServer selectedServer = RavelServer.getServerByAddress(joinAddress);
+        if (selectedServer == null) {
+            event.setCancelReason("This server is private!\nIf you think you should be able to join, you know how to contact us!");
+            event.setCancelled(true);
+            return;
+        }
+
+        //TODO: Support forced hosts
+
+        //Upload player skin to the Geyser global API
+        SignedJWT signedClientData = HandshakeUtils.createExtraData(loginData.getKeyPair(), loginData.getExtraData());
+        SignedJWT signedExtraData = HandshakeUtils.encodeJWT(loginData.getKeyPair(), loginData.getClientData());
+        BeProxy.getSkinUploader().uploadSkin(List.of(signedClientData), signedExtraData.getParsedString());
     }
 
     private void onPlayerJoin(PlayerLoginEvent event) {
