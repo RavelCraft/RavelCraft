@@ -27,7 +27,7 @@ public class BroadcastCommand extends RavelCommand {
     @Override
     public CommandOption[] getOptions() {
         return new CommandOption[] {
-                CommandOption.word("message"),
+                CommandOption.greedyString("message"),
         };
     }
 

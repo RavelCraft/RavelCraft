@@ -49,6 +49,7 @@ public abstract class RavelCommand {
         return switch (option.getType()) {
             case LITERAL -> option.getName();
             case WORD -> "<" + option.getName() + ">";
+            case GREEDY_STRING -> "<" + option.getName() + "...>";
         };
     }
 

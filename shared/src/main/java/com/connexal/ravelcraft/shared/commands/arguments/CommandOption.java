@@ -19,7 +19,8 @@ public class CommandOption {
 
     public enum Type {
         LITERAL,
-        WORD
+        WORD,
+        GREEDY_STRING
     }
 
     public static CommandOption literal(String name, CommandOption... options) {
@@ -36,5 +37,9 @@ public class CommandOption {
 
     public static CommandOption word(String name) {
         return new CommandOption(Type.WORD, name);
+    }
+
+    public static CommandOption greedyString(String name) {
+        return new CommandOption(Type.GREEDY_STRING, name);
     }
 }

@@ -19,6 +19,7 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.ConsoleCommandSource;
 import com.velocitypowered.api.proxy.Player;
 
+import static com.mojang.brigadier.arguments.StringArgumentType.greedyString;
 import static com.mojang.brigadier.arguments.StringArgumentType.word;
 
 public class VelocityCommandRegistrar extends CommandRegistrar {
@@ -74,6 +75,7 @@ public class VelocityCommandRegistrar extends CommandRegistrar {
         switch (option.getType()) {
             case LITERAL -> newOption = LiteralArgumentBuilder.literal(option.getName());
             case WORD -> newOption = RequiredArgumentBuilder.argument(option.getName(), word());
+            case GREEDY_STRING -> newOption = RequiredArgumentBuilder.argument(option.getName(), greedyString());
             default -> throw new IllegalStateException("Command option not understood");
         }
 

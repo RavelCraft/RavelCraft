@@ -32,7 +32,7 @@ public class BanCommand extends RavelCommand {
     @Override
     public CommandOption[] getOptions() {
         return new CommandOption[] {
-                CommandOption.word("player", CommandOption.word("days", CommandOption.word("reason"))),
+                CommandOption.word("player", CommandOption.word("days", CommandOption.greedyString("reason"))),
         };
     }
 

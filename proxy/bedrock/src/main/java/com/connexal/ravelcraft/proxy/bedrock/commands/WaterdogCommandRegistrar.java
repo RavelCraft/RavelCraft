@@ -45,6 +45,7 @@ public class WaterdogCommandRegistrar extends CommandRegistrar {
                 data.setEnumData(enumData);
             }
             case WORD -> data.setType(CommandParam.TEXT);
+            case GREEDY_STRING -> data.setType(CommandParam.TEXT); //Shouldn't be an issue
             default -> throw new IllegalStateException("Command option not understood");
         }
 

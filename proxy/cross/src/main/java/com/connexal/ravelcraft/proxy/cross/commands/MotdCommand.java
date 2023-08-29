@@ -27,7 +27,7 @@ public class MotdCommand extends RavelCommand {
     @Override
     public CommandOption[] getOptions() {
         return new CommandOption[] {
-                CommandOption.word("message"),
+                CommandOption.greedyString("message"),
         };
     }
 

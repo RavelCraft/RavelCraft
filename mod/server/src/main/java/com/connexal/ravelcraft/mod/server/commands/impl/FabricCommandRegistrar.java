@@ -19,6 +19,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import java.lang.reflect.Field;
 import java.util.Map;
 
+import static com.mojang.brigadier.arguments.StringArgumentType.greedyString;
 import static com.mojang.brigadier.arguments.StringArgumentType.word;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
@@ -107,6 +108,7 @@ public class FabricCommandRegistrar extends CommandRegistrar {
         switch (option.getType()) {
             case LITERAL -> newOption = literal(option.getName());
             case WORD -> newOption = argument(option.getName(), word());
+            case GREEDY_STRING -> newOption = argument(option.getName(), greedyString());
             default -> throw new IllegalStateException("Command option not understood");
         }
 

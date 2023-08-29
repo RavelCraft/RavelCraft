@@ -29,8 +29,8 @@ public class KickCommand extends RavelCommand {
     public CommandOption[] getOptions() {
         return new CommandOption[] {
                 CommandOption.word("player",
-                        CommandOption.literal("server", CommandOption.word("reason")),
-                        CommandOption.literal("network", CommandOption.word("reason"))),
+                        CommandOption.literal("server", CommandOption.greedyString("reason")),
+                        CommandOption.literal("network", CommandOption.greedyString("reason"))),
         };
     }
 
