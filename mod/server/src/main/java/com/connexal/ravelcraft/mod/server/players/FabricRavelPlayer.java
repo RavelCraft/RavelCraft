@@ -11,6 +11,7 @@ import com.connexal.ravelcraft.shared.util.text.Language;
 import com.connexal.ravelcraft.shared.util.text.Text;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.world.World;
 import org.geysermc.geyser.api.GeyserApi;
 
 import java.util.UUID;
@@ -64,6 +65,10 @@ public class FabricRavelPlayer implements RavelPlayer {
 
     public boolean isCreative() {
         return this.player.isCreative();
+    }
+
+    public ServerWorld getWorld() {
+        return this.player.getServerWorld();
     }
 
     // --- Global ---

@@ -64,6 +64,12 @@ public abstract class RavelCommand {
     }
 
     protected void completeAsync(Runnable runnable) {
-        RavelInstance.scheduleTask(runnable);
+        RavelInstance.scheduleTask(() -> {
+            try {
+                runnable.run();
+            } catch (Exception e) {
+                RavelInstance.getLogger().error("Error running command", e);
+            }
+        });
     }
 }

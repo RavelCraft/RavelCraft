@@ -108,6 +108,11 @@ public enum Text {
     COMMAND_TPA_REQUEST_PENDING("ravelcraft.command.tpa.request-pending"),
     COMMAND_TPA_SELF("ravelcraft.command.tpa.self"),
 
+    COMMAND_MAP_NAN("ravelcraft.command.map.nan"),
+    COMMAND_MAP_INVALID_URL("ravelcraft.command.map.invalid.url"),
+    COMMAND_MAP_INVALID_ID("ravelcraft.command.map.invalid.id"),
+    COMMAND_MAP_DONE("ravelcraft.command.map.done"),
+
     JOIN_INFO_RULES("ravelcraft.join-info.rules"),
     JOIN_INFO_ANNOUNCEMENTS("ravelcraft.join-info.announcements"),
     JOIN_INFO_LANGUAGES("ravelcraft.join-info.languages");
