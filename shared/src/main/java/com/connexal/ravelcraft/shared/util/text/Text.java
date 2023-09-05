@@ -78,6 +78,7 @@ public enum Text {
     COMMAND_MAINTENANCE_BACKEND_DISABLED("ravelcraft.command.maintenance.backend-disabled"),
 
     //--- Backend ---
+
     PLAYER_DISPLAY_SERVER_NAME("ravelcraft.player.display.server-name"),
 
     COMMAND_SPAWN_NOT_SET("ravelcraft.command.spawn.not-set"),
@@ -112,6 +113,9 @@ public enum Text {
     COMMAND_MAP_INVALID_URL("ravelcraft.command.map.invalid.url"),
     COMMAND_MAP_INVALID_ID("ravelcraft.command.map.invalid.id"),
     COMMAND_MAP_DONE("ravelcraft.command.map.done"),
+
+    COMMAND_MSG_SENDER("ravelcraft.command.msg.sender"),
+    COMMAND_MSG_RECEIVER("ravelcraft.command.msg.receiver"),
 
     JOIN_INFO_RULES("ravelcraft.join-info.rules"),
     JOIN_INFO_ANNOUNCEMENTS("ravelcraft.join-info.announcements"),

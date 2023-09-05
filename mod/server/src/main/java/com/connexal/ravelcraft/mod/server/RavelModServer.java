@@ -27,7 +27,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class RavelModServer implements RavelMain, ModInitializer {
-	public static final String[] OVERRIDDEN_COMMANDS = new String[] { "ban", "ban-ip", "banlist", "pardon", "pardon-ip", "kick", "list", "whitelist" };
+	public static final String[] OVERRIDDEN_COMMANDS = new String[] { "ban", "ban-ip", "banlist", "pardon", "pardon-ip", "kick", "list", "whitelist", "msg", "tell" };
 
 	private ModContainer mod;
 

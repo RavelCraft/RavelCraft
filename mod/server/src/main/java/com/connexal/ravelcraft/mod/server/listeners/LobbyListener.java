@@ -19,11 +19,12 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
 
 class LobbyListener {
     static void register() {
-        PlayerEvents.JOINED.register(LobbyListener::spawnRedirect);
+        PlayerEvents.JOINED.register(LobbyListener::spawnStuff);
         PlayerEvents.JOINED.register(LobbyListener::builderPermissions);
         EntityEvents.DAMAGE.register(LobbyListener::damageSuppress);
         BlockEvents.PLACE.register(LobbyListener::allowBlockPlace);
@@ -42,7 +43,7 @@ class LobbyListener {
     }
 
     //Always spawn players at the spawn location
-    private static void spawnRedirect(FabricRavelPlayer player) {
+    private static void spawnStuff(FabricRavelPlayer player) {
         Location location = RavelModServer.getSpawnManager().getSpawn();
         if (location == null) {
             RavelInstance.getLogger().error("Spawn location is null!");
@@ -50,6 +51,7 @@ class LobbyListener {
         }
 
         player.teleport(location);
+        player.getPlayer().changeGameMode(GameMode.SURVIVAL);
     }
 
     //Prevent entities from taking damage
@@ -83,7 +85,7 @@ class LobbyListener {
         Identifier id = Registries.BLOCK.getId(state.getBlock());
 
         //We allow doors to be interacted with (and don't mess with air)
-        if (state.isAir() || id.getPath().endsWith("door")) {
+        if (state.isAir() || id.getPath().endsWith("_door")) {
             return true;
         }
 
