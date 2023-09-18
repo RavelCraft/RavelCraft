@@ -39,6 +39,7 @@ public class RavelModServer implements RavelMain, ModInitializer {
 	private static TpaManager tpaManager;
 	private static Ravel1984Manager ravel1984Manager;
 	private static SpawnManager spawnManager;
+	private static GeyserManager geyserManager;
 
 	@Override
 	public void onInitialize() {
@@ -66,6 +67,7 @@ public class RavelModServer implements RavelMain, ModInitializer {
 		tpaManager = new TpaManager();
 		ravel1984Manager = Ravel1984Manager.create();
 		spawnManager = new SpawnManager();
+		geyserManager = new GeyserManager();
 
 		Listeners.register();
 

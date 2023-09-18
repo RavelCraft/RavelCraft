@@ -1,6 +1,7 @@
 package com.connexal.ravelcraft.mod.server.listeners;
 
 import com.connexal.ravelcraft.mod.server.RavelModServer;
+import com.connexal.ravelcraft.mod.server.managers.npc.NpcEntity;
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
 import com.connexal.ravelcraft.mod.server.util.Location;
 import com.connexal.ravelcraft.mod.server.util.events.BlockEvents;
@@ -32,7 +33,7 @@ class LobbyListener {
         PlayerEvents.INTERACT_BLOCK.register(LobbyListener::disableBlcokInteractions);
         PlayerEvents.INTERACT_ITEM.register(LobbyListener::disableItemInteractions);
         PlayerEvents.INTERACT_ENTITY.register(LobbyListener::disableEntityInteractions);
-        PlayerEvents.ATTACK_ENTITY.register(LobbyListener::disableEntityKills);
+        PlayerEvents.ATTACK_ENTITY.register(LobbyListener::disableEntityAttack);
     }
 
     //Builders are allowed to use commands in the lobby
@@ -99,11 +100,19 @@ class LobbyListener {
 
     //Only allow creative players to interact with entities
     private static boolean disableEntityInteractions(FabricRavelPlayer player, Entity entity) {
+        if (entity instanceof NpcEntity) { //Don't mess with NPCs
+            return  true;
+        }
+
         return player.isCreative();
     }
 
     //Only allow creative players to kill entities
-    private static boolean disableEntityKills(FabricRavelPlayer player, Entity entity) {
+    private static boolean disableEntityAttack(FabricRavelPlayer player, Entity entity) {
+        if (entity instanceof NpcEntity) { //Don't mess with NPCs
+            return  true;
+        }
+
         return player.isCreative();
     }
 }

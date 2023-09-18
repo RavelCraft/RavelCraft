@@ -45,9 +45,10 @@ public class MiniBlocksCommand extends RavelCommand {
 
         ServerPlayerEntity player = ((FabricRavelPlayer) sender).getPlayer();
 
-        MenuGui gui = new MenuGui(player, RavelModServer.getMiniBlockManager().getMiniBlocks().toArray(new ItemStack[0]), (item) -> {
+        MenuGui gui = new MenuGui(player, RavelModServer.getMiniBlockManager().getMiniBlocks().toArray(new ItemStack[0]), "Mini Blocks");
+        gui.setClick(item -> {
             player.getInventory().offerOrDrop(item);
-        }, "Mini Blocks");
+        });
         gui.open();
 
         return true;

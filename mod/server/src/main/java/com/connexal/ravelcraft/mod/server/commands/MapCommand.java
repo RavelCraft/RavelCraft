@@ -37,7 +37,7 @@ public class MapCommand extends RavelCommand {
 
     @Override
     public String[] getAliases() {
-        return new String[] { "custommap" };
+        return new String[0];
     }
 
     @Override

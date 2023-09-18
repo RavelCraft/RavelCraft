@@ -48,6 +48,7 @@ public class WebServer implements HttpHandler {
         //this.endpoints.add(new AuthEndpoint()); disabled for now
         //this.endpoints.add(new GameEndpoint()); disabled for now
         this.endpoints.add(new RobotsEndpoint());
+        this.endpoints.add(new VersionEndpoint());
 
         //Now for the RHTML endpoints
         try {

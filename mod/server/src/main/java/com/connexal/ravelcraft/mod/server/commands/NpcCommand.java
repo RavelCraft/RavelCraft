@@ -28,7 +28,9 @@ public class NpcCommand extends RavelCommand {
 
     @Override
     public CommandOption[] getOptions() {
-        return new CommandOption[0];
+        return new CommandOption[] {
+                CommandOption.literal("create")
+        };
     }
 
     @Override
@@ -37,14 +39,16 @@ public class NpcCommand extends RavelCommand {
             sender.sendMessage(Text.COMMAND_MUST_BE_PLAYER);
             return true;
         }
-        if (args.length != 0) {
+        if (args.length != 1) {
             return false;
         }
 
-        this.completeAsync(() -> {
-            FabricRavelPlayer player = (FabricRavelPlayer) sender;
-            NpcManager.createNpc((ServerWorld) player.getPlayer().getWorld(), "MOGUS", player.getLocation(), "http://textures.minecraft.net/texture/f489ad230d8ca79f3ded9f3a72c48143da46c9e8eb1ff581029d2444139bf908");
-        });
+        if (args[0].equalsIgnoreCase("create")) {
+            this.completeAsync(() -> {
+                FabricRavelPlayer player = (FabricRavelPlayer) sender;
+                NpcManager.createNpc((ServerWorld) player.getPlayer().getWorld(), player.getLocation());
+            });
+        }
 
         return true;
     }

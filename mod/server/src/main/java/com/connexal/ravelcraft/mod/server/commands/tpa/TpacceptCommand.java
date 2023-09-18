@@ -22,7 +22,7 @@ public class TpacceptCommand extends RavelCommand {
 
     @Override
     public String[] getAliases() {
-        return new String[] { "teleportaccept"};
+        return new String[0];
     }
 
     @Override

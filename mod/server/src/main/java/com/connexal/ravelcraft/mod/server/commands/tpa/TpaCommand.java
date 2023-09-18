@@ -25,7 +25,7 @@ public class TpaCommand extends RavelCommand {
 
     @Override
     public String[] getAliases() {
-        return new String[] { "teleportask"};
+        return new String[0];
     }
 
     @Override

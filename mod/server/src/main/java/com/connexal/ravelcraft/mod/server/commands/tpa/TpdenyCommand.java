@@ -22,7 +22,7 @@ public class TpdenyCommand extends RavelCommand {
 
     @Override
     public String[] getAliases() {
-        return new String[] { "teleportdeny" };
+        return new String[0];
     }
 
     @Override

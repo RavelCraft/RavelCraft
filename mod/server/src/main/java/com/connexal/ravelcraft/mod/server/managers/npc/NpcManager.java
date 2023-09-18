@@ -1,25 +1,34 @@
 package com.connexal.ravelcraft.mod.server.managers.npc;
 
 import com.connexal.ravelcraft.mod.server.util.Location;
+import com.connexal.ravelcraft.mod.server.util.gui.NpcGui;
 import com.connexal.ravelcraft.mod.server.util.registry.RegistrySyncUtils;
 import com.connexal.ravelcraft.shared.BuildConstants;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.minecraft.block.entity.SkullBlockEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 public class NpcManager {
     public static final Identifier NPC_ID = new Identifier(BuildConstants.ID, "npc");
     public static Supplier<EntityType<NpcEntity>> NPC_TYPE;
+
+    private static Map<UUID, Long> lastInteract = new HashMap<>();
 
     public static void setup() {
         //Register the entity type
@@ -37,25 +46,34 @@ public class NpcManager {
         FabricDefaultAttributeRegistry.register(NPC_TYPE.get(), NpcEntity.createNpcAttributes());
     }
 
-    public static NpcEntity createNpc(ServerWorld world, String name, Location location, byte[] skinData) {
+    public static NpcEntity createNpc(ServerWorld world, Location location) {
         NpcEntity npc = new NpcEntity(world);
 
         npc.teleport(location.getX(), location.getY(), location.getZ());
         npc.setPitch(location.getPitch());
         npc.setHeadYaw(location.getYaw());
-        npc.setCustomName(Text.of(name));
-        npc.applySkin(new String(skinData), null);
+        npc.sendRotationUpdate();
+        SkullBlockEntity.loadProperties(npc.getGameProfile(), npc::applySkin);
 
-        //TODO: Figure out why this doesn't work
-        world.tryLoadEntity(npc);
+        world.spawnEntity(npc);
 
         return npc;
     }
 
-    public static NpcEntity createNpc(ServerWorld world, String name, Location locaton, String skinTexture) {
-        String json = "{\"textures\":{\"SKIN\":{\"url\":\"" + skinTexture + "\"}}}";
-        byte[] encodedData = Base64.getEncoder().encode(json.getBytes());
+    public static void openEditMenu(NpcEntity npc, ServerPlayerEntity player) {
+        NpcGui gui = new NpcGui(player, npc);
+        gui.open();
+    }
 
-        return createNpc(world, name, locaton, encodedData);
+    public static void interact(NpcEntity npc, ServerPlayerEntity player) {
+        //Believe it or not, this event is triggered twice. Thanks Mojang.
+        long lastInteract = player.getLastActionTime();
+        Long lastRecordedInteract = NpcManager.lastInteract.remove(player.getUuid());
+        if (lastRecordedInteract != null && lastInteract - lastRecordedInteract < 50) {
+            return;
+        }
+        NpcManager.lastInteract.put(player.getUuid(), lastInteract);
+
+        npc.runInteraction(player);
     }
 }

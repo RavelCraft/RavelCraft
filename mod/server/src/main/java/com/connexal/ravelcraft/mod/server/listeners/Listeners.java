@@ -14,5 +14,6 @@ public class Listeners {
         //Note that if enabled, 1984 also registers some event listeners
 
         CustomisationListener.register();
+        ChatMessageCatcher.register();
     }
 }

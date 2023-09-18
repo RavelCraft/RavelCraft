@@ -25,7 +25,7 @@ public class TpahereCommand extends RavelCommand {
 
     @Override
     public String[] getAliases() {
-        return new String[] { "teleporthereask"};
+        return new String[0];
     }
 
     @Override

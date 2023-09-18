@@ -12,24 +12,28 @@ import java.util.function.Consumer;
 
 public class MenuGui extends SimpleGui {
     private final ItemStack[] displayItems;
-    private final Consumer<ItemStack> itemClicked;
     private final String title;
+
+    private Consumer<ItemStack> itemClicked = null;
 
     private int currentPage;
     private final int totalPages;
     private static final int maxItemsPerPage = 36; // 9 * 4
 
-    public MenuGui(ServerPlayerEntity player, ItemStack[] displayItems, Consumer<ItemStack> itemClicked, String title) {
+    public MenuGui(ServerPlayerEntity player, ItemStack[] displayItems, String title) {
         super(ScreenHandlerType.GENERIC_9X5, player, false);
 
         this.displayItems = displayItems;
-        this.itemClicked = itemClicked;
         this.title = title;
 
         this.currentPage = 0;
         this.totalPages = (int) Math.ceil((double) (this.displayItems.length / maxItemsPerPage));
 
         this.updateDisplay();
+    }
+
+    public void setClick(Consumer<ItemStack> itemClicked) {
+        this.itemClicked = itemClicked;
     }
 
     private void updateDisplay() {
