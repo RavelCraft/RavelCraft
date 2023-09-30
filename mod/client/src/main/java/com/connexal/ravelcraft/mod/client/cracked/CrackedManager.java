@@ -1,7 +1,7 @@
 package com.connexal.ravelcraft.mod.client.cracked;
 
 import com.connexal.ravelcraft.mod.cross.BuildConstants;
-import net.minecraft.client.util.Session;
+import net.minecraft.client.session.Session;
 
 import java.io.BufferedReader;
 import java.io.IOException;

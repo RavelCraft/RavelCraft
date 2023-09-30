@@ -53,7 +53,6 @@ public class NpcManager {
         npc.setPitch(location.getPitch());
         npc.setHeadYaw(location.getYaw());
         npc.sendRotationUpdate();
-        SkullBlockEntity.loadProperties(npc.getGameProfile(), npc::applySkin);
 
         world.spawnEntity(npc);
 

@@ -2,6 +2,7 @@ package com.connexal.ravelcraft.mod.server.libs.sgui.api.elements;
 
 import com.connexal.ravelcraft.mod.server.libs.sgui.api.GuiHelpers;
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.yggdrasil.ProfileResult;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.Item;
@@ -270,8 +271,10 @@ public class GuiElementBuilder implements GuiElementBuilderInterface<GuiElementB
      */
     public GuiElementBuilder setSkullOwner(GameProfile profile, @Nullable MinecraftServer server) {
         if (profile.getId() != null && server != null) {
-            profile = server.getSessionService().fillProfileProperties(profile, false);
-            this.getOrCreateNbt().put("SkullOwner", NbtHelper.writeGameProfile(new NbtCompound(), profile));
+            ProfileResult result = server.getSessionService().fetchProfile(profile.getId(), false);
+            if (result != null) {
+                this.getOrCreateNbt().put("SkullOwner", NbtHelper.writeGameProfile(new NbtCompound(), result.profile()));
+            }
         } else {
             this.getOrCreateNbt().putString("SkullOwner", profile.getName());
         }

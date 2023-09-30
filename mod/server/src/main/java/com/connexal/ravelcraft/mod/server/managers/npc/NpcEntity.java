@@ -1,8 +1,8 @@
 package com.connexal.ravelcraft.mod.server.managers.npc;
 
+import com.connexal.ravelcraft.mod.server.mixin.accessors.EntitySpawnS2CPacketAccessor;
 import com.connexal.ravelcraft.mod.server.mixin.accessors.EntityTrackerAccessor;
 import com.connexal.ravelcraft.mod.server.mixin.accessors.PlayerEntityAccessor;
-import com.connexal.ravelcraft.mod.server.mixin.accessors.PlayerSpawnS2CPacketAccessor;
 import com.connexal.ravelcraft.mod.server.mixin.accessors.ThreadedAnvilChunkStorageAccessor;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
@@ -14,12 +14,12 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.PlayerSpawnS2CPacket;
+import net.minecraft.network.packet.c2s.common.SyncedClientOptions;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.server.world.ServerWorld;
@@ -66,7 +66,7 @@ public class NpcEntity extends MobEntity {
             return;
         }
 
-        this.fakePlayer = new ServerPlayerEntity(this.getServer(), (ServerWorld) this.getWorld(), this.gameProfile);
+        this.fakePlayer = new ServerPlayerEntity(this.getServer(), (ServerWorld) this.getWorld(), this.gameProfile, SyncedClientOptions.createDefault());
         this.fakePlayer.getDataTracker().set(PlayerEntityAccessor.getPLAYER_MODEL_PARTS(), (byte) 0x7f);
         this.fakePlayer.setPos(this.getX(), this.getY(), this.getZ());
         this.fakePlayer.setYaw(this.getYaw());
@@ -97,9 +97,9 @@ public class NpcEntity extends MobEntity {
             PropertyMap propertyMap = profile.getProperties();
             Property skin = propertyMap.get("textures").iterator().next();
 
-            skinTag.putString("value", skin.getValue());
+            skinTag.putString("value", skin.value());
             if (skin.hasSignature()) {
-                skinTag.putString("signature", skin.getSignature());
+                skinTag.putString("signature", skin.signature());
             }
         } catch (NoSuchElementException ignored) { }
 
@@ -199,9 +199,9 @@ public class NpcEntity extends MobEntity {
 
     @Override
     public Packet<ClientPlayPacketListener> createSpawnPacket() {
-        PlayerSpawnS2CPacket packet = new PlayerSpawnS2CPacket(this.fakePlayer);
+        EntitySpawnS2CPacket packet = new EntitySpawnS2CPacket(this.fakePlayer);
 
-        PlayerSpawnS2CPacketAccessor packetAccessor = (PlayerSpawnS2CPacketAccessor) packet;
+        EntitySpawnS2CPacketAccessor packetAccessor = (EntitySpawnS2CPacketAccessor) packet;
         packetAccessor.setId(this.getId());
         packetAccessor.setUuid(this.getUuid());
         packetAccessor.setX(this.getX());

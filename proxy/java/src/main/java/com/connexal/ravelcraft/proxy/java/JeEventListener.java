@@ -259,7 +259,7 @@ public class JeEventListener {
         if (isTestServer) {
             serverPing.description(Component.text(ChatColor.AQUA + "RavelCraft test instance!\n" + ChatColor.YELLOW + "v" + BuildConstants.VERSION + " @" + host));
         } else if (pingedServer.isProxy()) {
-            serverPing.description(Component.text(ChatColor.GREEN + "Welcome to the " + ChatColor.RED + BuildConstants.NAME + " Network!\n" + ChatColor.YELLOW + RavelProxyInstance.getMotdManager().getMotd()));
+            serverPing.description(Component.text(ChatColor.GREEN + "Welcome to the " + ChatColor.RED + BuildConstants.NAME + "!\n" + ChatColor.YELLOW + RavelProxyInstance.getMotdManager().getMotd()));
         } else {
             serverPing.description(Component.text(ChatColor.GREEN + BuildConstants.NAME + " " + ChatColor.RED + pingedServer.getName() + " server!\n" + ChatColor.YELLOW + RavelProxyInstance.getMotdManager().getMotd()));
         }

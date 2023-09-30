@@ -53,21 +53,23 @@ public final class SkinApplier {
                 observer1.networkHandler.sendPacket(new PlayerListS2CPacket(PlayerListS2CPacket.Action.ADD_PLAYER, player)); // refresh the player information
                 if (player != observer1 && observer1.canSee(player)) {
                     observer1.networkHandler.sendPacket(new EntitiesDestroyS2CPacket(player.getId()));
-                    observer1.networkHandler.sendPacket(new PlayerSpawnS2CPacket(player));
+                    observer1.networkHandler.sendPacket(new EntitySpawnS2CPacket(player));
                     observer1.networkHandler.sendPacket(new EntityPositionS2CPacket(player));
                     observer1.networkHandler.sendPacket(new EntityTrackerUpdateS2CPacket(player.getId(), player.getDataTracker().getChangedEntries()));
                 } else if (player == observer1) {
                     observer1.networkHandler.sendPacket(new PlayerRespawnS2CPacket(
-                            observer1.getWorld().getDimensionKey(),
-                            observer1.getWorld().getRegistryKey(),
-                            BiomeAccess.hashSeed(observer1.getServerWorld().getSeed()),
-                            observer1.interactionManager.getGameMode(),
-                            observer1.interactionManager.getPreviousGameMode(),
-                            observer1.getWorld().isDebugWorld(),
-                            observer1.getServerWorld().isFlat(),
-                            (byte)2,
-                            Optional.empty(),
-                            observer1.getPortalCooldown()
+                            new CommonPlayerSpawnInfo(
+                                    observer1.getWorld().getDimensionKey(),
+                                    observer1.getWorld().getRegistryKey(),
+                                    BiomeAccess.hashSeed(observer1.getServerWorld().getSeed()),
+                                    observer1.interactionManager.getGameMode(),
+                                    observer1.interactionManager.getPreviousGameMode(),
+                                    observer1.getWorld().isDebugWorld(),
+                                    observer1.getServerWorld().isFlat(),
+                                    Optional.empty(),
+                                    observer1.getPortalCooldown()
+                            ),
+                            (byte)2
                     ));
                     observer1.networkHandler.sendPacket(new UpdateSelectedSlotS2CPacket(observer1.getInventory().selectedSlot));
                     observer1.sendAbilitiesUpdate();

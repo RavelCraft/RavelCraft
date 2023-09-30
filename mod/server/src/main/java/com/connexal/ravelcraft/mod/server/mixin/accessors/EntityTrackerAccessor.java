@@ -1,7 +1,7 @@
 package com.connexal.ravelcraft.mod.server.mixin.accessors;
 
 import net.minecraft.server.network.EntityTrackerEntry;
-import net.minecraft.server.world.EntityTrackingListener;
+import net.minecraft.server.network.PlayerAssociatedNetworkHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
@@ -13,5 +13,5 @@ public interface EntityTrackerAccessor {
     EntityTrackerEntry getEntry();
 
     @Accessor("listeners")
-    Set<EntityTrackingListener> getListeners();
+    Set<PlayerAssociatedNetworkHandler> getListeners();
 }

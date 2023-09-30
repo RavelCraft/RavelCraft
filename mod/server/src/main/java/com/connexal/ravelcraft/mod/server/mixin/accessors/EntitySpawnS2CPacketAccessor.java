@@ -1,14 +1,14 @@
 package com.connexal.ravelcraft.mod.server.mixin.accessors;
 
-import net.minecraft.network.packet.s2c.play.PlayerSpawnS2CPacket;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.UUID;
 
-@Mixin(PlayerSpawnS2CPacket.class)
-public interface PlayerSpawnS2CPacketAccessor {
+@Mixin(EntitySpawnS2CPacket.class)
+public interface EntitySpawnS2CPacketAccessor {
     @Mutable
     @Accessor("id")
     void setId(int id);

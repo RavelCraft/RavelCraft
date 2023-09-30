@@ -47,13 +47,12 @@ public class CrackedLoginScreen extends Screen {
 
     @Override
     public void tick() {
-        this.usernameField.tick();
-        this.passwordField.tick();
+        super.tick();
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context);
+        this.renderBackground(context, mouseX, mouseY, delta);
         context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 16777215);
         context.drawTextWithShadow(this.textRenderer, Text.literal("Enter username and password"), this.width / 2 - 100, this.height / 4, 10526880);
         this.usernameField.render(context, mouseX, mouseY, delta);

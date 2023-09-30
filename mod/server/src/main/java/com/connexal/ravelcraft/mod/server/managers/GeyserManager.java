@@ -1,6 +1,5 @@
 package com.connexal.ravelcraft.mod.server.managers;
 
-import com.connexal.ravelcraft.shared.RavelInstance;
 import org.geysermc.event.subscribe.Subscribe;
 import org.geysermc.geyser.api.GeyserApi;
 import org.geysermc.geyser.api.event.EventRegistrar;
@@ -14,9 +13,6 @@ public class GeyserManager implements EventRegistrar {
 
     @Subscribe
     public void onDefineCommands(ServerDefineCommandsEvent event) {
-        event.commands().removeIf(command -> {
-            RavelInstance.getLogger().info("Command: " + command + " remove? " + command.name().startsWith("//"));
-            return command.name().startsWith("//");
-        });
+        event.commands().removeIf(command -> command.name().startsWith("/"));
     }
 }

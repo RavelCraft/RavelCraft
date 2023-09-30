@@ -9,6 +9,7 @@ import com.mojang.serialization.Dynamic;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.network.packet.c2s.common.SyncedClientOptions;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.MinecraftServer;
@@ -68,7 +69,7 @@ public class PlayerInvGui extends SimpleGui {
         GameProfile requestedProfile = new GameProfile(uuid, RavelInstance.getUUIDTools().getName(uuid));
 
         if (requestedPlayer == null) {
-            requestedPlayer = server.getPlayerManager().createPlayer(requestedProfile);
+            requestedPlayer = server.getPlayerManager().createPlayer(requestedProfile, SyncedClientOptions.createDefault());
             NbtCompound compound = server.getPlayerManager().loadPlayerData(requestedPlayer);
             if (compound != null) {
                 ServerWorld world = server.getWorld(

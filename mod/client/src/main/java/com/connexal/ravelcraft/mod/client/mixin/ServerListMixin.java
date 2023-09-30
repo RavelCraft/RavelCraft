@@ -27,7 +27,7 @@ public class ServerListMixin {
         }
 
         if (!ravelPresent) {
-            this.servers.add(0, new ServerInfo(BuildConstants.NAME, BuildConstants.SERVER_IP, false));
+            this.servers.add(0, new ServerInfo(BuildConstants.NAME, BuildConstants.SERVER_IP, ServerInfo.ServerType.OTHER));
         }
     }
 }
