@@ -24,6 +24,7 @@
 
 package com.connexal.ravelcraft.mod.server.players.velocity;
 
+import com.connexal.ravelcraft.mod.server.mixin.velocity.ServerLoginNetworkHandlerAccessor;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
@@ -33,7 +34,7 @@ import static com.connexal.ravelcraft.mod.server.players.velocity.VelocityLib.PL
 import static com.connexal.ravelcraft.mod.server.players.velocity.VelocityLib.PLAYER_INFO_PACKET;
 
 public class VelocityModernForwarding implements EventRegistrar {
-    private static VelocityPacketHandler handler;
+    private static VelocityPacketHandler velocityHandler;
 
     public static void init() {
         if (!RavelInstance.getConfig().contains("forwarding-key")) {
@@ -43,9 +44,17 @@ public class VelocityModernForwarding implements EventRegistrar {
             return;
         }
 
-        handler = new VelocityPacketHandler();
+        velocityHandler = new VelocityPacketHandler();
 
-        ServerLoginNetworking.registerGlobalReceiver(PLAYER_INFO_CHANNEL, handler::handleVelocityPacket);
-        ServerLoginConnectionEvents.QUERY_START.register((handler, server, sender, synchronizer) -> sender.sendPacket(PLAYER_INFO_CHANNEL, PLAYER_INFO_PACKET));
+        ServerLoginNetworking.registerGlobalReceiver(PLAYER_INFO_CHANNEL, velocityHandler::handleVelocityPacket);
+        ServerLoginConnectionEvents.QUERY_START.register((handler, server, sender, synchronizer) -> {
+            String name = ((ServerLoginNetworkHandlerAccessor) handler).getProfile().getName();
+            if (name.startsWith(".")) { //TODO: Remove this when Geyser fixes their bug
+                velocityHandler.handleVelocityPacket(server, handler, false, null, synchronizer, null);
+                return;
+            }
+
+            sender.sendPacket(PLAYER_INFO_CHANNEL, PLAYER_INFO_PACKET);
+        });
     }
 }

@@ -57,7 +57,7 @@ public abstract class ServerCommonNetworkHandlerMixin {
                     if (!(entity instanceof NpcEntity npc)) return;
 
                     GameProfile profile = npc.getGameProfile();
-                    PlayerListS2CPacket playerAddPacket = PlayerListS2CPacket.entryFromPlayer(Collections.singleton(npc.getFakePlayer()));
+                    PlayerListS2CPacket playerAddPacket = PlayerListS2CPacket.entryFromPlayer(Collections.emptyList());
                     //noinspection ConstantConditions
                     PlayerListS2CPacket.Entry entry = new PlayerListS2CPacket.Entry(profile.getId(), profile, false, 0, GameMode.SURVIVAL, npc.getDisplayName(), null);
                     ((PlayerListS2CPacketAccessor) playerAddPacket).setEntries(Collections.singletonList(entry));

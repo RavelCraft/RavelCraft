@@ -37,6 +37,9 @@ public class UUIDTools {
         }
 
         UUID uuid = this.getUUID(args[0]);
+        if (uuid == null) {
+            return new String[] {};
+        }
         return new String[] { uuid.toString() };
     }
 
@@ -47,6 +50,9 @@ public class UUIDTools {
 
         UUID uuid = UUID.fromString(args[0]);
         String name = this.getName(uuid);
+        if (name == null) {
+            return new String[] {};
+        }
         return new String[] { name };
     }
 
