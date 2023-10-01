@@ -96,6 +96,10 @@ public class RavelInstance {
         return main;
     }
 
+    public static Path getDataPath() {
+        return dataPath;
+    }
+
     public static RavelLogger getLogger() {
         return logger;
     }

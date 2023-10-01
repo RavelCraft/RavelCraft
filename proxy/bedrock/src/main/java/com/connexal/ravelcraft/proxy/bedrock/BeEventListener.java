@@ -1,6 +1,7 @@
 package com.connexal.ravelcraft.proxy.bedrock;
 
 import com.connexal.ravelcraft.proxy.bedrock.players.WaterdogBedrockRavelPlayer;
+import com.connexal.ravelcraft.proxy.bedrock.util.Motd;
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
 import com.connexal.ravelcraft.proxy.cross.servers.ban.BanManager;
 import com.connexal.ravelcraft.proxy.cross.servers.maintenance.MaintenanceManager;
@@ -182,8 +183,8 @@ public class BeEventListener {
         event.setPlayerCount(RavelInstance.getPlayerManager().getOnlineCount());
         event.setMaximumPlayerCount(BuildConstants.MAX_PLAYERS);
 
-        event.setMotd("\uE015 ʀᴀᴠᴇʟᴄʀᴀғᴛ");
-        event.setSubMotd("Super secret second line!");
+        event.setMotd(Motd.FIRST_LINE);
+        event.setSubMotd(RavelProxyInstance.getMotdManager().getMotd());
     }
 
     private void onPlayerQuery(ProxyQueryEvent event) {

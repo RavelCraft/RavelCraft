@@ -5,6 +5,7 @@ import com.connexal.ravelcraft.proxy.bedrock.players.WaterdogPlayerManager;
 import com.connexal.ravelcraft.proxy.bedrock.players.skin.SkinUploader;
 import com.connexal.ravelcraft.proxy.bedrock.servers.WaterdogServerManager;
 import com.connexal.ravelcraft.proxy.bedrock.util.WaterdogRavelLogger;
+import com.connexal.ravelcraft.proxy.bedrock.xbox.XboxBroadcaster;
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.RavelMain;
@@ -17,6 +18,7 @@ public class BeProxy extends Plugin implements RavelMain {
     private static ProxyServer server = null;
 
     private static SkinUploader skinUploader = null;
+    private static XboxBroadcaster xboxBroadcaster = null;
 
     @Override
     public void onEnable() {
@@ -32,6 +34,8 @@ public class BeProxy extends Plugin implements RavelMain {
 
         skinUploader = new SkinUploader();
         skinUploader.start();
+
+        xboxBroadcaster = new XboxBroadcaster();
     }
 
     @Override
@@ -67,5 +71,9 @@ public class BeProxy extends Plugin implements RavelMain {
 
     public static SkinUploader getSkinUploader() {
         return skinUploader;
+    }
+
+    public static XboxBroadcaster getXboxBroadcaster() {
+        return xboxBroadcaster;
     }
 }

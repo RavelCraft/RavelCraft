@@ -21,6 +21,8 @@ dependencies {
 
     shadow("org.java-websocket:Java-WebSocket:${websocketVersion}")
 
+    shadow(files("${project.file("libs/MCXboxBroadcastExtension.jar")}"))
+
     shadow(project(":shared"))
     shadow(project(":proxy-cross"))
 }
