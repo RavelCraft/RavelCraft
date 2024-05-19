@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.connexal.ravelcraft.mod.server.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
     "accessors.EntityAccessor",
     "accessors.EntitySpawnS2CPacketAccessor",
@@ -22,18 +22,15 @@
     "events.ServerPlayerEntityMixin",
     "events.ServerPlayerInteractionManagerMixin",
     "events.ServerPlayNetworkHandlerMixin",
-    "geyser.SkinProviderInvoker",
-    "geyser.SkinProviderMixin",
-    "libs.sgui.ScreenHandlerMixin",
-    "libs.sgui.ServerPlayerEntityMixin",
-    "libs.sgui.ServerPlayNetworkHandlerMixin",
-    "libs.sgui.SignBlockEntityAccessor",
+    "sgui.PlayerInteractEntityC2SPacketAccessor",
+    "sgui.ScreenHandlerMixin",
+    "sgui.ServerPlayerEntityMixin",
+    "sgui.ServerPlayNetworkHandlerMixin",
+    "sgui.SignBlockEntityAccessor",
     "npc.ServerCommonNetworkHandlerMixin",
     "npc.ServerPlayNetworkHandlerMixin",
     "registry.RegistrySyncManagerMixin",
-    "registry.SimpleRegistryMixin",
-    "velocity.ClientConnection_AddressAccessor",
-    "velocity.ServerLoginNetworkHandlerAccessor"
+    "registry.SimpleRegistryMixin"
   ],
   "injectors": {
     "defaultRequire": 1

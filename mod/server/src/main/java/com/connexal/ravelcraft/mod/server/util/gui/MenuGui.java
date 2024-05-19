@@ -1,12 +1,13 @@
 package com.connexal.ravelcraft.mod.server.util.gui;
 
-import com.connexal.ravelcraft.mod.server.libs.sgui.api.elements.GuiElement;
-import com.connexal.ravelcraft.mod.server.libs.sgui.api.elements.GuiElementBuilder;
-import com.connexal.ravelcraft.mod.server.libs.sgui.api.gui.SimpleGui;
+import com.connexal.ravelcraft.mod.server.managers.npc.sgui.api.elements.GuiElement;
+import com.connexal.ravelcraft.mod.server.managers.npc.sgui.api.elements.GuiElementBuilder;
+import com.connexal.ravelcraft.mod.server.managers.npc.sgui.api.gui.SimpleGui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
 
@@ -87,7 +88,7 @@ public class MenuGui extends SimpleGui {
         }
 
         //Set title
-        this.setTitle(net.minecraft.text.Text.literal(this.title + " - " + (this.currentPage + 1) + "/" + (this.totalPages + 1)));
+        this.setTitle(Text.literal(this.title + " - " + (this.currentPage + 1) + "/" + (this.totalPages + 1)));
     }
 
     private void nextPage() {

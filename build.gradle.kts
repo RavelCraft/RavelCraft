@@ -25,6 +25,7 @@ allprojects {
 
     repositories {
         mavenCentral()
+        mavenLocal()
 
         maven("https://jitpack.io") {
             content {
@@ -40,5 +41,7 @@ allprojects {
         maven("https://repo.papermc.io/repository/maven-public/")
 
         maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+
+        maven("https://maven.nucleoid.xyz")
     }
 }

@@ -1,0 +1,20 @@
+package com.connexal.ravelcraft.mod.server.mixin.sgui;
+
+import com.connexal.ravelcraft.mod.server.managers.npc.sgui.virtual.inventory.VirtualInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.Slot;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+@Mixin(ScreenHandler.class)
+public class ScreenHandlerMixin {
+    @Inject(method = "canInsertItemIntoSlot", at = @At("HEAD"), cancellable = true)
+    private static void sgui$blockIfVirtual(Slot slot, ItemStack stack, boolean allowOverflow, CallbackInfoReturnable<Boolean> cir) {
+        if (slot != null && slot.inventory instanceof VirtualInventory) {
+            cir.setReturnValue(false);
+        }
+    }
+}

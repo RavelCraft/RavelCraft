@@ -4,9 +4,9 @@ import com.connexal.ravelcraft.mod.cross.RavelModInstance;
 import com.connexal.ravelcraft.mod.server.commands.impl.FabricCommandRegistrar;
 import com.connexal.ravelcraft.mod.server.listeners.Listeners;
 import com.connexal.ravelcraft.mod.server.managers.*;
+import com.connexal.ravelcraft.mod.server.managers.geyser.GeyserManager;
 import com.connexal.ravelcraft.mod.server.managers.npc.NpcManager;
 import com.connexal.ravelcraft.mod.server.players.FabricPlayerManager;
-import com.connexal.ravelcraft.mod.server.players.velocity.VelocityModernForwarding;
 import com.connexal.ravelcraft.mod.server.util.FabricRavelLogger;
 import com.connexal.ravelcraft.shared.BuildConstants;
 import com.connexal.ravelcraft.shared.RavelInstance;
@@ -58,8 +58,6 @@ public class RavelModServer implements RavelMain, ModInitializer {
 
 		RavelInstance.init(new FabricCommandRegistrar(), new FabricPlayerManager());
 		RavelModInstance.init();
-
-		VelocityModernForwarding.init();
 
 		NpcManager.setup();
 		homeManager = new HomeManager();

@@ -4,7 +4,7 @@ import net.fabricmc.loom.task.RemapJarTask
 plugins {
     id("com.github.johnrengelman.shadow") version("7.1.2")
     id("idea")
-    id("fabric-loom") version("1.2-SNAPSHOT")
+    id("fabric-loom") version("1.6-SNAPSHOT")
 }
 
 val projectId = project.property("project_id") as String

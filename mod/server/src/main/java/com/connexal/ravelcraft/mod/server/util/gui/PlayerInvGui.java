@@ -1,7 +1,7 @@
 package com.connexal.ravelcraft.mod.server.util.gui;
 
 import com.connexal.ravelcraft.mod.server.RavelModServer;
-import com.connexal.ravelcraft.mod.server.libs.sgui.api.gui.SimpleGui;
+import com.connexal.ravelcraft.mod.server.managers.npc.sgui.api.gui.SimpleGui;
 import com.connexal.ravelcraft.mod.server.mixin.accessors.EntityAccessor;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.mojang.authlib.GameProfile;
@@ -20,6 +20,7 @@ import net.minecraft.util.WorldSavePath;
 import net.minecraft.world.dimension.DimensionType;
 
 import java.io.File;
+import java.util.Optional;
 import java.util.UUID;
 
 public class PlayerInvGui extends SimpleGui {
@@ -70,10 +71,10 @@ public class PlayerInvGui extends SimpleGui {
 
         if (requestedPlayer == null) {
             requestedPlayer = server.getPlayerManager().createPlayer(requestedProfile, SyncedClientOptions.createDefault());
-            NbtCompound compound = server.getPlayerManager().loadPlayerData(requestedPlayer);
-            if (compound != null) {
+            Optional<NbtCompound> compound = server.getPlayerManager().loadPlayerData(requestedPlayer);
+            if (compound.isPresent()) {
                 ServerWorld world = server.getWorld(
-                        DimensionType.worldFromDimensionNbt(new Dynamic<>(NbtOps.INSTANCE, compound.get("Dimension")))
+                        DimensionType.worldFromDimensionNbt(new Dynamic<>(NbtOps.INSTANCE, compound.get().get("Dimension")))
                                 .result().get());
 
                 if (world != null) {
@@ -90,10 +91,10 @@ public class PlayerInvGui extends SimpleGui {
         try {
             NbtCompound compoundTag = player.writeNbt(new NbtCompound());
             File file = File.createTempFile(player.getUuidAsString() + "-", ".dat", playerDataDir);
-            NbtIo.writeCompressed(compoundTag, file);
+            NbtIo.writeCompressed(compoundTag, file.toPath());
             File file2 = new File(playerDataDir, player.getUuidAsString() + ".dat");
             File file3 = new File(playerDataDir, player.getUuidAsString() + ".dat_old");
-            Util.backupAndReplace(file2, file, file3);
+            Util.backupAndReplace(file2.toPath(), file.toPath(), file3.toPath());
         } catch (Exception e) {
             RavelInstance.getLogger().warning("Failed to save player data for " + player.getName().getString());
         }

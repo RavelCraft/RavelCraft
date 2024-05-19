@@ -10,6 +10,8 @@ import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
 import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
 import com.connexal.ravelcraft.shared.util.text.Text;
 import com.google.auto.service.AutoService;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.MapIdComponent;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -64,7 +66,7 @@ public class MapCommand extends RavelCommand {
         }
 
         this.completeAsync(() -> {
-            int mapID;
+            MapIdComponent mapIdComponent;
             if (create) {
                 String mapUrl = String.join(" ", args);
                 mapUrl = mapUrl.substring(7); //Remove "create" from the string
@@ -80,14 +82,14 @@ public class MapCommand extends RavelCommand {
 
                 //Create map
                 ServerWorld world = RavelModServer.getServer().getOverworld();
-                mapID = world.getNextMapId();
+                mapIdComponent = world.getNextMapId();
                 MapState mapState = MapState.of(0, 0, (byte) 0, false, false, RegistryKey.of(RegistryKeys.WORLD, new Identifier(BuildConstants.ID, "custom_map")));
 
                 MapUtils.applyImageToMap(mapState, image, true);
-                world.putMapState(FilledMapItem.getMapName(mapID), mapState);
+                world.putMapState(mapIdComponent, mapState);
             } else {
                 try {
-                    mapID = Integer.parseInt(args[1]);
+                    mapIdComponent = new MapIdComponent(Integer.parseInt(args[1]));
                 } catch (NumberFormatException e) {
                     sender.sendMessage(Text.COMMAND_MAP_NAN);
                     return;
@@ -95,7 +97,7 @@ public class MapCommand extends RavelCommand {
 
                 //Check if map exists
                 ServerWorld world = RavelModServer.getServer().getOverworld();
-                if (world.getMapState(FilledMapItem.getMapName(mapID)) == null) {
+                if (world.getMapState(mapIdComponent) == null) {
                     sender.sendMessage(Text.COMMAND_MAP_INVALID_ID);
                     return;
                 }
@@ -103,7 +105,7 @@ public class MapCommand extends RavelCommand {
 
             //Give map to player
             ItemStack map = new ItemStack(Items.FILLED_MAP);
-            map.getOrCreateNbt().putInt("map", mapID);
+            map.set(DataComponentTypes.MAP_ID, mapIdComponent);
 
             ((FabricRavelPlayer) sender).getPlayer().giveItemStack(map);
             sender.sendMessage(Text.COMMAND_MAP_DONE);

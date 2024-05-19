@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
+import net.minecraft.client.util.SkinTextures;
 import net.minecraft.util.Identifier;
 
 import java.io.FileNotFoundException;
@@ -31,30 +32,29 @@ public class CapeProvider {
         return out;
     }
 
-    public static void loadCape(GameProfile profile, CapeTextureAvailableCallback callback) {
-        new Thread(() -> {
-            if (capes.containsKey(profile.getId())) {
-                callback.onTextureAvailable(capes.get(profile.getId()));
-                return;
+    public static SkinTextures loadCape(GameProfile profile, SkinTextures original) {
+        if (capes.containsKey(profile.getId())) {
+            Identifier identifier = capes.get(profile.getId());
+            return new SkinTextures(original.texture(), original.textureUrl(), identifier, identifier, original.model(), original.secure());
+        }
+
+        for (CapeType type : CapeType.values()) {
+            try {
+                URL url = new URL(type.getURL(profile));
+                NativeImage texture = uncropImage(NativeImage.read(url.openStream()));
+                NativeImageBackedTexture textureWrapper = new NativeImageBackedTexture(texture);
+
+                Identifier identifier = MinecraftClient.getInstance().getTextureManager().registerDynamicTexture("ravelcape" + profile.getId().toString().replace("-", ""), textureWrapper);
+                capes.put(profile.getId(), identifier);
+
+                return new SkinTextures(original.texture(), original.textureUrl(), identifier, identifier, original.model(), original.secure());
+            } catch (FileNotFoundException e) {
+                // Ignore it, this means that the user has no cape for this type
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to load cape of type " + type.name() + " for " + profile.getName(), e);
             }
+        }
 
-            for (CapeType type : CapeType.values()) {
-                try {
-                    URL url = new URL(type.getURL(profile));
-                    NativeImage texture = uncropImage(NativeImage.read(url.openStream()));
-                    NativeImageBackedTexture textureWrapper = new NativeImageBackedTexture(texture);
-
-                    Identifier identifier = MinecraftClient.getInstance().getTextureManager().registerDynamicTexture("ravelcape" + profile.getId().toString().replace("-", ""), textureWrapper);
-                    capes.put(profile.getId(), identifier);
-                    callback.onTextureAvailable(identifier);
-
-                    return;
-                } catch (FileNotFoundException e) {
-                    // Ignore it, this means that the user has no cape for this type
-                } catch (IOException e) {
-                    throw new RuntimeException("Failed to load cape of type " + type.name() + " for " + profile.getName(), e);
-                }
-            }
-        }).start();
+        return original;
     }
 }

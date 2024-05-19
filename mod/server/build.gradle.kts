@@ -1,7 +1,7 @@
 plugins {
 	id("com.github.johnrengelman.shadow") version("7.1.2")
 	id("idea")
-	id("fabric-loom") version("1.2-SNAPSHOT")
+	id("fabric-loom") version("1.6-SNAPSHOT")
 }
 
 val projectId = project.property("project_id") as String
@@ -12,6 +12,8 @@ val fabricVersion = project.property("fabric_version") as String
 val fabricLoaderVersion = project.property("fabric_loader_version") as String
 
 val geyserVersion = project.property("geyser_version") as String
+val sguiVersion = project.property("sgui_version") as String
+val autoServiceVersion = project.property("auto_service_version") as String
 
 val builtJarName = "${projectId}-serverMod-${minecraftVersion}"
 base.archivesName.set(builtJarName)
@@ -22,11 +24,12 @@ dependencies {
 	modImplementation("net.fabricmc:fabric-loader:${fabricLoaderVersion}")
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
 
-	implementation("com.google.auto.service:auto-service:1.0.1")
-	annotationProcessor("com.google.auto.service:auto-service:1.0.1")
+	implementation("com.google.auto.service:auto-service:${autoServiceVersion}")
+	annotationProcessor("com.google.auto.service:auto-service:${autoServiceVersion}")
 
-	implementation("org.geysermc.geyser:core:${geyserVersion}")
 	implementation("org.geysermc.geyser:api:${geyserVersion}")
+
+	//implementation("eu.pb4:sgui:${sguiVersion}")
 
 	shadow(project(":shared"))
 	shadow(project(":mod-cross"))

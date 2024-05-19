@@ -1,5 +1,9 @@
 package com.connexal.ravelcraft.mod.server.util;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -15,24 +19,10 @@ public class SkullUtils {
     public static ItemStack getSkullFromBase64(String base64, String name, UUID uuid) {
         ItemStack item = Items.PLAYER_HEAD.getDefaultStack();
 
-        NbtCompound nbtCompound = new NbtCompound();
-        NbtCompound skullOwner = new NbtCompound();
-        NbtCompound properties = new NbtCompound();
-        NbtCompound valueData = new NbtCompound();
-        NbtList textures = new NbtList();
+        GameProfile profile = new GameProfile(uuid == null ? Util.NIL_UUID : uuid, name);
+        profile.getProperties().put("textures", new Property("textures", base64));
 
-        valueData.putString("Value", base64);
-
-        textures.add(valueData);
-        properties.put("textures", textures);
-
-        skullOwner.put("Id", NbtHelper.fromUuid(uuid == null ? Util.NIL_UUID : uuid));
-        skullOwner.put("Properties", properties);
-        nbtCompound.put("SkullOwner", skullOwner);
-
-        item.getOrCreateNbt().copyFrom(nbtCompound);
-
-        item.setCustomName(Text.literal(name));
+        item.set(DataComponentTypes.PROFILE, new ProfileComponent(profile));
 
         return item;
     }

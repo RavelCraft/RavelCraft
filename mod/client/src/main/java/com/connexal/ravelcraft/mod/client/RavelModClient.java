@@ -4,14 +4,12 @@ import com.connexal.ravelcraft.mod.cross.BuildConstants;
 import com.connexal.ravelcraft.mod.cross.RavelModInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
-import javax.imageio.IIOException;
 import java.net.URL;
 
 public class RavelModClient implements ModInitializer {

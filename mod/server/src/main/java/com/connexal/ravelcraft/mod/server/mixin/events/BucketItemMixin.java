@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(BucketItem.class)
 public class BucketItemMixin {
-    @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;emitGameEvent(Lnet/minecraft/entity/Entity;Lnet/minecraft/world/event/GameEvent;Lnet/minecraft/util/math/BlockPos;)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
+    @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;emitGameEvent(Lnet/minecraft/entity/Entity;Lnet/minecraft/registry/entry/RegistryEntry;Lnet/minecraft/util/math/BlockPos;)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void onBucketFill(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir, ItemStack itemStack, BlockHitResult blockHitResult, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState, FluidDrainable fluidDrainable, ItemStack itemStack2) {
         RavelPlayer player = RavelInstance.getPlayerManager().getPlayer(user.getUuid());
         ItemEvents.BUCKET_FILL.invoker().onBucketFill((FabricRavelPlayer) player, blockPos, itemStack2);

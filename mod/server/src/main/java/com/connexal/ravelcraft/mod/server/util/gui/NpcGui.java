@@ -4,6 +4,7 @@ import com.connexal.ravelcraft.mod.server.listeners.ChatMessageCatcher;
 import com.connexal.ravelcraft.mod.server.managers.npc.NpcEntity;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.util.ChatColor;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -13,25 +14,25 @@ import net.minecraft.text.Text;
 import java.util.concurrent.CompletableFuture;
 
 public class NpcGui extends MenuGui {
-    private static ItemStack[] displayItems;
+    private static final ItemStack[] displayItems;
     static {
         ItemStack runAction = Items.COMMAND_BLOCK.getDefaultStack();
-        runAction.setCustomName(Text.of(ChatColor.WHITE + "Run Action"));
+        runAction.set(DataComponentTypes.CUSTOM_NAME, Text.of(ChatColor.WHITE + "Run Action"));
 
         ItemStack remove = Items.BARRIER.getDefaultStack();
-        remove.setCustomName(Text.of(ChatColor.WHITE + "Remove NPC"));
+        remove.set(DataComponentTypes.CUSTOM_NAME, Text.of(ChatColor.WHITE + "Remove NPC"));
 
         ItemStack rename = Items.OAK_SIGN.getDefaultStack();
-        rename.setCustomName(Text.of(ChatColor.WHITE + "Rename NPC"));
+        rename.set(DataComponentTypes.CUSTOM_NAME, Text.of(ChatColor.WHITE + "Rename NPC"));
 
         ItemStack setCommand = Items.DEBUG_STICK.getDefaultStack();
-        setCommand.setCustomName(Text.of(ChatColor.WHITE + "Set Command"));
+        setCommand.set(DataComponentTypes.CUSTOM_NAME, Text.of(ChatColor.WHITE + "Set Command"));
 
         ItemStack setMessage = Items.WRITABLE_BOOK.getDefaultStack();
-        setMessage.setCustomName(Text.of(ChatColor.WHITE + "Set Message"));
+        setMessage.set(DataComponentTypes.CUSTOM_NAME, Text.of(ChatColor.WHITE + "Set Message"));
 
         ItemStack setSkin = Items.PLAYER_HEAD.getDefaultStack();
-        setSkin.setCustomName(Text.of(ChatColor.WHITE + "Set Skin"));
+        setSkin.set(DataComponentTypes.CUSTOM_NAME, Text.of(ChatColor.WHITE + "Set Skin"));
 
         displayItems = new ItemStack[] {
                 runAction,
