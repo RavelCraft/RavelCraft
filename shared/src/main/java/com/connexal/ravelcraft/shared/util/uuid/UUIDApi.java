@@ -12,7 +12,7 @@ import java.net.URL;
 import java.util.UUID;
 
 class UUIDApi {
-    private static final String API_KEY = "4765c134-ab62-4b7f-b7bc-04128f37bb97"; //Maybe not terribly intelligent
+    private static final String API_KEY = "4857adc8-e4c8-4332-b719-ad2c33f328da"; //Maybe not terribly intelligent
 
     private static final String JAVA_UUID_URL = "https://mcprofile.io/api/v1/java/username/%s";
     private static final String JAVA_NAME_URL = "https://mcprofile.io/api/v1/java/uuid/%s";
@@ -37,7 +37,15 @@ class UUIDApi {
             connection.setRequestProperty("x-api-key", API_KEY);
             connection.setReadTimeout(5000);
             if (connection.getResponseCode() != 200) {
-                return null;
+                //Get the raw response
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+                StringBuilder builder = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    builder.append(line);
+                }
+
+                throw new RuntimeException("Unable to get UUID for " + name + ": " + builder);
             }
 
             if (isBedrock) {
@@ -69,7 +77,15 @@ class UUIDApi {
             connection.setRequestProperty("x-api-key", API_KEY);
             connection.setReadTimeout(5000);
             if (connection.getResponseCode() != 200) {
-                return null;
+                //Get the raw response
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+                StringBuilder builder = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    builder.append(line);
+                }
+
+                throw new RuntimeException("Unable to get name for " + uuid + ": " + builder);
             }
 
             if (isBedrock) {

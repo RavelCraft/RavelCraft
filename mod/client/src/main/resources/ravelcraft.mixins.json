@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.connexal.ravelcraft.mod.client.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "MultiplayerScreenMixin",
+    "PlayerListEntryMixin",
+    "ServerListMixin",
+    "ToastManagerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

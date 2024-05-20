@@ -12,8 +12,8 @@ val name = "${projectId}-javaProxy-${minecraftVersion}"
 base.archivesName.set(name)
 
 dependencies {
-    compileOnly("com.velocitypowered:velocity-api:3.1.0")
-    annotationProcessor("com.velocitypowered:velocity-api:3.1.0")
+    compileOnly("com.velocitypowered:velocity-api:3.2.0-SNAPSHOT")
+    annotationProcessor("com.velocitypowered:velocity-api:3.2.0-SNAPSHOT")
 
     implementation("com.google.auto.service:auto-service:1.0.1")
     annotationProcessor("com.google.auto.service:auto-service:1.0.1")

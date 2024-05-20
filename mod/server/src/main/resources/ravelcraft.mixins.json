@@ -1,0 +1,38 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.connexal.ravelcraft.mod.server.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "accessors.EntityAccessor",
+    "accessors.EntitySpawnS2CPacketAccessor",
+    "accessors.EntityTrackerAccessor",
+    "accessors.EntityTrackerUpdateS2CPacketAccessor",
+    "accessors.PlayerEntityAccessor",
+    "accessors.PlayerListS2CPacketAccessor",
+    "accessors.ThreadedAnvilChunkStorageAccessor",
+    "customisations.ExplosionMixin",
+    "customisations.FarmlandBlockMixin",
+    "customisations.ItemFrameEntityMixin",
+    "customisations.PlayerManagerMixin",
+    "events.BucketItemMixin",
+    "events.ItemEntityMixin",
+    "events.LivingEntityMixin",
+    "events.PlayerManagerMixin",
+    "events.ServerPlayerEntityMixin",
+    "events.ServerPlayerInteractionManagerMixin",
+    "events.ServerPlayNetworkHandlerMixin",
+    "npc.ServerCommonNetworkHandlerMixin",
+    "npc.ServerPlayNetworkHandlerMixin",
+    "registry.RegistrySyncManagerMixin",
+    "registry.SimpleRegistryMixin",
+    "sgui.PlayerInteractEntityC2SPacketAccessor",
+    "sgui.ScreenHandlerMixin",
+    "sgui.ServerPlayerEntityMixin",
+    "sgui.ServerPlayNetworkHandlerMixin",
+    "sgui.SignBlockEntityAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

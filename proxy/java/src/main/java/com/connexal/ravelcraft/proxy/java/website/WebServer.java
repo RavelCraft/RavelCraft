@@ -1,6 +1,7 @@
 package com.connexal.ravelcraft.proxy.java.website;
 
 import com.connexal.ravelcraft.proxy.java.website.endpoints.*;
+import com.connexal.ravelcraft.proxy.java.website.endpoints.api.VersionEndpoint;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.util.RavelConfig;
 import com.sun.net.httpserver.HttpExchange;
@@ -46,7 +47,6 @@ public class WebServer implements HttpHandler {
         this.endpoints.clear();
 
         //this.endpoints.add(new AuthEndpoint()); disabled for now
-        //this.endpoints.add(new GameEndpoint()); disabled for now
         this.endpoints.add(new RobotsEndpoint());
         this.endpoints.add(new VersionEndpoint());
 

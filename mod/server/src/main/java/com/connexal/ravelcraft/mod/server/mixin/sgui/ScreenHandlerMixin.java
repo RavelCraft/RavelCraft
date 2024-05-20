@@ -1,6 +1,6 @@
 package com.connexal.ravelcraft.mod.server.mixin.sgui;
 
-import com.connexal.ravelcraft.mod.server.managers.npc.sgui.virtual.inventory.VirtualInventory;
+import com.connexal.ravelcraft.mod.server.libs.sgui.virtual.inventory.VirtualInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;

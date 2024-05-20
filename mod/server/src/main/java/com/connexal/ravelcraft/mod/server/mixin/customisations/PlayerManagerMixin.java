@@ -1,5 +1,6 @@
 package com.connexal.ravelcraft.mod.server.mixin.customisations;
 
+import net.minecraft.network.message.SignedMessage;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
@@ -7,6 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerManager.class)
 public class PlayerManagerMixin {
@@ -20,4 +22,10 @@ public class PlayerManagerMixin {
     }
 
     //FabricRavelPlayer is created within the method "playerJoin" of this mixin in the "events" package
+
+    //Ignore the chat signature verification
+    @Inject(at = @At(value = "HEAD"), method = "verify", cancellable = true)
+    private void verifyPlayer(SignedMessage message, CallbackInfoReturnable<Boolean> cir) {
+        cir.setReturnValue(true);
+    }
 }

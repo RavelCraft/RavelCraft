@@ -20,24 +20,56 @@ base.archivesName.set(name)
 dependencies {
     minecraft("com.mojang:minecraft:${minecraftVersion}")
     mappings("net.fabricmc:yarn:${yarnMappings}:v2")
-    modCompileOnly("net.fabricmc:fabric-loader:${fabricLoaderVersion}")
-    modCompileOnly("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
+
+    if (project.hasProperty("runDatagen")) { //To run: ./gradlew runDatagen -PrunDatagen
+        println("Data generation detected and enabled")
+
+        modImplementation("net.fabricmc:fabric-loader:${fabricLoaderVersion}")
+        modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
+    } else {
+        modCompileOnly("net.fabricmc:fabric-loader:${fabricLoaderVersion}")
+        modCompileOnly("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
+    }
 }
 
 tasks {
     named<Jar>("jar") {
         archiveClassifier.set("unshaded")
-        from(project.rootProject.file("LICENSE"))
     }
     val shadowJar = named<ShadowJar>("shadowJar") {
         archiveClassifier.set("")
 
         configurations = listOf(project.configurations.shadow.get())
+
+        from(project.rootProject.file("LICENSE"))
+        from(file("src/main/generated"))
     }
     val remapJar = named<RemapJarTask>("remapJar") {
         enabled = false
     }
     named("build") {
         dependsOn(shadowJar)
+    }
+}
+
+loom {
+    runs {
+        create("datagen") {
+            client()
+            configName = "Data Generation"
+            vmArg("-Dfabric-api.datagen")
+            vmArg("-Dfabric-api.datagen.output-dir=${file("src/main/generated")}")
+            vmArg("-Dfabric-api.datagen.modid=$projectId")
+            ideConfigGenerated(true)
+            runDir("build/datagen")
+        }
+    }
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs.add(file("src/main/generated"))
+        }
     }
 }

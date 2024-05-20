@@ -1,9 +1,9 @@
 package com.connexal.ravelcraft.mod.server.mixin.sgui;
 
 import com.mojang.authlib.GameProfile;
-import com.connexal.ravelcraft.mod.server.managers.npc.sgui.impl.PlayerExtensions;
-import com.connexal.ravelcraft.mod.server.managers.npc.sgui.virtual.SguiScreenHandlerFactory;
-import com.connexal.ravelcraft.mod.server.managers.npc.sgui.virtual.VirtualScreenHandlerInterface;
+import com.connexal.ravelcraft.mod.server.libs.sgui.impl.PlayerExtensions;
+import com.connexal.ravelcraft.mod.server.libs.sgui.virtual.SguiScreenHandlerFactory;
+import com.connexal.ravelcraft.mod.server.libs.sgui.virtual.VirtualScreenHandlerInterface;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.NamedScreenHandlerFactory;

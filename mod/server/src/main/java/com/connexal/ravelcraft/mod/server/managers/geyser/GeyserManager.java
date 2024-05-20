@@ -12,12 +12,16 @@ import org.geysermc.geyser.api.event.bedrock.SessionSkinApplyEvent;
 import org.geysermc.geyser.api.event.java.ServerDefineCommandsEvent;
 import org.geysermc.geyser.api.skin.Cape;
 import org.geysermc.geyser.api.skin.Skin;
+import org.geysermc.geyser.api.event.lifecycle.GeyserDefineCustomBlocksEvent;
+import org.geysermc.geyser.api.event.lifecycle.GeyserDefineCustomItemsEvent;
 
 public class GeyserManager implements EventRegistrar {
     public GeyserManager() {
         GeyserApi.api().eventBus().register(this, this);
         GeyserApi.api().eventBus().subscribe(this, ServerDefineCommandsEvent.class, this::onDefineCommands);
         GeyserApi.api().eventBus().subscribe(this, SessionSkinApplyEvent.class, this::onSkinApplyEvent);
+        GeyserApi.api().eventBus().subscribe(this, GeyserDefineCustomItemsEvent.class, this::onDefineCustomItems);
+        GeyserApi.api().eventBus().subscribe(this, GeyserDefineCustomBlocksEvent.class, this::onDefineCustomBlocks);
     }
 
     @Subscribe
@@ -54,5 +58,15 @@ public class GeyserManager implements EventRegistrar {
             event.geometry(EarsFetcher.geometry(event.slim()));
             event.skin(skin);
         }
+    }
+
+    @Subscribe
+    public void onDefineCustomItems(GeyserDefineCustomItemsEvent event) {
+
+    }
+
+    @Subscribe
+    public void onDefineCustomBlocks(GeyserDefineCustomBlocksEvent event) {
+
     }
 }

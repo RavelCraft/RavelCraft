@@ -351,18 +351,18 @@ public abstract class PlayerManager {
     }
 
     protected void playerJoinedInternal(RavelPlayer player) {
-        UUID uuid = player.getUniqueID();
-        this.connectedPlayers.put(uuid, player);
-
         if (RavelInstance.getServer().isProxy()) {
-            for (RavelPlayer otherPlayer : this.connectedPlayers.values()) {
-                if (otherPlayer.getOwnerProxy() != RavelInstance.getServer()) {
+            for (RavelPlayer onlinePlayer : this.connectedPlayers.values()) {
+                if (onlinePlayer.getOwnerProxy() != RavelInstance.getServer()) {
                     continue;
                 }
 
-                otherPlayer.sendMessage(Text.PLAYERS_JOIN_NETWORK, player.getName());
+                onlinePlayer.sendMessage(Text.PLAYERS_JOIN_NETWORK, player.getName());
             }
         }
+
+        //TODO: Find a way to send a message to the player that just joined
+        this.connectedPlayers.put(player.getUniqueID(), player);
 
         //This should take name changed into account
         RavelInstance.getUUIDTools().registerPlayerData(player.getUniqueID(), player.getName());
