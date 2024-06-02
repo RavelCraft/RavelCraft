@@ -3,12 +3,7 @@ package com.connexal.ravelcraft.mod.server.mixin.events;
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
 import com.connexal.ravelcraft.mod.server.util.events.PlayerEvents;
 import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.players.PlayerManager;
-import com.connexal.ravelcraft.shared.util.text.Text;
 import net.minecraft.entity.Entity;
-import net.minecraft.network.message.LastSeenMessageList;
-import net.minecraft.network.message.SignedMessage;
-import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.network.packet.s2c.play.PositionFlag;
@@ -20,14 +15,12 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Set;
 
 @Mixin(ServerPlayNetworkHandler.class)
 public abstract class ServerPlayNetworkHandlerMixin {
-    private PlayerManager playerManager = null;
     private FabricRavelPlayer ravelPlayer = null;
 
     @Shadow
@@ -37,27 +30,11 @@ public abstract class ServerPlayNetworkHandlerMixin {
 
     private boolean updateData() {
         if (this.ravelPlayer == null) {
-            this.playerManager = RavelInstance.getPlayerManager();
-            this.ravelPlayer = (FabricRavelPlayer) this.playerManager.getPlayer(this.getPlayer().getUuid());
+            this.ravelPlayer = (FabricRavelPlayer) RavelInstance.getPlayerManager().getPlayer(this.getPlayer().getUuid());
             return this.ravelPlayer != null;
         }
 
         return true;
-    }
-
-
-    //Remove the chat signature, send everything as the server
-    @Inject(method = "getSignedMessage", at = @At("RETURN"), cancellable = true)
-    private void disableSecureChat(ChatMessageC2SPacket packet, LastSeenMessageList lastSeenMessages, CallbackInfoReturnable<SignedMessage> cir) {
-        this.updateData();
-
-        String message = packet.chatMessage();
-        boolean allowed = PlayerEvents.CHAT.invoker().onPlayerChat(this.ravelPlayer, message);
-        if (allowed) {
-            this.playerManager.broadcast(Text.CHAT_FORMAT, this.ravelPlayer.displayName(), message);
-        }
-
-        cir.setReturnValue(null);
     }
 
     @Inject(at = @At("TAIL"), method = "onDisconnected")

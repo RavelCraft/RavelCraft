@@ -10,10 +10,10 @@ import org.geysermc.geyser.api.GeyserApi;
 import org.geysermc.geyser.api.event.EventRegistrar;
 import org.geysermc.geyser.api.event.bedrock.SessionSkinApplyEvent;
 import org.geysermc.geyser.api.event.java.ServerDefineCommandsEvent;
-import org.geysermc.geyser.api.skin.Cape;
-import org.geysermc.geyser.api.skin.Skin;
 import org.geysermc.geyser.api.event.lifecycle.GeyserDefineCustomBlocksEvent;
 import org.geysermc.geyser.api.event.lifecycle.GeyserDefineCustomItemsEvent;
+import org.geysermc.geyser.api.skin.Cape;
+import org.geysermc.geyser.api.skin.Skin;
 
 public class GeyserManager implements EventRegistrar {
     public GeyserManager() {

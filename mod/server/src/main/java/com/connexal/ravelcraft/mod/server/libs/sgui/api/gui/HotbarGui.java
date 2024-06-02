@@ -1,9 +1,9 @@
 package com.connexal.ravelcraft.mod.server.libs.sgui.api.gui;
 
-import com.connexal.ravelcraft.mod.server.libs.sgui.api.elements.GuiElementInterface;
-import com.connexal.ravelcraft.mod.server.libs.sgui.virtual.hotbar.HotbarScreenHandler;
 import com.connexal.ravelcraft.mod.server.libs.sgui.api.ClickType;
 import com.connexal.ravelcraft.mod.server.libs.sgui.api.GuiHelpers;
+import com.connexal.ravelcraft.mod.server.libs.sgui.api.elements.GuiElementInterface;
+import com.connexal.ravelcraft.mod.server.libs.sgui.virtual.hotbar.HotbarScreenHandler;
 import com.connexal.ravelcraft.mod.server.libs.sgui.virtual.inventory.VirtualSlot;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;

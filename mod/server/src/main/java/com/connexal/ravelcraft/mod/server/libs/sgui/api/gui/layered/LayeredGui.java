@@ -1,10 +1,10 @@
 package com.connexal.ravelcraft.mod.server.libs.sgui.api.gui.layered;
 
-import com.connexal.ravelcraft.mod.server.libs.sgui.api.elements.GuiElementInterface;
-import com.google.common.collect.ImmutableList;
 import com.connexal.ravelcraft.mod.server.libs.sgui.api.ClickType;
 import com.connexal.ravelcraft.mod.server.libs.sgui.api.GuiHelpers;
+import com.connexal.ravelcraft.mod.server.libs.sgui.api.elements.GuiElementInterface;
 import com.connexal.ravelcraft.mod.server.libs.sgui.api.gui.SlotGuiInterface;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;

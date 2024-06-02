@@ -47,7 +47,7 @@ class MasterWhitelistManager extends WhitelistManager {
 
         for (RavelServer server : RavelServer.values()) {
             String serverName = server.name().toLowerCase();
-            if (server.isProxy() || !this.config.contains(serverName)) {
+            if (server.isProxy()) {
                 continue;
             }
 

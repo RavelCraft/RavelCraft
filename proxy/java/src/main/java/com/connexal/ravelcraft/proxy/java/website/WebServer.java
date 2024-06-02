@@ -1,6 +1,8 @@
 package com.connexal.ravelcraft.proxy.java.website;
 
-import com.connexal.ravelcraft.proxy.java.website.endpoints.*;
+import com.connexal.ravelcraft.proxy.java.website.endpoints.AbstractEndpoint;
+import com.connexal.ravelcraft.proxy.java.website.endpoints.RhtmlEndpoint;
+import com.connexal.ravelcraft.proxy.java.website.endpoints.RobotsEndpoint;
 import com.connexal.ravelcraft.proxy.java.website.endpoints.api.AuthEndpoint;
 import com.connexal.ravelcraft.proxy.java.website.endpoints.api.VersionEndpoint;
 import com.connexal.ravelcraft.shared.RavelInstance;

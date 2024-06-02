@@ -2,7 +2,6 @@ package com.connexal.ravelcraft.mod.server.commands;
 
 import com.connexal.ravelcraft.mod.server.RavelModServer;
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
-import com.connexal.ravelcraft.mod.server.util.map.MapColour;
 import com.connexal.ravelcraft.mod.server.util.map.MapUtils;
 import com.connexal.ravelcraft.shared.BuildConstants;
 import com.connexal.ravelcraft.shared.commands.RavelCommand;
@@ -12,7 +11,6 @@ import com.connexal.ravelcraft.shared.util.text.Text;
 import com.google.auto.service.AutoService;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.MapIdComponent;
-import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.map.MapState;
