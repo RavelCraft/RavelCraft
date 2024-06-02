@@ -35,6 +35,9 @@ public class CapeProvider {
     public static SkinTextures loadCape(GameProfile profile, SkinTextures original) {
         if (capes.containsKey(profile.getId())) {
             Identifier identifier = capes.get(profile.getId());
+            if (identifier == null) {
+                return null;
+            }
             return new SkinTextures(original.texture(), original.textureUrl(), identifier, identifier, original.model(), original.secure());
         }
 
@@ -51,10 +54,11 @@ public class CapeProvider {
             } catch (FileNotFoundException e) {
                 // Ignore it, this means that the user has no cape for this type
             } catch (IOException e) {
-                throw new RuntimeException("Failed to load cape of type " + type.name() + " for " + profile.getName(), e);
+                // Ignore it, this means that the cape is not available
             }
         }
 
-        return original;
+        capes.put(profile.getId(), null);
+        return null;
     }
 }

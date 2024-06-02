@@ -1,14 +1,14 @@
-// 1.20.6	2024-05-20T19:32:35.170647	RavelCraft/Model Definitions
+// 1.20.6	2024-05-25T16:42:39.822706	RavelCraft/Model Definitions
+eda4fba83a4adc1feb3f777e5a04f91495228c8d assets/ravelcraft/models/item/magic_shovel.json
+25da36d1d14e83018e4fbdb98ca4fbac49cd10da assets/ravelcraft/models/item/magic_leggings.json
+ecf0810bfd7044733e2e2b30267fd01783ecfed8 assets/ravelcraft/models/item/magic_boots.json
+d3e445220a78de0525cfc361842ae7a7661816a5 assets/ravelcraft/models/item/magic_chestplate.json
+fa9661cd2ac4665120e8a9d1df754e756db61996 assets/ravelcraft/blockstates/magic_block.json
+5c978e78fdcb750df34cdb4a766d0e367b6b77c0 assets/ravelcraft/models/item/magic_helmet.json
+19367da181e5b264edb5f058b8c330d0254c33eb assets/ravelcraft/models/item/magic_axe.json
+ecff1ed3dd4212e18496757bf495bf5318930918 assets/ravelcraft/models/item/magic_hoe.json
 65110876a0dee0f0912b77fb5b4f576b7a517781 assets/ravelcraft/models/item/magic_block.json
 c181e99675a81eb543c83a906c2ab958d97b9ba5 assets/ravelcraft/models/block/magic_block.json
 1f96440eb9fa0cd8f92d594a4ac7a6a3110c52b3 assets/ravelcraft/models/item/magic_pickaxe.json
-fa9661cd2ac4665120e8a9d1df754e756db61996 assets/ravelcraft/blockstates/magic_block.json
-d3e445220a78de0525cfc361842ae7a7661816a5 assets/ravelcraft/models/item/magic_chestplate.json
-ecf0810bfd7044733e2e2b30267fd01783ecfed8 assets/ravelcraft/models/item/magic_boots.json
-eda4fba83a4adc1feb3f777e5a04f91495228c8d assets/ravelcraft/models/item/magic_shovel.json
-19367da181e5b264edb5f058b8c330d0254c33eb assets/ravelcraft/models/item/magic_axe.json
-ecff1ed3dd4212e18496757bf495bf5318930918 assets/ravelcraft/models/item/magic_hoe.json
-5c978e78fdcb750df34cdb4a766d0e367b6b77c0 assets/ravelcraft/models/item/magic_helmet.json
-25da36d1d14e83018e4fbdb98ca4fbac49cd10da assets/ravelcraft/models/item/magic_leggings.json
-0137093f425318319ce9ae2259788f4d2b1e1302 assets/ravelcraft/models/item/magic_ingot.json
 71d39013a2ec5e9596dea38fdd3a96e8dcb95b7e assets/ravelcraft/models/item/magic_sword.json
+0137093f425318319ce9ae2259788f4d2b1e1302 assets/ravelcraft/models/item/magic_ingot.json

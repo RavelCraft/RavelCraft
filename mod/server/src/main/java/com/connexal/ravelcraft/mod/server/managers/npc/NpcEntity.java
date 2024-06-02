@@ -73,7 +73,7 @@ public class NpcEntity extends MobEntity {
         this.fakePlayer.setHeadYaw(this.getHeadYaw());
         this.fakePlayer.setPitch(this.getPitch());
         this.fakePlayer.setCustomNameVisible(true);
-        this.fakePlayer.setCustomName(this.getDisplayName());
+        this.fakePlayer.setCustomName(Text.of(this.getDisplayName().getLiteralString()));
     }
 
     public void sendRotationUpdate() {

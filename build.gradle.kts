@@ -5,6 +5,7 @@ val minecraftVersion = project.property("minecraft_version") as String
 val fabricLoaderVersion = project.property("fabric_loader_version") as String
 val websocketVersion = project.property("websocket_version") as String
 
+
 allprojects {
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"

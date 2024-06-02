@@ -18,7 +18,7 @@ public class CrackedManager {
         String name = session.getUsername();
 
         try {
-            HttpURLConnection connection = (HttpURLConnection) new URL("https://" + BuildConstants.SERVER_IP + "/game?username=" + username + "&password=" + password + "&name=" + name).openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URL("https://" + BuildConstants.SERVER_IP + "/api/auth?username=" + username + "&password=" + password + "&name=" + name).openConnection();
             connection.setReadTimeout(5000);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));

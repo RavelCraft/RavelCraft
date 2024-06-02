@@ -7,16 +7,18 @@ plugins {
 
 val projectId = project.property("project_id") as String
 val minecraftVersion = project.property("minecraft_version") as String
+val autoServiceVersion = project.property("auto_service_version") as String
+val velocityVersion = project.property("velocity_version") as String
 
 val name = "${projectId}-javaProxy-${minecraftVersion}"
 base.archivesName.set(name)
 
 dependencies {
-    compileOnly("com.velocitypowered:velocity-api:3.2.0-SNAPSHOT")
-    annotationProcessor("com.velocitypowered:velocity-api:3.2.0-SNAPSHOT")
+    compileOnly("com.velocitypowered:velocity-api:${velocityVersion}")
+    annotationProcessor("com.velocitypowered:velocity-api:${velocityVersion}")
 
-    implementation("com.google.auto.service:auto-service:1.0.1")
-    annotationProcessor("com.google.auto.service:auto-service:1.0.1")
+    implementation("com.google.auto.service:auto-service:${autoServiceVersion}")
+    annotationProcessor("com.google.auto.service:auto-service:${autoServiceVersion}")
 
     shadow(project(":shared"))
     shadow(project(":proxy-cross"))

@@ -29,7 +29,7 @@ public class CrackedLoginScreen extends Screen {
             if (out != null) {
                 this.client.setScreen(new DisconnectedScreen(this.parent, Text.literal("Failed to authenticate"), Text.literal(out)));
             } else {
-                this.client.setScreen(this.parent);
+                this.client.setScreen(new DisconnectedScreen(this.parent, Text.literal("Authentication success!"), Text.literal("You may now join the server.")));
             }
         }).dimensions(this.width / 2 - 102, this.height / 4 + 100 + 12, 204, 20).build());
 

@@ -18,6 +18,9 @@ public class PlayerListEntryMixin {
 
     @Inject(at = @At("TAIL"), method = "getSkinTextures", cancellable = true)
     protected void getSkinTextures(CallbackInfoReturnable<SkinTextures> cir) {
-        cir.setReturnValue(CapeProvider.loadCape(this.profile, cir.getReturnValue()));
+        SkinTextures newTextures = CapeProvider.loadCape(this.profile, cir.getReturnValue());
+        if (newTextures != null) {
+            cir.setReturnValue(newTextures);
+        }
     }
 }

@@ -10,7 +10,7 @@ public enum CapeType {
     public String getURL(GameProfile profile) {
         return switch (this) {
             case OPTIFINE -> "http://s.optifine.net/capes/" + profile.getName() + ".png";
-            case RAVELCRAFT -> "http://db." + BuildConstants.SERVER_IP + "/capes/" + profile.getId().toString() + ".png";
+            case RAVELCRAFT -> "https://db." + BuildConstants.SERVER_IP + "/capes/" + profile.getId().toString() + ".png";
         };
     }
 }

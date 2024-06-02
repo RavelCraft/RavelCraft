@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.connexal.ravelcraft.mod.server.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
     "accessors.EntityAccessor",
     "accessors.EntitySpawnS2CPacketAccessor",

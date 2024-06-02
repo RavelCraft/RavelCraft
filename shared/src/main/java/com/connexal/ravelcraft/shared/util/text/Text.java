@@ -119,7 +119,11 @@ public enum Text {
 
     JOIN_INFO_RULES("ravelcraft.join-info.rules"),
     JOIN_INFO_ANNOUNCEMENTS("ravelcraft.join-info.announcements"),
-    JOIN_INFO_LANGUAGES("ravelcraft.join-info.languages");
+    JOIN_INFO_LANGUAGES("ravelcraft.join-info.languages"),
+
+    // --- Java proxy ---
+
+    COMMAND_CRACKED_RELOAD("ravelcraft.command.cracked.reload");
 
     private static final Map<Language, Properties> languages = new HashMap<>();
 

@@ -5,17 +5,22 @@ import com.connexal.ravelcraft.mod.server.managers.npc.NpcPlayerUpdate;
 import com.connexal.ravelcraft.mod.server.mixin.accessors.EntitySpawnS2CPacketAccessor;
 import com.connexal.ravelcraft.mod.server.mixin.accessors.EntityTrackerUpdateS2CPacketAccessor;
 import com.connexal.ravelcraft.mod.server.mixin.accessors.PlayerListS2CPacketAccessor;
+import com.connexal.ravelcraft.shared.RavelInstance;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.network.PacketCallbacks;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.handler.PacketCodecDispatcher;
 import net.minecraft.network.packet.BundlePacket;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySetHeadYawS2CPacket;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityTrackerUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.server.network.ServerCommonNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -52,32 +57,35 @@ public abstract class ServerCommonNetworkHandlerMixin {
 
         if (packet instanceof BundlePacket<?> bPacket && !this.skipCheck) {
             for (Packet<?> subPacket : bPacket.getPackets()) {
-                if (subPacket instanceof EntitySpawnS2CPacketAccessor) {
+                if (subPacket instanceof EntitySpawnS2CPacket) {
                     Entity entity = world.getEntityById(((EntitySpawnS2CPacketAccessor) subPacket).getId());
                     if (!(entity instanceof NpcEntity npc)) return;
 
                     GameProfile profile = npc.getGameProfile();
                     PlayerListS2CPacket playerAddPacket = PlayerListS2CPacket.entryFromPlayer(Collections.emptyList());
-                    //noinspection ConstantConditions
-                    PlayerListS2CPacket.Entry entry = new PlayerListS2CPacket.Entry(profile.getId(), profile, false, 0, GameMode.SURVIVAL, npc.getDisplayName(), null);
-                    ((PlayerListS2CPacketAccessor) playerAddPacket).setEntries(Collections.singletonList(entry));
+                    ((PlayerListS2CPacketAccessor) playerAddPacket).setEntries(new ArrayList<>());
+
+                    Text safeText;
+                    if (npc.getDisplayName() == null) {
+                        safeText = Text.of("NO NAME");
+                    } else {
+                        safeText = Text.of(npc.getDisplayName().getLiteralString());
+                    }
+
+                    playerAddPacket.getEntries().add(new PlayerListS2CPacket.Entry(profile.getId(), profile, false, 0, GameMode.ADVENTURE, safeText, null));
                     this.send(playerAddPacket, packetCallbacks);
 
-                    // Before we send this packet, we have
-                    // added player to tablist, otherwise client doesn't
-                    // show it ... :mojank:
+                    // Before we send this packet, we have added player to tablist, otherwise client doesn't show it
+                    // ... :mojank
                     this.skipCheck = true;
                     this.send(packet, packetCallbacks);
                     this.skipCheck = false;
 
-                    // And now we can remove it from tablist
-                    // we must delay the tablist packet to allow
-                    // the client to fetch skin.
-                    // If player is immediately removed from the tablist,
-                    // client doesn't care about the skin.
+                    // And now we can remove it from tablist we must delay the tablist packet to allow the client to
+                    // fetch skin. If player is immediately removed from the tablist, client doesn't care about the skin.
                     UUID uuid = npc.getGameProfile().getId();
                     this.tablistQueue.remove(uuid);
-                    this.tablistQueue.put(uuid, new NpcPlayerUpdate(npc.getGameProfile(), npc.getTabListName(), this.queueTick + 30));
+                    this.tablistQueue.put(uuid, new NpcPlayerUpdate(npc.getGameProfile(), Text.of(npc.getTabListName().getLiteralString()), this.queueTick + 30));
 
                     this.send(new EntitySetHeadYawS2CPacket(entity, (byte) ((int) (entity.getHeadYaw() * 256.0F / 360.0F))), packetCallbacks);
 

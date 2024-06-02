@@ -17,10 +17,21 @@ base.archivesName.set(name)
 dependencies {
 	minecraft("com.mojang:minecraft:${minecraftVersion}")
 	mappings("net.fabricmc:yarn:${yarnMappings}:v2")
-	modCompileOnly("net.fabricmc:fabric-loader:${fabricLoaderVersion}")
-	modCompileOnly("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
 
-	shadow(project(":mod-cross"))
+	if (project.hasProperty("runClient")) { //To run: ./gradlew runClient -PrunClient
+		println("Client execution detected and enabled")
+
+		modImplementation("net.fabricmc:fabric-loader:${fabricLoaderVersion}")
+		modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
+
+		shadow(project(":mod-cross"))
+		implementation(project(":mod-cross"))
+	} else {
+		modCompileOnly("net.fabricmc:fabric-loader:${fabricLoaderVersion}")
+		modCompileOnly("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
+
+		shadow(project(":mod-cross"))
+	}
 }
 
 tasks {
@@ -51,6 +62,8 @@ tasks {
 loom {
 	runs {
 		named("client") {
+			programArgs.add("--username")
+			programArgs.add("*RavelTest")
 			client()
 			configName = "Fabric Client"
 			ideConfigGenerated(true)

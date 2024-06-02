@@ -28,7 +28,6 @@ package com.connexal.ravelcraft.mod.server.managers.geyser.capes;
 import com.connexal.ravelcraft.mod.server.managers.geyser.UrlType;
 import com.connexal.ravelcraft.shared.BuildConstants;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 public enum CapeProvider {
@@ -37,9 +36,8 @@ public enum CapeProvider {
     MINECRAFTCAPES("https://api.minecraftcapes.net/profile/%s/cape", UrlType.UUID),
     RAVELCRAFT("https://" + BuildConstants.SERVER_IP + "/capes/%s.png", UrlType.UUID_DASHED);
 
-    public static final CapeProvider[] VALUES = Arrays.copyOfRange(values(), 1, 5);
-    private String url;
-    private UrlType type;
+    private final String url;
+    private final UrlType type;
 
     CapeProvider(String url, UrlType urlType) {
         this.url = url;

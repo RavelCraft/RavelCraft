@@ -43,7 +43,7 @@ public class CapeFetcher {
      * @return The updated cape
      */
     public static CompletableFuture<Cape> request(Cape currentCape, UUID playerId, String username) {
-        for (CapeProvider provider : CapeProvider.VALUES) {
+        for (CapeProvider provider : CapeProvider.values()) {
             Cape cape = Utils.getOrDefault(
                 requestCape(provider.getUrlFor(playerId, username), currentCape),
                 currentCape, 3

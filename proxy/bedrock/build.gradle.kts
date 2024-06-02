@@ -7,6 +7,8 @@ plugins {
 
 val projectId = project.property("project_id") as String
 val minecraftVersion = project.property("minecraft_version") as String
+val autoServiceVersion = project.property("auto_service_version") as String
+val waterdogVersion = project.property("waterdog_version") as String
 
 val websocketVersion = project.property("websocket_version") as String
 
@@ -14,10 +16,10 @@ val name = "${projectId}-bedrockProxy-${minecraftVersion}"
 base.archivesName.set(name)
 
 dependencies {
-    compileOnly("dev.waterdog.waterdogpe:waterdog:2.0.1-SNAPSHOT")
+    compileOnly("dev.waterdog.waterdogpe:waterdog:${waterdogVersion}")
 
-    implementation("com.google.auto.service:auto-service:1.0.1")
-    annotationProcessor("com.google.auto.service:auto-service:1.0.1")
+    implementation("com.google.auto.service:auto-service:${autoServiceVersion}")
+    annotationProcessor("com.google.auto.service:auto-service:${autoServiceVersion}")
 
     shadow("org.java-websocket:Java-WebSocket:${websocketVersion}")
 

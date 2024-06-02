@@ -34,7 +34,7 @@ public class GeyserManager implements EventRegistrar {
     public void onSkinApplyEvent(SessionSkinApplyEvent event) {
         Cape cape = Utils.getOrDefault(CapeFetcher.request(
                 event.skinData().cape(), event.uuid(), event.username()
-        ), event.skinData().cape(), CapeProvider.VALUES.length * 3);
+        ), event.skinData().cape(), CapeProvider.values().length * 3);
 
         if (!cape.failed() && cape != event.skinData().cape()) {
             RavelInstance.getLogger().info("Applied cape texture for " + event.username() + " (" + event.uuid() + ")");

@@ -5,6 +5,7 @@ import com.connexal.ravelcraft.proxy.cross.servers.ban.BanManager;
 import com.connexal.ravelcraft.proxy.cross.servers.maintenance.MaintenanceManager;
 import com.connexal.ravelcraft.proxy.cross.servers.whitelist.WhitelistManager;
 import com.connexal.ravelcraft.proxy.java.players.VelocityJavaRavelPlayer;
+import com.connexal.ravelcraft.proxy.java.website.endpoints.api.AuthEndpoint;
 import com.connexal.ravelcraft.shared.BuildConstants;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import com.connexal.ravelcraft.shared.messaging.Messager;
@@ -20,6 +21,7 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.event.connection.PreLoginEvent;
+import com.velocitypowered.api.event.player.GameProfileRequestEvent;
 import com.velocitypowered.api.event.player.KickedFromServerEvent;
 import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.event.player.ServerPreConnectEvent;
@@ -29,17 +31,19 @@ import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
+import com.velocitypowered.api.util.GameProfile;
 import net.kyori.adventure.text.Component;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.file.Paths;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class JeEventListener {
+    private final Map<UUID, RavelServer> playerServerMap = new HashMap<>();
+    private final List<UUID> verifiedCrackedUsers = new ArrayList<>();
+
     private final ServerPing.SamplePlayer[] samplePlayers;
     private final Favicon emptyFavicon;
     private Favicon serverFavicon;
@@ -73,8 +77,22 @@ public class JeEventListener {
             event.setResult(PreLoginEvent.PreLoginComponentResult.denied(Component.text("This server is private!\nIf you think you should be able to join, you know how to contact us!")));
             return;
         }
+        playerServerMap.put(event.getUniqueId(), selectedServer);
 
-        //TODO: Add forced hosts support
+        if (event.getUsername().startsWith("*")) {
+            event.setResult(PreLoginEvent.PreLoginComponentResult.forceOfflineMode());
+        }
+    }
+
+    @Subscribe(order = PostOrder.FIRST)
+    public void onGameProfileRequest(GameProfileRequestEvent event) {
+        if (event.getUsername().startsWith("*")) {
+            GameProfile gameProfile = AuthEndpoint.getCrackedProfile(event.getUsername());
+            if (gameProfile != null) {
+                this.verifiedCrackedUsers.add(gameProfile.getId());
+            }
+            event.setGameProfile(gameProfile);
+        }
     }
 
     @Subscribe(order = PostOrder.FIRST)
@@ -83,6 +101,14 @@ public class JeEventListener {
         if (!messager.attemptConnect() || !messager.otherProxyConnected()) {
             event.setResult(ResultedEvent.ComponentResult.denied(Component.text("Network IPC connection establishment failed. Contact the server administrator.")));
             return;
+        }
+
+        //Cracked player check
+        if (event.getPlayer().getUsername().startsWith("*")) {
+            if (!this.verifiedCrackedUsers.remove(event.getPlayer().getUniqueId())) {
+                event.setResult(ResultedEvent.ComponentResult.denied(Component.text("Failed to login! Please try again later.")));
+                return;
+            }
         }
 
         RavelPlayer player = new VelocityJavaRavelPlayer(event.getPlayer());
@@ -117,6 +143,7 @@ public class JeEventListener {
 
         RavelInstance.getPlayerManager().applyPlayerRank(player, player.getRank());
         RavelInstance.getPlayerManager().playerJoined(player);
+        event.setResult(ResultedEvent.ComponentResult.allowed());
     }
 
     @Subscribe
@@ -145,22 +172,28 @@ public class JeEventListener {
     public void onPlayerAskTransfer(ServerPreConnectEvent event) {
         //Pre transfer checks...
 
+        RavelServer server = playerServerMap.remove(event.getPlayer().getUniqueId());
+        if (server == null) {
+            Optional<RegisteredServer> optionalServer = event.getResult().getServer();
+            if (optionalServer.isEmpty()) {
+                RavelInstance.getLogger().error("Failed to find player server!");
+                return;
+            }
+            RegisteredServer serverInfo = optionalServer.get();
+
+            try {
+                server = RavelServer.valueOf(serverInfo.getServerInfo().getName().toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException e) {
+                RavelInstance.getLogger().error("Failed to find player server!", e);
+                return;
+            }
+        } else {
+            JeProxy.getServer().getServer(server.getIdentifier()).ifPresent(backendServer -> {
+                event.setResult(ServerPreConnectEvent.ServerResult.allowed(backendServer));
+            });
+        }
+
         //Check if player is whitelisted on the backend server
-        Optional<RegisteredServer> optionalServer = event.getResult().getServer();
-        if (optionalServer.isEmpty()) {
-            RavelInstance.getLogger().error("Failed to find player server!");
-            return;
-        }
-        RegisteredServer serverInfo = optionalServer.get();
-
-        RavelServer server;
-        try {
-            server = RavelServer.valueOf(serverInfo.getServerInfo().getName().toUpperCase(Locale.ROOT));
-        } catch (IllegalArgumentException e) {
-            RavelInstance.getLogger().error("Failed to find player server!", e);
-            return;
-        }
-
         WhitelistManager whitelistManager = RavelProxyInstance.getWhitelistManager();
         if (whitelistManager.isEnabled(server)) {
             if (!whitelistManager.isWhitelisted(event.getPlayer().getUniqueId(), server)) {
@@ -178,7 +211,6 @@ public class JeEventListener {
             if (!maintenanceManager.canBypass(player)) {
                 event.setResult(ServerPreConnectEvent.ServerResult.denied());
                 player.sendMessage(Text.PLAYERS_MAINTENANCE);
-                return;
             }
         }
     }

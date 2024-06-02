@@ -4,6 +4,7 @@
   "package": "com.connexal.ravelcraft.mod.client.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "CapeFeatureRendererMixin",
     "MultiplayerScreenMixin",
     "PlayerListEntryMixin",
     "ServerListMixin",

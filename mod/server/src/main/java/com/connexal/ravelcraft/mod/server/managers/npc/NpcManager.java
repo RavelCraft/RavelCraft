@@ -28,15 +28,15 @@ public class NpcManager {
     public static final Identifier NPC_ID = new Identifier(BuildConstants.ID, "npc");
     public static Supplier<EntityType<NpcEntity>> NPC_TYPE;
 
-    private static Map<UUID, Long> lastInteract = new HashMap<>();
+    private static final Map<UUID, Long> lastInteract = new HashMap<>();
 
     public static void setup() {
         //Register the entity type
         final EntityType<NpcEntity> type = Registry.register(
                 Registries.ENTITY_TYPE,
                 NPC_ID,
-                FabricEntityTypeBuilder.<NpcEntity>create(SpawnGroup.MISC, NpcEntity::new)
-                        .dimensions(EntityDimensions.fixed(0.6F, 1.8F))
+                EntityType.Builder.<NpcEntity>create(NpcEntity::new, SpawnGroup.MISC)
+                        .dimensions(0.6F, 1.8F)
                         .build()
         );
         NPC_TYPE = () -> type;
