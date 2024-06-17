@@ -80,8 +80,8 @@ public class MapCommand extends RavelCommand {
 
                 //Create map
                 ServerWorld world = RavelModServer.getServer().getOverworld();
-                mapIdComponent = world.getNextMapId();
-                MapState mapState = MapState.of(0, 0, (byte) 0, false, false, RegistryKey.of(RegistryKeys.WORLD, new Identifier(BuildConstants.ID, "custom_map")));
+                mapIdComponent = world.increaseAndGetMapId();
+                MapState mapState = MapState.of(0, 0, (byte) 0, false, false, RegistryKey.of(RegistryKeys.WORLD, Identifier.of(BuildConstants.ID, "custom_map")));
 
                 MapUtils.applyImageToMap(mapState, image, true);
                 world.putMapState(mapIdComponent, mapState);

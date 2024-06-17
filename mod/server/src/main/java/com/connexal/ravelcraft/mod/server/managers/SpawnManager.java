@@ -21,7 +21,7 @@ public class SpawnManager {
             double z = this.config.getDouble("spawn.z");
             float pitch = this.config.getFloat("spawn.pitch");
             float yaw = this.config.getFloat("spawn.yaw");
-            RegistryKey<World> world = RegistryKey.of(RegistryKeys.WORLD, new Identifier(this.config.getString("spawn.world")));
+            RegistryKey<World> world = RegistryKey.of(RegistryKeys.WORLD, Identifier.of(this.config.getString("spawn.world")));
 
             this.spawn = new Location(x, y, z, pitch, yaw, world);
         } else {

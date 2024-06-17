@@ -23,7 +23,7 @@ public record BlockDescriptor(Identifier identifier, Block block, BlockItem bloc
     }
 
     public static Builder builder(String identifier) {
-        return new Builder(new Identifier(BuildConstants.ID, identifier));
+        return new Builder(Identifier.of(BuildConstants.ID, identifier));
     }
 
     public static class Builder {

@@ -31,22 +31,22 @@ public class ArmorSet {
         Map<ArmorItem.Type, ItemDescriptor> items = new HashMap<>();
         if (helmet) {
             ArmorItem item = new ArmorItem(armorMaterialRef, ArmorItem.Type.HELMET, new Item.Settings());
-            Identifier helmetId = new Identifier(identifier.getNamespace(), identifier.getPath() + "_helmet");
+            Identifier helmetId = Identifier.of(identifier.getNamespace(), identifier.getPath() + "_helmet");
             items.put(ArmorItem.Type.HELMET, ItemDescriptor.builder(helmetId).item(item).register());
         }
         if (chestplate) {
             ArmorItem item = new ArmorItem(armorMaterialRef, ArmorItem.Type.CHESTPLATE, new Item.Settings());
-            Identifier chestplateId = new Identifier(identifier.getNamespace(), identifier.getPath() + "_chestplate");
+            Identifier chestplateId = Identifier.of(identifier.getNamespace(), identifier.getPath() + "_chestplate");
             items.put(ArmorItem.Type.CHESTPLATE, ItemDescriptor.builder(chestplateId).item(item).register());
         }
         if (leggings) {
             ArmorItem item = new ArmorItem(armorMaterialRef, ArmorItem.Type.LEGGINGS, new Item.Settings());
-            Identifier leggingsId = new Identifier(identifier.getNamespace(), identifier.getPath() + "_leggings");
+            Identifier leggingsId = Identifier.of(identifier.getNamespace(), identifier.getPath() + "_leggings");
             items.put(ArmorItem.Type.LEGGINGS, ItemDescriptor.builder(leggingsId).item(item).register());
         }
         if (boots) {
             ArmorItem item = new ArmorItem(armorMaterialRef, ArmorItem.Type.BOOTS, new Item.Settings());
-            Identifier bootsId = new Identifier(identifier.getNamespace(), identifier.getPath() + "_boots");
+            Identifier bootsId = Identifier.of(identifier.getNamespace(), identifier.getPath() + "_boots");
             items.put(ArmorItem.Type.BOOTS, ItemDescriptor.builder(bootsId).item(item).register());
         }
 
@@ -62,7 +62,7 @@ public class ArmorSet {
     }
 
     public static Builder builder(String identifier) {
-        return new Builder(new Identifier(BuildConstants.ID, identifier));
+        return new Builder(Identifier.of(BuildConstants.ID, identifier));
     }
 
     public static class Builder {

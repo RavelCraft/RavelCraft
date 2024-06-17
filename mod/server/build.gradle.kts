@@ -29,7 +29,7 @@ dependencies {
 
 	implementation("org.geysermc.geyser:api:${geyserVersion}")
 
-	//implementation("eu.pb4:sgui:${sguiVersion}")
+	modImplementation("eu.pb4:sgui:${sguiVersion}")
 
 	shadow(project(":shared"))
 	shadow(project(":mod-cross"))

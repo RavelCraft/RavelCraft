@@ -4,6 +4,7 @@ import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
 import com.connexal.ravelcraft.mod.server.util.events.PlayerEvents;
 import com.connexal.ravelcraft.shared.RavelInstance;
 import net.minecraft.entity.Entity;
+import net.minecraft.network.DisconnectionInfo;
 import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.network.packet.s2c.play.PositionFlag;
@@ -38,9 +39,9 @@ public abstract class ServerPlayNetworkHandlerMixin {
     }
 
     @Inject(at = @At("TAIL"), method = "onDisconnected")
-    private void onPlayerLeave(net.minecraft.text.Text reason, CallbackInfo ci) {
+    private void onPlayerLeave(DisconnectionInfo disconnectionInfo, CallbackInfo ci) {
         if (this.updateData()) {
-            PlayerEvents.LEFT.invoker().onPlayerLeft(this.ravelPlayer, reason.getString());
+            PlayerEvents.LEFT.invoker().onPlayerLeft(this.ravelPlayer, disconnectionInfo.reason().getString());
         } else {
             throw new RuntimeException("Player left without being initialized... Something is wrong!");
         }

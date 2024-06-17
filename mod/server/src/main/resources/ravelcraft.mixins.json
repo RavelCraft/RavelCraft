@@ -10,7 +10,7 @@
     "accessors.EntityTrackerUpdateS2CPacketAccessor",
     "accessors.PlayerEntityAccessor",
     "accessors.PlayerListS2CPacketAccessor",
-    "accessors.ThreadedAnvilChunkStorageAccessor",
+    "accessors.ServerChunkLoadingManagerAccessor",
     "customisations.ExplosionMixin",
     "customisations.FarmlandBlockMixin",
     "customisations.ItemFrameEntityMixin",
@@ -25,12 +25,7 @@
     "npc.ServerCommonNetworkHandlerMixin",
     "npc.ServerPlayNetworkHandlerMixin",
     "registry.RegistrySyncManagerMixin",
-    "registry.SimpleRegistryMixin",
-    "sgui.PlayerInteractEntityC2SPacketAccessor",
-    "sgui.ScreenHandlerMixin",
-    "sgui.ServerPlayerEntityMixin",
-    "sgui.ServerPlayNetworkHandlerMixin",
-    "sgui.SignBlockEntityAccessor"
+    "registry.SimpleRegistryMixin"
   ],
   "injectors": {
     "defaultRequire": 1

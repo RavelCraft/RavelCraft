@@ -188,9 +188,13 @@ public class JeEventListener {
                 return;
             }
         } else {
-            JeProxy.getServer().getServer(server.getIdentifier()).ifPresent(backendServer -> {
-                event.setResult(ServerPreConnectEvent.ServerResult.allowed(backendServer));
-            });
+            Optional<RegisteredServer> optional = JeProxy.getServer().getServer(server.getIdentifier());
+            if (optional.isPresent()) {
+                event.setResult(ServerPreConnectEvent.ServerResult.allowed(optional.get()));
+            } else {
+                RavelInstance.getLogger().error("Failed to find server: " + server.getIdentifier());
+                event.setResult(ServerPreConnectEvent.ServerResult.denied());
+            }
         }
 
         //Check if player is whitelisted on the backend server

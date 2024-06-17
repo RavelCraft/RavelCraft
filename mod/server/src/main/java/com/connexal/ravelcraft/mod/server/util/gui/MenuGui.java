@@ -1,8 +1,8 @@
 package com.connexal.ravelcraft.mod.server.util.gui;
 
-import com.connexal.ravelcraft.mod.server.libs.sgui.api.elements.GuiElement;
-import com.connexal.ravelcraft.mod.server.libs.sgui.api.elements.GuiElementBuilder;
-import com.connexal.ravelcraft.mod.server.libs.sgui.api.gui.SimpleGui;
+import eu.pb4.sgui.api.elements.GuiElement;
+import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandlerType;

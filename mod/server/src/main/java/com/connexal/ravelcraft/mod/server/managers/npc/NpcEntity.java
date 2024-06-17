@@ -3,7 +3,7 @@ package com.connexal.ravelcraft.mod.server.managers.npc;
 import com.connexal.ravelcraft.mod.server.mixin.accessors.EntitySpawnS2CPacketAccessor;
 import com.connexal.ravelcraft.mod.server.mixin.accessors.EntityTrackerAccessor;
 import com.connexal.ravelcraft.mod.server.mixin.accessors.PlayerEntityAccessor;
-import com.connexal.ravelcraft.mod.server.mixin.accessors.ThreadedAnvilChunkStorageAccessor;
+import com.connexal.ravelcraft.mod.server.mixin.accessors.ServerChunkLoadingManagerAccessor;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
@@ -20,10 +20,11 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.common.SyncedClientOptions;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.server.network.EntityTrackerEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerChunkLoadingManager;
 import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -84,8 +85,8 @@ public class NpcEntity extends MobEntity {
 
     private void sendProfileUpdates() {
         ServerChunkManager manager = (ServerChunkManager) this.getWorld().getChunkManager();
-        ThreadedAnvilChunkStorage storage = manager.threadedAnvilChunkStorage;
-        EntityTrackerAccessor trackerEntry = ((ThreadedAnvilChunkStorageAccessor) storage).getEntiryTrackers().get(this.getId());
+        ServerChunkLoadingManager storage = manager.chunkLoadingManager;
+        EntityTrackerAccessor trackerEntry = ((ServerChunkLoadingManagerAccessor) storage).getEntityTrackers().get(this.getId());
         if (trackerEntry != null) {
             trackerEntry.getListeners().forEach(tracking -> trackerEntry.getEntry().startTracking(tracking.getPlayer()));
         }
@@ -198,8 +199,8 @@ public class NpcEntity extends MobEntity {
     }
 
     @Override
-    public Packet<ClientPlayPacketListener> createSpawnPacket() {
-        EntitySpawnS2CPacket packet = new EntitySpawnS2CPacket(this.fakePlayer);
+    public Packet<ClientPlayPacketListener> createSpawnPacket(EntityTrackerEntry entry) {
+        EntitySpawnS2CPacket packet = new EntitySpawnS2CPacket(this.fakePlayer, entry);
 
         EntitySpawnS2CPacketAccessor packetAccessor = (EntitySpawnS2CPacketAccessor) packet;
         packetAccessor.setId(this.getId());

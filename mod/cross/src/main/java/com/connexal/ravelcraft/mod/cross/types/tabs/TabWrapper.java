@@ -25,11 +25,11 @@ public class TabWrapper {
     }
 
     public TabWrapper register() {
-        Registry.register(Registries.ITEM_GROUP, new Identifier(BuildConstants.ID, this.id), this.itemGroup);
+        Registry.register(Registries.ITEM_GROUP, Identifier.of(BuildConstants.ID, this.id), this.itemGroup);
         return this;
     }
 
     public RegistryKey<ItemGroup> getRegistryKey() {
-        return RegistryKey.of(Registries.ITEM_GROUP.getKey(), new Identifier(BuildConstants.ID, this.id));
+        return RegistryKey.of(Registries.ITEM_GROUP.getKey(), Identifier.of(BuildConstants.ID, this.id));
     }
 }

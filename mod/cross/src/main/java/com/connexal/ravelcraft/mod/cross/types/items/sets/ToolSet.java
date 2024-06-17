@@ -36,27 +36,27 @@ public class ToolSet implements ToolMaterial {
         Map<Type, ItemDescriptor> items = new HashMap<>();
         if (axe) {
             AxeItem item = new AxeItem(this, new Item.Settings());
-            Identifier axeId = new Identifier(identifier.getNamespace(), identifier.getPath() + "_axe");
+            Identifier axeId = Identifier.of(identifier.getNamespace(), identifier.getPath() + "_axe");
             items.put(Type.AXE, ItemDescriptor.builder(axeId).item(item).register());
         }
         if (hoe) {
             HoeItem item = new HoeItem(this, new Item.Settings());
-            Identifier hoeId = new Identifier(identifier.getNamespace(), identifier.getPath() + "_hoe");
+            Identifier hoeId = Identifier.of(identifier.getNamespace(), identifier.getPath() + "_hoe");
             items.put(Type.HOE, ItemDescriptor.builder(hoeId).item(item).register());
         }
         if (pickaxe) {
             PickaxeItem item = new PickaxeItem(this, new Item.Settings());
-            Identifier pickaxeId = new Identifier(identifier.getNamespace(), identifier.getPath() + "_pickaxe");
+            Identifier pickaxeId = Identifier.of(identifier.getNamespace(), identifier.getPath() + "_pickaxe");
             items.put(Type.PICKAXE, ItemDescriptor.builder(pickaxeId).item(item).register());
         }
         if (shovel) {
             ShovelItem item = new ShovelItem(this, new Item.Settings());
-            Identifier shovelId = new Identifier(identifier.getNamespace(), identifier.getPath() + "_shovel");
+            Identifier shovelId = Identifier.of(identifier.getNamespace(), identifier.getPath() + "_shovel");
             items.put(Type.SHOVEL, ItemDescriptor.builder(shovelId).item(item).register());
         }
         if (sword) {
             SwordItem item = new SwordItem(this, new Item.Settings());
-            Identifier swordId = new Identifier(identifier.getNamespace(), identifier.getPath() + "_sword");
+            Identifier swordId = Identifier.of(identifier.getNamespace(), identifier.getPath() + "_sword");
             items.put(Type.SWORD, ItemDescriptor.builder(swordId).item(item).register());
         }
 
@@ -102,7 +102,7 @@ public class ToolSet implements ToolMaterial {
     }
 
     public static Builder builder(String identifier) {
-        return new Builder(new Identifier(BuildConstants.ID, identifier));
+        return new Builder(Identifier.of(BuildConstants.ID, identifier));
     }
 
     public static class Builder {

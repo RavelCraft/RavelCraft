@@ -20,12 +20,11 @@ public enum RavelServer {
 
     public static RavelServer getServerByAddress(String address) {
         if (address.equals(BuildConstants.SERVER_IP)) {
-            return JE_PROXY;
+            return DEFAULT_SERVER;
         }
-
         for (String server : BuildConstants.TEST_IPS) {
             if (address.equals(server)) {
-                return JE_PROXY;
+                return DEFAULT_SERVER;
             }
         }
 

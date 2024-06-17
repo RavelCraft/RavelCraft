@@ -19,7 +19,7 @@ public record ItemDescriptor(Identifier identifier, Item item, Model displayMode
     }
 
     public static Builder builder(String identifier) {
-        return new Builder(new Identifier(BuildConstants.ID, identifier));
+        return new Builder(Identifier.of(BuildConstants.ID, identifier));
     }
 
     public static class Builder {

@@ -53,7 +53,7 @@ public final class SkinApplier {
                 observer1.networkHandler.sendPacket(new PlayerListS2CPacket(PlayerListS2CPacket.Action.ADD_PLAYER, player)); // refresh the player information
                 if (player != observer1 && observer1.canSee(player)) {
                     observer1.networkHandler.sendPacket(new EntitiesDestroyS2CPacket(player.getId()));
-                    observer1.networkHandler.sendPacket(new EntitySpawnS2CPacket(player));
+                    observer1.networkHandler.sendPacket(new EntitySpawnS2CPacket(player, 0, player.getBlockPos()));
                     observer1.networkHandler.sendPacket(new EntityPositionS2CPacket(player));
                     observer1.networkHandler.sendPacket(new EntityTrackerUpdateS2CPacket(player.getId(), player.getDataTracker().getChangedEntries()));
                 } else if (player == observer1) {

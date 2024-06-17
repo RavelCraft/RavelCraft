@@ -61,7 +61,7 @@ public class HomeManager {
         double z = this.config.getDouble(path + ".z");
         float pitch = this.config.getFloat(path + ".pitch");
         float yaw = this.config.getFloat(path + ".yaw");
-        RegistryKey<World> world = RegistryKey.of(RegistryKeys.WORLD, new Identifier(this.config.getString(path + ".world")));
+        RegistryKey<World> world = RegistryKey.of(RegistryKeys.WORLD, Identifier.of(this.config.getString(path + ".world")));
 
         return new Location(x, y, z, pitch, yaw, world);
     }

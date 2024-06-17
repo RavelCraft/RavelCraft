@@ -19,7 +19,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public class NpcManager {
-    public static final Identifier NPC_ID = new Identifier(BuildConstants.ID, "npc");
+    public static final Identifier NPC_ID = Identifier.of(BuildConstants.ID, "npc");
     public static Supplier<EntityType<NpcEntity>> NPC_TYPE;
 
     private static final Map<UUID, Long> lastInteract = new HashMap<>();
@@ -43,7 +43,7 @@ public class NpcManager {
     public static NpcEntity createNpc(ServerWorld world, Location location) {
         NpcEntity npc = new NpcEntity(world);
 
-        npc.teleport(location.getX(), location.getY(), location.getZ());
+        npc.teleport(location.getX(), location.getY(), location.getZ(), false);
         npc.setPitch(location.getPitch());
         npc.setHeadYaw(location.getYaw());
         npc.sendRotationUpdate();
