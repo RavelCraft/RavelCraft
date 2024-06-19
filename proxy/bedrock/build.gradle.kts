@@ -25,7 +25,8 @@ dependencies {
 
     shadow(files("${project.file("libs/MCXboxBroadcastExtension.jar")}"))
 
-    shadow(project(":shared"))
+    shadow(project(":shared-all"))
+    shadow(project(":shared-server"))
     shadow(project(":proxy-cross"))
 }
 

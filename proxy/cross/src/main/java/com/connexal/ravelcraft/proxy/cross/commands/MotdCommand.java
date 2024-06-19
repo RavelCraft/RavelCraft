@@ -1,10 +1,10 @@
 package com.connexal.ravelcraft.proxy.cross.commands;
 
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
-import com.connexal.ravelcraft.shared.commands.RavelCommand;
-import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommand;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommandSender;
+import com.connexal.ravelcraft.shared.server.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import com.google.auto.service.AutoService;
 
 @AutoService(RavelCommand.class)
@@ -34,14 +34,14 @@ public class MotdCommand extends RavelCommand {
     @Override
     protected boolean run(RavelCommandSender sender, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(Text.COMMAND_MOTD_GET, RavelProxyInstance.getMotdManager().getMotd());
+            sender.sendMessage(RavelText.COMMAND_MOTD_GET, RavelProxyInstance.getMotdManager().getMotd());
             return true;
         }
 
         String message = String.join(" ", args);
         this.completeAsync(() -> RavelProxyInstance.getMotdManager().setMotd(message));
 
-        sender.sendMessage(Text.COMMAND_MOTD_SET, message);
+        sender.sendMessage(RavelText.COMMAND_MOTD_SET, message);
         return true;
     }
 }

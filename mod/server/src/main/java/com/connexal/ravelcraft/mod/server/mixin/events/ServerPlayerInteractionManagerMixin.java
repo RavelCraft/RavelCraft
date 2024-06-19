@@ -3,7 +3,7 @@ package com.connexal.ravelcraft.mod.server.mixin.events;
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
 import com.connexal.ravelcraft.mod.server.util.events.BlockEvents;
 import com.connexal.ravelcraft.mod.server.util.events.PlayerEvents;
-import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;

@@ -1,12 +1,12 @@
 package com.connexal.ravelcraft.proxy.cross.commands;
 
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.commands.RavelCommand;
-import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
-import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.util.server.RavelServer;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommand;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommandSender;
+import com.connexal.ravelcraft.shared.server.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.server.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.server.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import com.google.auto.service.AutoService;
 
 import java.util.Locale;
@@ -48,7 +48,7 @@ public class ServerCommand extends RavelCommand {
 
             if (args.length == 1) { //If we don't specify a player, then we are transferring ourselves
                 if (!sender.isPlayer()) {
-                    sender.sendMessage(Text.COMMAND_MUST_BE_PLAYER);
+                    sender.sendMessage(RavelText.COMMAND_MUST_BE_PLAYER);
                     return;
                 }
 
@@ -60,30 +60,30 @@ public class ServerCommand extends RavelCommand {
             try {
                 server = RavelServer.valueOf(args[0].toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException e) {
-                sender.sendMessage(Text.COMMAND_SERVER_INVALID);
+                sender.sendMessage(RavelText.COMMAND_SERVER_INVALID);
                 return;
             }
 
             if (player == null) {
-                sender.sendMessage(Text.COMMAND_PLAYER_NOT_FOUND);
+                sender.sendMessage(RavelText.COMMAND_PLAYER_NOT_FOUND);
                 return;
             }
 
             if (player.getServer() == server) {
-                sender.sendMessage(Text.COMMAND_SERVER_ALREADY);
+                sender.sendMessage(RavelText.COMMAND_SERVER_ALREADY);
                 return;
             }
 
             boolean success = RavelInstance.getPlayerManager().transferPlayerToServer(player, server);
             if (success) {
                 if (args.length == 2) {
-                    sender.sendMessage(Text.COMMAND_SERVER_SUCCESS_OTHER, server.getName());
+                    sender.sendMessage(RavelText.COMMAND_SERVER_SUCCESS_OTHER, server.getName());
                 }
             } else {
                 if (args.length == 1) {
-                    sender.sendMessage(Text.COMMAND_SERVER_FAIL_SLEF, server.getName());
+                    sender.sendMessage(RavelText.COMMAND_SERVER_FAIL_SLEF, server.getName());
                 } else {
-                    sender.sendMessage(Text.COMMAND_SERVER_FAIL_OTHER, server.getName());
+                    sender.sendMessage(RavelText.COMMAND_SERVER_FAIL_OTHER, server.getName());
                 }
             }
         });

@@ -26,7 +26,7 @@
 package com.connexal.ravelcraft.mod.server.managers.geyser.capes;
 
 import com.connexal.ravelcraft.mod.server.managers.geyser.UrlType;
-import com.connexal.ravelcraft.shared.BuildConstants;
+import com.connexal.ravelcraft.shared.all.Ravel;
 
 import java.util.UUID;
 
@@ -34,7 +34,7 @@ public enum CapeProvider {
     OPTIFINE("https://optifine.net/capes/%s.png", UrlType.USERNAME),
     LABYMOD("https://dl.labymod.net/capes/%s", UrlType.UUID_DASHED),
     MINECRAFTCAPES("https://api.minecraftcapes.net/profile/%s/cape", UrlType.UUID),
-    RAVELCRAFT("https://" + BuildConstants.SERVER_IP + "/capes/%s.png", UrlType.UUID_DASHED);
+    RAVELCRAFT("https://" + Ravel.SERVER_IP + "/capes/%s.png", UrlType.UUID_DASHED);
 
     private final String url;
     private final UrlType type;

@@ -7,32 +7,18 @@ import com.connexal.ravelcraft.mod.server.managers.*;
 import com.connexal.ravelcraft.mod.server.managers.geyser.GeyserManager;
 import com.connexal.ravelcraft.mod.server.managers.npc.NpcManager;
 import com.connexal.ravelcraft.mod.server.players.FabricPlayerManager;
-import com.connexal.ravelcraft.mod.server.util.FabricRavelLogger;
-import com.connexal.ravelcraft.shared.BuildConstants;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.RavelMain;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.server.MinecraftServer;
 import org.geysermc.api.Geyser;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-public class RavelModServer implements RavelMain, ModInitializer {
+public class RavelModServer implements ModInitializer {
 	public static final String[] OVERRIDDEN_COMMANDS = new String[] { "ban", "ban-ip", "banlist", "pardon", "pardon-ip", "kick", "list", "whitelist", "msg", "tell" };
 
-	private ModContainer mod;
-
 	private static MinecraftServer server = null;
-	private static ScheduledExecutorService scheduler;
 
 	private static HomeManager homeManager;
 	private static MiniBlockManager miniBlockManager;
@@ -46,15 +32,13 @@ public class RavelModServer implements RavelMain, ModInitializer {
 		if (FabricLoader.getInstance().getEnvironmentType() != EnvType.SERVER) {
 			throw new IllegalStateException("RavelModServer must be loaded on a server environment.");
 		}
+
+		RavelModInstance.setup();
+		RavelInstance.setup();
+
 		if (!Geyser.isRegistered()) {
 			RavelInstance.getLogger().error("Geyser is not registered! Your server won't understand Bedrock clients!");
 		}
-
-		scheduler = Executors.newScheduledThreadPool(3);
-
-		mod = FabricLoader.getInstance().getModContainer(BuildConstants.ID).orElseThrow();
-		RavelInstance.setup(this, FabricLoader.getInstance().getConfigDir().resolve(BuildConstants.ID), new FabricRavelLogger());
-		RavelModInstance.setup();
 
 		RavelInstance.init(new FabricCommandRegistrar(), new FabricPlayerManager());
 		RavelModInstance.init();
@@ -80,37 +64,6 @@ public class RavelModServer implements RavelMain, ModInitializer {
 
 			RavelInstance.shutdown();
 		});
-	}
-
-	@Override
-	public InputStream getResource(String name) {
-		Path path = this.mod.findPath(name).orElse(null);
-		if (path == null) {
-			return null;
-		}
-
-		try {
-			return path.getFileSystem()
-					.provider()
-					.newInputStream(path);
-		} catch (IOException e) {
-			return null;
-		}
-	}
-
-	@Override
-	public void scheduleTask(Runnable runnable) {
-		scheduler.execute(runnable);
-	}
-
-	@Override
-	public void scheduleTask(Runnable runnable, int secondsDelay) {
-		scheduler.schedule(runnable, secondsDelay, TimeUnit.SECONDS);
-	}
-
-	@Override
-	public void scheduleRepeatingTask(Runnable runnable, int secondsInterval) {
-		scheduler.scheduleAtFixedRate(runnable, 0, secondsInterval, TimeUnit.SECONDS);
 	}
 
 	public static MinecraftServer getServer() {

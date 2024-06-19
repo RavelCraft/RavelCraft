@@ -2,12 +2,12 @@ package com.connexal.ravelcraft.proxy.java.commands;
 
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
 import com.connexal.ravelcraft.proxy.java.JeProxy;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.commands.CommandRegistrar;
-import com.connexal.ravelcraft.shared.commands.RavelCommand;
-import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
-import com.connexal.ravelcraft.shared.commands.arguments.CommandSubOption;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.commands.CommandRegistrar;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommand;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommandSender;
+import com.connexal.ravelcraft.shared.server.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.server.commands.arguments.CommandSubOption;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;

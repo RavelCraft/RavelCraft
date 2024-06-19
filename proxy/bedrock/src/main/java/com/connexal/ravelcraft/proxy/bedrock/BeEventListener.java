@@ -6,15 +6,15 @@ import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
 import com.connexal.ravelcraft.proxy.cross.servers.ban.BanManager;
 import com.connexal.ravelcraft.proxy.cross.servers.maintenance.MaintenanceManager;
 import com.connexal.ravelcraft.proxy.cross.servers.whitelist.WhitelistManager;
-import com.connexal.ravelcraft.shared.BuildConstants;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.messaging.Messager;
-import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
-import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.util.server.RavelServer;
-import com.connexal.ravelcraft.shared.util.text.InitText;
-import com.connexal.ravelcraft.shared.util.text.Text;
-import com.connexal.ravelcraft.shared.util.uuid.UUIDTools;
+import com.connexal.ravelcraft.shared.all.Ravel;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.messaging.Messager;
+import com.connexal.ravelcraft.shared.server.messaging.MessagingCommand;
+import com.connexal.ravelcraft.shared.server.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.server.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.all.text.RavelTextHardcoded;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
+import com.connexal.ravelcraft.shared.server.util.uuid.UUIDTools;
 import com.nimbusds.jwt.SignedJWT;
 import dev.waterdog.waterdogpe.ProxyServer;
 import dev.waterdog.waterdogpe.event.defaults.*;
@@ -88,7 +88,7 @@ public class BeEventListener {
 
         //Whitelist check first
         if (!RavelProxyInstance.getWhitelistManager().isWhitelisted(player.getUniqueID())) {
-            event.setCancelReason(InitText.NOT_WHITELISTED);
+            event.setCancelReason(RavelTextHardcoded.NOT_WHITELISTED);
             event.setCancelled(true);
             return;
         }
@@ -104,15 +104,15 @@ public class BeEventListener {
         //And a maintenance check
         if (RavelProxyInstance.getMaintenanceManager().isEnabled()) {
             if (!RavelProxyInstance.getMaintenanceManager().canBypass(player)) {
-                event.setCancelReason(InitText.MAINTENANCE);
+                event.setCancelReason(RavelTextHardcoded.MAINTENANCE);
                 event.setCancelled(true);
                 return;
             }
         }
 
         //Finally, check if the server is full
-        if (RavelInstance.getPlayerManager().getOnlineCount() >= BuildConstants.MAX_PLAYERS) {
-            event.setCancelReason(InitText.SERVER_FULL);
+        if (RavelInstance.getPlayerManager().getOnlineCount() >= Ravel.MAX_PLAYERS) {
+            event.setCancelReason(RavelTextHardcoded.SERVER_FULL);
             event.setCancelled(true);
             return;
         }
@@ -144,7 +144,7 @@ public class BeEventListener {
             if (!whitelistManager.isWhitelisted(uuid, server)) {
                 event.setCancelled(true);
                 RavelPlayer player = RavelInstance.getPlayerManager().getPlayer(uuid);
-                player.sendMessage(Text.PLAYERS_NOT_WHITELISTED_BACKEND, server.getName());
+                player.sendMessage(RavelText.PLAYERS_NOT_WHITELISTED_BACKEND, server.getName());
                 return;
             }
         }
@@ -156,7 +156,7 @@ public class BeEventListener {
 
             if (!maintenanceManager.canBypass(player)) {
                 event.setCancelled(true);
-                player.sendMessage(Text.PLAYERS_MAINTENANCE);
+                player.sendMessage(RavelText.PLAYERS_MAINTENANCE);
                 return;
             }
         }
@@ -181,7 +181,7 @@ public class BeEventListener {
     private void onPlayerPing(ProxyPingEvent event) {
         event.setPlayers(Collections.emptyList());
         event.setPlayerCount(RavelInstance.getPlayerManager().getOnlineCount());
-        event.setMaximumPlayerCount(BuildConstants.MAX_PLAYERS);
+        event.setMaximumPlayerCount(Ravel.MAX_PLAYERS);
 
         event.setMotd(Motd.FIRST_LINE);
         event.setSubMotd(RavelProxyInstance.getMotdManager().getMotd());

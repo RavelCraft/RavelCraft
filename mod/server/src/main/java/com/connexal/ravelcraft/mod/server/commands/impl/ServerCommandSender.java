@@ -1,9 +1,10 @@
 package com.connexal.ravelcraft.mod.server.commands.impl;
 
-import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.connexal.ravelcraft.shared.util.text.Language;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommandSender;
+import com.connexal.ravelcraft.shared.all.text.Language;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.Text;
 
 public class ServerCommandSender implements RavelCommandSender {
     private final ServerCommandSource source;
@@ -17,9 +18,9 @@ public class ServerCommandSender implements RavelCommandSender {
     }
 
     @Override
-    public void sendMessage(Text message, String... values) {
+    public void sendMessage(RavelText message, String... values) {
         String messageString = message.getMessage(Language.DEFAULT, values);
-        this.source.sendMessage(net.minecraft.text.Text.literal(messageString));
+        this.source.sendMessage(Text.literal(messageString));
     }
 
     @Override

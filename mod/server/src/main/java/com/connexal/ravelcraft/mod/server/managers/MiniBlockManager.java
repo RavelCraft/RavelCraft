@@ -1,7 +1,7 @@
 package com.connexal.ravelcraft.mod.server.managers;
 
 import com.connexal.ravelcraft.mod.server.util.SkullUtils;
-import com.connexal.ravelcraft.shared.util.ChatColor;
+import com.connexal.ravelcraft.shared.all.util.ChatColor;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;

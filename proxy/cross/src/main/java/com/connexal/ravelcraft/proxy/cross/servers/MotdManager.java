@@ -1,12 +1,12 @@
 package com.connexal.ravelcraft.proxy.cross.servers;
 
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.messaging.Messager;
-import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
-import com.connexal.ravelcraft.shared.messaging.MessagingConstants;
-import com.connexal.ravelcraft.shared.util.RavelConfig;
-import com.connexal.ravelcraft.shared.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.messaging.Messager;
+import com.connexal.ravelcraft.shared.server.messaging.MessagingCommand;
+import com.connexal.ravelcraft.shared.server.messaging.MessagingConstants;
+import com.connexal.ravelcraft.shared.all.util.RavelConfig;
+import com.connexal.ravelcraft.shared.server.util.server.RavelServer;
 
 public class MotdManager {
     private static final String MOTD_DEFAULT = "A Minecraft Server";

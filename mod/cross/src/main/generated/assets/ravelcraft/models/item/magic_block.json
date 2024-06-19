@@ -1,6 +1,3 @@
 {
-  "parent": "ravelcraft:magic_block",
-  "textures": {
-    "layer0": "ravelcraft:item/magic_block"
-  }
+  "parent": "ravelcraft:block/magic_block"
 }

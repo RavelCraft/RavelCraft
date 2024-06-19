@@ -25,7 +25,7 @@
 package com.connexal.ravelcraft.mod.server.util;
 
 import com.connexal.ravelcraft.mod.server.RavelModServer;
-import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import net.minecraft.entity.effect.StatusEffectInstance;

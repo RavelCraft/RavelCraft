@@ -21,11 +21,15 @@ dependencies {
     minecraft("com.mojang:minecraft:${minecraftVersion}")
     mappings("net.fabricmc:yarn:${yarnMappings}:v2")
 
+    shadow(project(":shared-all"))
+
     if (project.hasProperty("runDatagen")) { //To run: ./gradlew runDatagen -PrunDatagen
         println("Data generation detected and enabled")
 
         modImplementation("net.fabricmc:fabric-loader:${fabricLoaderVersion}")
         modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")
+
+        implementation(project(":shared-all"))
     } else {
         modCompileOnly("net.fabricmc:fabric-loader:${fabricLoaderVersion}")
         modCompileOnly("net.fabricmc.fabric-api:fabric-api:${fabricVersion}")

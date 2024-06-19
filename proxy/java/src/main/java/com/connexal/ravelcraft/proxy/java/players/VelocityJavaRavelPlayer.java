@@ -1,12 +1,12 @@
 package com.connexal.ravelcraft.proxy.java.players;
 
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.players.PlayerManager;
-import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.players.RavelRank;
-import com.connexal.ravelcraft.shared.util.server.RavelServer;
-import com.connexal.ravelcraft.shared.util.text.Language;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.players.PlayerManager;
+import com.connexal.ravelcraft.shared.server.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.server.players.RavelRank;
+import com.connexal.ravelcraft.shared.server.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.all.text.Language;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.Component;
 
@@ -35,7 +35,7 @@ public class VelocityJavaRavelPlayer implements RavelPlayer {
     }
 
     @Override
-    public void sendMessage(Text message, String... values) {
+    public void sendMessage(RavelText message, String... values) {
         String messageString = message.getMessage(this.getLanguage(), values);
         this.player.sendMessage(Component.text(messageString));
     }

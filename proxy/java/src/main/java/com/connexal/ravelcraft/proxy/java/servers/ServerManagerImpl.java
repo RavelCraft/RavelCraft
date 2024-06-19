@@ -2,7 +2,7 @@ package com.connexal.ravelcraft.proxy.java.servers;
 
 import com.connexal.ravelcraft.proxy.cross.servers.ServerManager;
 import com.connexal.ravelcraft.proxy.java.JeProxy;
-import com.connexal.ravelcraft.shared.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.server.util.server.RavelServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
 

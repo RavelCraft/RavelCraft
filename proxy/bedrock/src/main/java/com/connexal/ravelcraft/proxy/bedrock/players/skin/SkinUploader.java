@@ -26,11 +26,11 @@
 package com.connexal.ravelcraft.proxy.bedrock.players.skin;
 
 import com.connexal.ravelcraft.proxy.bedrock.BeProxy;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
-import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.util.RavelLogger;
-import com.connexal.ravelcraft.shared.util.uuid.UUIDTools;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.messaging.MessagingCommand;
+import com.connexal.ravelcraft.shared.server.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.all.util.RavelLogger;
+import com.connexal.ravelcraft.shared.server.util.uuid.UUIDTools;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

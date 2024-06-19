@@ -1,6 +1,6 @@
 package com.connexal.ravelcraft.mod.client.mixin;
 
-import com.connexal.ravelcraft.mod.cross.BuildConstants;
+import com.connexal.ravelcraft.shared.all.Ravel;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.option.ServerList;
 import org.spongepowered.asm.mixin.Final;
@@ -20,14 +20,14 @@ public class ServerListMixin {
     private void loadFile(CallbackInfo info) {
         boolean ravelPresent = false;
         for (ServerInfo server : servers) {
-            if (server.address.equals(BuildConstants.SERVER_IP)) {
+            if (server.address.equals(Ravel.SERVER_IP)) {
                 ravelPresent = true;
                 break;
             }
         }
 
         if (!ravelPresent) {
-            this.servers.add(0, new ServerInfo(BuildConstants.NAME, BuildConstants.SERVER_IP, ServerInfo.ServerType.OTHER));
+            this.servers.add(0, new ServerInfo(Ravel.NAME, Ravel.SERVER_IP, ServerInfo.ServerType.OTHER));
         }
     }
 }

@@ -45,8 +45,12 @@ pluginManagement {
 
 rootProject.name = "ravelcraft-parent"
 
-include(":shared", ":mod-cross", ":proxy-cross")
+include(":shared-all", ":shared-server")
+include(":mod-cross", ":proxy-cross")
 include(":proxy-bedrock", ":proxy-java", ":mod-server", ":mod-client")
+
+project(":shared-all").projectDir = file("shared/all")
+project(":shared-server").projectDir = file("shared/server")
 
 project(":proxy-cross").projectDir = file("proxy/cross")
 project(":proxy-bedrock").projectDir = file("proxy/bedrock")

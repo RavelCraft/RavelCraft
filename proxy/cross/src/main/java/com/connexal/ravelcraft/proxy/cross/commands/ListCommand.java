@@ -1,12 +1,12 @@
 package com.connexal.ravelcraft.proxy.cross.commands;
 
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.commands.RavelCommand;
-import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
-import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.util.ChatColor;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommand;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommandSender;
+import com.connexal.ravelcraft.shared.server.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.server.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.all.util.ChatColor;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import com.google.auto.service.AutoService;
 
 import java.util.*;
@@ -42,7 +42,7 @@ public class ListCommand extends RavelCommand {
         this.completeAsync(() -> {
             Set<RavelPlayer> players = RavelInstance.getPlayerManager().getConnectedPlayers();
             if (players.isEmpty()) {
-                sender.sendMessage(Text.COMMAND_LIST_NO_PLAYERS);
+                sender.sendMessage(RavelText.COMMAND_LIST_NO_PLAYERS);
                 return;
             }
 
@@ -64,7 +64,7 @@ public class ListCommand extends RavelCommand {
                 builder.append(String.join(" ", entry.getValue()));
             }
 
-            sender.sendMessage(Text.COMMAND_LIST_PLAYERS, builder.toString());
+            sender.sendMessage(RavelText.COMMAND_LIST_PLAYERS, builder.toString());
         });
 
         return true;

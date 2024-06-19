@@ -1,6 +1,6 @@
 package com.connexal.ravelcraft.mod.client.mixin;
 
-import com.connexal.ravelcraft.mod.cross.BuildConstants;
+import com.connexal.ravelcraft.shared.all.Ravel;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.toast.SystemToast;
@@ -23,7 +23,7 @@ public class ToastManagerMixin {
         }
 
         //Test IP string array contain the server IP, so we can use them to test locally
-        if (!server.address.equals(BuildConstants.SERVER_IP) && !List.of(BuildConstants.TEST_IPS).contains(server.address)) {
+        if (!server.address.equals(Ravel.SERVER_IP) && !List.of(Ravel.TEST_IPS).contains(server.address)) {
             return;
         }
 

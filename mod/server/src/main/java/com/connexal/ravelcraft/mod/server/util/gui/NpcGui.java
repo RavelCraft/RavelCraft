@@ -2,8 +2,8 @@ package com.connexal.ravelcraft.mod.server.util.gui;
 
 import com.connexal.ravelcraft.mod.server.listeners.ChatMessageCatcher;
 import com.connexal.ravelcraft.mod.server.managers.npc.NpcEntity;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.util.ChatColor;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.all.util.ChatColor;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;

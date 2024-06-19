@@ -1,11 +1,11 @@
 package com.connexal.ravelcraft.mod.server.commands;
 
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.commands.RavelCommand;
-import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
-import com.connexal.ravelcraft.shared.util.server.RavelServer;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommand;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommandSender;
+import com.connexal.ravelcraft.shared.server.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.server.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import com.google.auto.service.AutoService;
 
 import java.util.Locale;
@@ -44,13 +44,13 @@ public class BackendServerCommand extends RavelCommand {
         try {
             server = RavelServer.valueOf(args[0].toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
-            sender.sendMessage(Text.COMMAND_SERVER_INVALID);
+            sender.sendMessage(RavelText.COMMAND_SERVER_INVALID);
             return true;
         }
 
         boolean success = RavelInstance.getPlayerManager().transferPlayerToServer(sender.asPlayer(), server);
         if (!success) {
-            sender.sendMessage(Text.COMMAND_SERVER_FAIL_SLEF, server.getName());
+            sender.sendMessage(RavelText.COMMAND_SERVER_FAIL_SLEF, server.getName());
         }
         return true;
     }

@@ -3,7 +3,7 @@ package com.connexal.ravelcraft.mod.server.util.gui;
 import com.connexal.ravelcraft.mod.server.RavelModServer;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import com.connexal.ravelcraft.mod.server.mixin.accessors.EntityAccessor;
-import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
 import com.mojang.authlib.GameProfile;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.nbt.NbtCompound;

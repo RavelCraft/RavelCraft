@@ -1,10 +1,10 @@
 package com.connexal.ravelcraft.mod.server.commands;
 
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
-import com.connexal.ravelcraft.shared.commands.RavelCommand;
-import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommand;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommandSender;
+import com.connexal.ravelcraft.shared.server.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import com.google.auto.service.AutoService;
 
 @AutoService(RavelCommand.class)
@@ -32,7 +32,7 @@ public class SuicideCommand extends RavelCommand {
     @Override
     protected boolean run(RavelCommandSender sender, String[] args) {
         if (!sender.isPlayer()) {
-            sender.sendMessage(Text.COMMAND_MUST_BE_PLAYER);
+            sender.sendMessage(RavelText.COMMAND_MUST_BE_PLAYER);
             return true;
         }
         if (args.length != 0) {
@@ -43,7 +43,7 @@ public class SuicideCommand extends RavelCommand {
             FabricRavelPlayer player = (FabricRavelPlayer) sender;
             //TODO: can only kill once?
             player.kill();
-            player.sendMessage(Text.COMMAND_KILL);
+            player.sendMessage(RavelText.COMMAND_KILL);
         });
 
         return true;

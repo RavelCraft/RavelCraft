@@ -1,6 +1,6 @@
 package com.connexal.ravelcraft.mod.cross.types.tabs;
 
-import com.connexal.ravelcraft.mod.cross.BuildConstants;
+import com.connexal.ravelcraft.shared.all.Ravel;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -25,11 +25,11 @@ public class TabWrapper {
     }
 
     public TabWrapper register() {
-        Registry.register(Registries.ITEM_GROUP, Identifier.of(BuildConstants.ID, this.id), this.itemGroup);
+        Registry.register(Registries.ITEM_GROUP, Identifier.of(Ravel.ID, this.id), this.itemGroup);
         return this;
     }
 
     public RegistryKey<ItemGroup> getRegistryKey() {
-        return RegistryKey.of(Registries.ITEM_GROUP.getKey(), Identifier.of(BuildConstants.ID, this.id));
+        return RegistryKey.of(Registries.ITEM_GROUP.getKey(), Identifier.of(Ravel.ID, this.id));
     }
 }

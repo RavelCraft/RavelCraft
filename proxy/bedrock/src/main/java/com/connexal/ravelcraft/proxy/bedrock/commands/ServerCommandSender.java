@@ -1,8 +1,8 @@
 package com.connexal.ravelcraft.proxy.bedrock.commands;
 
-import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.connexal.ravelcraft.shared.util.text.Language;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommandSender;
+import com.connexal.ravelcraft.shared.all.text.Language;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import dev.waterdog.waterdogpe.command.CommandSender;
 
 public class ServerCommandSender implements RavelCommandSender {
@@ -17,7 +17,7 @@ public class ServerCommandSender implements RavelCommandSender {
     }
 
     @Override
-    public void sendMessage(Text message, String... values) {
+    public void sendMessage(RavelText message, String... values) {
         String messageString = message.getMessage(Language.DEFAULT, values);
         this.sender.sendMessage(messageString);
     }

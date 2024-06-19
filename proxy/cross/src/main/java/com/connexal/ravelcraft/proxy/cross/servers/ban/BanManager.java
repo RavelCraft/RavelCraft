@@ -1,13 +1,13 @@
 package com.connexal.ravelcraft.proxy.cross.servers.ban;
 
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.messaging.Messager;
-import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
-import com.connexal.ravelcraft.shared.messaging.MessagingConstants;
-import com.connexal.ravelcraft.shared.util.StringUtils;
-import com.connexal.ravelcraft.shared.util.server.RavelServer;
-import com.connexal.ravelcraft.shared.util.text.InitText;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.messaging.Messager;
+import com.connexal.ravelcraft.shared.server.messaging.MessagingCommand;
+import com.connexal.ravelcraft.shared.server.messaging.MessagingConstants;
+import com.connexal.ravelcraft.shared.all.util.StringUtils;
+import com.connexal.ravelcraft.shared.server.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.all.text.RavelTextHardcoded;
 
 import java.util.Map;
 import java.util.UUID;
@@ -130,7 +130,7 @@ public abstract class BanManager {
     }
 
     public static String generateBanString(long end, String reason) {
-        return InitText.BANNED + StringUtils.formatDate(end) + "\n" + reason;
+        return RavelTextHardcoded.BANNED + StringUtils.formatDate(end) + "\n" + reason;
     }
 
     public record BanData(long end, String reason) {

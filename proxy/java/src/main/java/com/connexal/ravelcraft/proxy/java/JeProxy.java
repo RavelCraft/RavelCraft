@@ -6,9 +6,10 @@ import com.connexal.ravelcraft.proxy.java.players.VelocityPlayerManager;
 import com.connexal.ravelcraft.proxy.java.servers.ServerManagerImpl;
 import com.connexal.ravelcraft.proxy.java.util.VelocityRavelLogger;
 import com.connexal.ravelcraft.proxy.java.website.WebServer;
-import com.connexal.ravelcraft.shared.BuildConstants;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.RavelMain;
+import com.connexal.ravelcraft.shared.all.Ravel;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.all.RavelMain;
+import com.connexal.ravelcraft.shared.all.util.RavelLogger;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
@@ -18,27 +19,30 @@ import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
-@Plugin(id = BuildConstants.ID, name = BuildConstants.NAME, version = BuildConstants.VERSION,
-        url = BuildConstants.SERVER_IP, description = BuildConstants.DESCRIPTION, authors = { BuildConstants.NAME })
+@Plugin(id = Ravel.ID, name = Ravel.NAME, version = Ravel.VERSION,
+        url = Ravel.SERVER_IP, description = Ravel.DESCRIPTION, authors = { Ravel.NAME })
 public class JeProxy implements RavelMain {
     private static ProxyServer server = null;
-    private static Logger logger = null;
+    private static RavelLogger logger = null;
+    private static Path dataPath = null;
 
     private static WebServer webServer;
 
     @Inject
     public JeProxy(ProxyServer server, Logger logger) {
         JeProxy.server = server;
-        JeProxy.logger = logger;
+        JeProxy.logger = new VelocityRavelLogger(logger);
+        JeProxy.dataPath = Paths.get("plugins", Ravel.ID);
     }
 
     @Subscribe
     public void onInitialize(ProxyInitializeEvent event) {
-        RavelInstance.setup(this, Paths.get("plugins/" + BuildConstants.ID), new VelocityRavelLogger(logger));
-        RavelProxyInstance.setup();
+        RavelMain.set(this);
+        RavelInstance.setup();
 
         RavelInstance.init(new VelocityCommandRegistrar(), new VelocityPlayerManager());
         RavelProxyInstance.init(new ServerManagerImpl());
@@ -71,6 +75,16 @@ public class JeProxy implements RavelMain {
     @Override
     public void scheduleRepeatingTask(Runnable runnable, int secondsInterval) {
         server.getScheduler().buildTask(this, runnable).repeat(secondsInterval, TimeUnit.SECONDS).schedule();
+    }
+
+    @Override
+    public RavelLogger getRavelLogger() {
+        return logger;
+    }
+
+    @Override
+    public Path getDataPath() {
+        return dataPath;
     }
 
     public static ProxyServer getServer() {

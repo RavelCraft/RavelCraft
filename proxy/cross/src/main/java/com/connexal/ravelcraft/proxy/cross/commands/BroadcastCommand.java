@@ -1,10 +1,10 @@
 package com.connexal.ravelcraft.proxy.cross.commands;
 
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.commands.RavelCommand;
-import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommand;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommandSender;
+import com.connexal.ravelcraft.shared.server.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import com.google.auto.service.AutoService;
 
 @AutoService(RavelCommand.class)
@@ -39,10 +39,10 @@ public class BroadcastCommand extends RavelCommand {
 
         String message = String.join(" ", args);
         this.completeAsync(() -> {
-            RavelInstance.getPlayerManager().broadcast(Text.COMMAND_BROADCAST, message);
+            RavelInstance.getPlayerManager().broadcast(RavelText.COMMAND_BROADCAST, message);
 
             if (!sender.isPlayer()) {
-                sender.sendMessage(Text.COMMAND_BROADCAST, message);
+                sender.sendMessage(RavelText.COMMAND_BROADCAST, message);
             }
         });
 

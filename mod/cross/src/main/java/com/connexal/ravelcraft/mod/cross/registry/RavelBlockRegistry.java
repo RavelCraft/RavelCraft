@@ -1,6 +1,9 @@
 package com.connexal.ravelcraft.mod.cross.registry;
 
+import com.connexal.ravelcraft.mod.cross.types.Descriptor;
 import com.connexal.ravelcraft.mod.cross.types.blocks.BlockDescriptor;
+import com.connexal.ravelcraft.mod.cross.types.items.ItemDescriptor;
+import com.google.common.collect.ImmutableList;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -11,25 +14,50 @@ import net.minecraft.sound.BlockSoundGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RavelBlockRegistry {
-    public static final List<BlockDescriptor> BLOCK_LIST = new ArrayList<>();
-
-
-    public static final BlockDescriptor MAGIC_BLOCK = BlockDescriptor.builder("magic_block")
+public enum RavelBlockRegistry {
+    MAGIC_BLOCK(BlockDescriptor.builder("magic_block")
             .block(new Block(AbstractBlock.Settings.create()
                     .sounds(BlockSoundGroup.AMETHYST_BLOCK)))
-            .register();
+            .build());
+
+    private final Descriptor descriptor;
+
+    RavelBlockRegistry(Descriptor descriptor) {
+        this.descriptor = descriptor;
+    }
+
+    public Descriptor descriptor() {
+        return this.descriptor;
+    }
+
+    public BlockDescriptor blockDescriptor() {
+        if (this.descriptor instanceof BlockDescriptor blockDescriptor) {
+            return blockDescriptor;
+        } else {
+            throw new IllegalStateException("This does not refer to a block");
+        }
+    }
 
 
-    public static BlockDescriptor register(BlockDescriptor descriptor) {
-        Registry.register(Registries.BLOCK, descriptor.identifier(), descriptor.block());
-        BLOCK_LIST.add(descriptor);
+    public static final ImmutableList<BlockDescriptor> BLOCK_LIST = build();
 
-        return descriptor;
+    public static ImmutableList<BlockDescriptor> build() {
+        List<BlockDescriptor> list = new ArrayList<>();
+
+        for (RavelBlockRegistry registry : values()) {
+            if (registry.descriptor() instanceof BlockDescriptor descriptor) {
+                Registry.register(Registries.BLOCK, descriptor.identifier(), descriptor.block());
+                list.add(descriptor);
+            } else {
+                throw new IllegalStateException("This does not refer to a block");
+            }
+        }
+
+        return ImmutableList.copyOf(list);
     }
 
     public static void initialize() {
-        ItemGroupEvents.modifyEntriesEvent(RavelTabRegistry.RAVEL_TAB.getRegistryKey()).register(itemGroup -> {
+        ItemGroupEvents.modifyEntriesEvent(RavelTabRegistry.RAVEL_TAB.wrapper().getRegistryKey()).register(itemGroup -> {
             for (BlockDescriptor descriptor : BLOCK_LIST) {
                 itemGroup.add(descriptor.blockItem());
             }

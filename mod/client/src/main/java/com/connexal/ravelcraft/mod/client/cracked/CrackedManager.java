@@ -1,6 +1,6 @@
 package com.connexal.ravelcraft.mod.client.cracked;
 
-import com.connexal.ravelcraft.mod.cross.BuildConstants;
+import com.connexal.ravelcraft.shared.all.Ravel;
 import net.minecraft.client.session.Session;
 
 import java.io.BufferedReader;
@@ -18,7 +18,7 @@ public class CrackedManager {
         String name = session.getUsername();
 
         try {
-            HttpURLConnection connection = (HttpURLConnection) new URL("https://" + BuildConstants.SERVER_IP + "/api/auth?username=" + username + "&password=" + password + "&name=" + name).openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URL("https://" + Ravel.SERVER_IP + "/api/auth?username=" + username + "&password=" + password + "&name=" + name).openConnection();
             connection.setReadTimeout(5000);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));

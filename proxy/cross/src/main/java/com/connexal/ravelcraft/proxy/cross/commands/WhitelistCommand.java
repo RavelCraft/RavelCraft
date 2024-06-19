@@ -1,12 +1,12 @@
 package com.connexal.ravelcraft.proxy.cross.commands;
 
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.commands.RavelCommand;
-import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
-import com.connexal.ravelcraft.shared.util.server.RavelServer;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommand;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommandSender;
+import com.connexal.ravelcraft.shared.server.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.server.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import com.google.auto.service.AutoService;
 
 import java.util.Locale;
@@ -58,7 +58,7 @@ public class WhitelistCommand extends RavelCommand {
             this.completeAsync(() -> {
                 UUID uuid = RavelInstance.getUUIDTools().getUUID(args[1]);
                 if (uuid == null) {
-                    sender.sendMessage(Text.COMMAND_PLAYER_NOT_FOUND);
+                    sender.sendMessage(RavelText.COMMAND_PLAYER_NOT_FOUND);
                     return;
                 }
 
@@ -67,16 +67,16 @@ public class WhitelistCommand extends RavelCommand {
                     try {
                         server = RavelServer.valueOf(args[2].toUpperCase(Locale.ROOT));
                     } catch (Exception e) {
-                        sender.sendMessage(Text.COMMAND_WHITELIST_INVALID_SERVER);
+                        sender.sendMessage(RavelText.COMMAND_WHITELIST_INVALID_SERVER);
                         return;
                     }
                 }
 
                 RavelProxyInstance.getWhitelistManager().setWhitelisted(uuid, true, server);
                 if (server == null) {
-                    sender.sendMessage(Text.COMMAND_WHITELIST_GLOBAL_ADD, args[1]);
+                    sender.sendMessage(RavelText.COMMAND_WHITELIST_GLOBAL_ADD, args[1]);
                 } else {
-                    sender.sendMessage(Text.COMMAND_WHITELIST_BACKEND_ADD, args[1], server.getName());
+                    sender.sendMessage(RavelText.COMMAND_WHITELIST_BACKEND_ADD, args[1], server.getName());
                 }
             });
         } else if (args[0].equalsIgnoreCase("remove")) {
@@ -87,7 +87,7 @@ public class WhitelistCommand extends RavelCommand {
             this.completeAsync(() -> {
                 UUID uuid = RavelInstance.getUUIDTools().getUUID(args[1]);
                 if (uuid == null) {
-                    sender.sendMessage(Text.COMMAND_PLAYER_NOT_FOUND);
+                    sender.sendMessage(RavelText.COMMAND_PLAYER_NOT_FOUND);
                     return;
                 }
 
@@ -96,16 +96,16 @@ public class WhitelistCommand extends RavelCommand {
                     try {
                         server = RavelServer.valueOf(args[2].toUpperCase(Locale.ROOT));
                     } catch (Exception e) {
-                        sender.sendMessage(Text.COMMAND_WHITELIST_INVALID_SERVER);
+                        sender.sendMessage(RavelText.COMMAND_WHITELIST_INVALID_SERVER);
                         return;
                     }
                 }
 
                 RavelProxyInstance.getWhitelistManager().setWhitelisted(uuid, false, server);
                 if (server == null) {
-                    sender.sendMessage(Text.COMMAND_WHITELIST_GLOBAL_REMOVE, args[1]);
+                    sender.sendMessage(RavelText.COMMAND_WHITELIST_GLOBAL_REMOVE, args[1]);
                 } else {
-                    sender.sendMessage(Text.COMMAND_WHITELIST_BACKEND_REMOVE, args[1], server.getName());
+                    sender.sendMessage(RavelText.COMMAND_WHITELIST_BACKEND_REMOVE, args[1], server.getName());
                 }
             });
         } else if (args[0].equalsIgnoreCase("enable")) {
@@ -118,7 +118,7 @@ public class WhitelistCommand extends RavelCommand {
                 try {
                     server = RavelServer.valueOf(args[1].toUpperCase(Locale.ROOT));
                 } catch (Exception e) {
-                    sender.sendMessage(Text.COMMAND_WHITELIST_INVALID_SERVER);
+                    sender.sendMessage(RavelText.COMMAND_WHITELIST_INVALID_SERVER);
                     return;
                 }
 
@@ -126,15 +126,15 @@ public class WhitelistCommand extends RavelCommand {
                 try {
                     enable = Boolean.parseBoolean(args[2]);
                 } catch (Exception e) {
-                    sender.sendMessage(Text.COMMAND_WHITELIST_ENABLE_BOOL_INVALID);
+                    sender.sendMessage(RavelText.COMMAND_WHITELIST_ENABLE_BOOL_INVALID);
                     return;
                 }
 
                 RavelProxyInstance.getWhitelistManager().setEnabled(server, enable);
                 if (enable) {
-                    sender.sendMessage(Text.COMMAND_WHITELIST_ENABLE_TRUE, server.getName());
+                    sender.sendMessage(RavelText.COMMAND_WHITELIST_ENABLE_TRUE, server.getName());
                 } else {
-                    sender.sendMessage(Text.COMMAND_WHITELIST_ENABLE_FALSE, server.getName());
+                    sender.sendMessage(RavelText.COMMAND_WHITELIST_ENABLE_FALSE, server.getName());
                 }
             });
         } else {

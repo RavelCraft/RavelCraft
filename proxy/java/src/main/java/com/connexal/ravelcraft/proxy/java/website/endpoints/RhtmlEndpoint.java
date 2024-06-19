@@ -5,7 +5,7 @@ import com.connexal.ravelcraft.proxy.java.website.EndpointType;
 import com.connexal.ravelcraft.proxy.java.website.PageRequest;
 import com.connexal.ravelcraft.proxy.java.website.PageReturn;
 import com.connexal.ravelcraft.proxy.java.website.WebServer;
-import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
 
 import java.io.IOException;
 import java.nio.file.Files;

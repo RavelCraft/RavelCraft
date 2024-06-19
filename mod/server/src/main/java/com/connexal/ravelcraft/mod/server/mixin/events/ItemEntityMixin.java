@@ -3,7 +3,7 @@ package com.connexal.ravelcraft.mod.server.mixin.events;
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
 import com.connexal.ravelcraft.mod.server.util.Location;
 import com.connexal.ravelcraft.mod.server.util.events.ItemEvents;
-import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;

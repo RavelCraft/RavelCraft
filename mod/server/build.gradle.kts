@@ -31,7 +31,8 @@ dependencies {
 
 	modImplementation("eu.pb4:sgui:${sguiVersion}")
 
-	shadow(project(":shared"))
+	shadow(project(":shared-all"))
+	shadow(project(":shared-server"))
 	shadow(project(":mod-cross"))
 }
 
@@ -65,7 +66,7 @@ loom {
 		named("server") {
 			server()
 			configName = "Fabric Server"
-			ideConfigGenerated(true)
+			ideConfigGenerated(false)
 			runDir("run")
 		}
 	}

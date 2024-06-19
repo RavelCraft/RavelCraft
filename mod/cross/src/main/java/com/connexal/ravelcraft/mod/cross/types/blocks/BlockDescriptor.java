@@ -1,29 +1,22 @@
 package com.connexal.ravelcraft.mod.cross.types.blocks;
 
-import com.connexal.ravelcraft.mod.cross.BuildConstants;
-import com.connexal.ravelcraft.mod.cross.registry.RavelBlockRegistry;
-import com.connexal.ravelcraft.mod.cross.registry.RavelItemRegistry;
-import com.connexal.ravelcraft.mod.cross.types.Identifiable;
-import com.connexal.ravelcraft.mod.cross.types.items.ItemDescriptor;
+import com.connexal.ravelcraft.mod.cross.types.Descriptor;
+import com.connexal.ravelcraft.shared.all.Ravel;
+import com.connexal.ravelcraft.shared.all.text.Language;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
-import net.minecraft.data.client.Model;
-import net.minecraft.data.client.Models;
-import net.minecraft.data.client.TextureKey;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ToolItem;
 import net.minecraft.util.Identifier;
 
-import java.util.Optional;
-
-public record BlockDescriptor(Identifier identifier, Block block, BlockItem blockItem) implements Identifiable {
+public record BlockDescriptor(Identifier identifier, Block block, BlockItem blockItem, String displayName) implements Descriptor {
     public static Builder builder(Identifier identifier) {
         return new Builder(identifier);
     }
 
     public static Builder builder(String identifier) {
-        return new Builder(Identifier.of(BuildConstants.ID, identifier));
+        return new Builder(Identifier.of(Ravel.ID, identifier));
     }
 
     public static class Builder {
@@ -45,7 +38,7 @@ public record BlockDescriptor(Identifier identifier, Block block, BlockItem bloc
             return this;
         }
 
-        public BlockDescriptor register() {
+        public BlockDescriptor build() {
             if (this.block == null) {
                 this.block = new Block(AbstractBlock.Settings.create());
             }
@@ -53,10 +46,12 @@ public record BlockDescriptor(Identifier identifier, Block block, BlockItem bloc
                 this.blockItem = new BlockItem(this.block, new Item.Settings());
             }
 
-            BlockDescriptor descriptor = new BlockDescriptor(this.identifier, this.block, this.blockItem);
-            RavelBlockRegistry.register(descriptor);
-            ItemDescriptor.builder(this.identifier).item(this.blockItem).register();
-            return descriptor;
+            String displayName = RavelText.getFormatString(Language.DEFAULT,  Ravel.ID + ".block." + this.identifier.getPath());
+            if (displayName == null) {
+                displayName = this.identifier.getPath();
+            }
+
+            return new BlockDescriptor(this.identifier, this.block, this.blockItem, displayName);
         }
     }
 }

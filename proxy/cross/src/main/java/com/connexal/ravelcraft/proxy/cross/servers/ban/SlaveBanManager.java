@@ -1,8 +1,8 @@
 package com.connexal.ravelcraft.proxy.cross.servers.ban;
 
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
-import com.connexal.ravelcraft.shared.messaging.MessagingConstants;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.messaging.MessagingCommand;
+import com.connexal.ravelcraft.shared.server.messaging.MessagingConstants;
 
 import java.util.HashMap;
 import java.util.UUID;

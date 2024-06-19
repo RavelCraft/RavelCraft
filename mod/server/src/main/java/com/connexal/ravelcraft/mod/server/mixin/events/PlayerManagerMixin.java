@@ -2,8 +2,8 @@ package com.connexal.ravelcraft.mod.server.mixin.events;
 
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
 import com.connexal.ravelcraft.mod.server.util.events.PlayerEvents;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.message.MessageType;
 import net.minecraft.network.message.SignedMessage;
@@ -34,7 +34,7 @@ public class PlayerManagerMixin {
 
         boolean allowed = PlayerEvents.CHAT.invoker().onPlayerChat(player, message.getSignedContent());
         if (allowed) {
-            RavelInstance.getPlayerManager().broadcast(Text.CHAT_FORMAT, player.displayName(), message.getSignedContent());
+            RavelInstance.getPlayerManager().broadcast(RavelText.CHAT_FORMAT, player.displayName(), message.getSignedContent());
         }
 
         ci.cancel();

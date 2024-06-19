@@ -1,10 +1,15 @@
 package com.connexal.ravelcraft.mod.server.managers.geyser;
 
+import com.connexal.ravelcraft.mod.cross.registry.RavelBlockRegistry;
+import com.connexal.ravelcraft.mod.cross.registry.RavelItemRegistry;
+import com.connexal.ravelcraft.mod.cross.types.blocks.BlockDescriptor;
 import com.connexal.ravelcraft.mod.server.managers.geyser.capes.CapeFetcher;
 import com.connexal.ravelcraft.mod.server.managers.geyser.capes.CapeProvider;
+import com.connexal.ravelcraft.mod.server.managers.geyser.custom.GeyserBlockRegistrar;
+import com.connexal.ravelcraft.mod.server.managers.geyser.custom.GeyserItemRegistrar;
 import com.connexal.ravelcraft.mod.server.managers.geyser.ears.EarsFetcher;
 import com.connexal.ravelcraft.mod.server.managers.geyser.ears.EarsProvider;
-import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
 import org.geysermc.event.subscribe.Subscribe;
 import org.geysermc.geyser.api.GeyserApi;
 import org.geysermc.geyser.api.event.EventRegistrar;
@@ -18,10 +23,11 @@ import org.geysermc.geyser.api.skin.Skin;
 public class GeyserManager implements EventRegistrar {
     public GeyserManager() {
         GeyserApi.api().eventBus().register(this, this);
-        GeyserApi.api().eventBus().subscribe(this, ServerDefineCommandsEvent.class, this::onDefineCommands);
-        GeyserApi.api().eventBus().subscribe(this, SessionSkinApplyEvent.class, this::onSkinApplyEvent);
-        GeyserApi.api().eventBus().subscribe(this, GeyserDefineCustomItemsEvent.class, this::onDefineCustomItems);
-        GeyserApi.api().eventBus().subscribe(this, GeyserDefineCustomBlocksEvent.class, this::onDefineCustomBlocks);
+        //No longer required?
+        //GeyserApi.api().eventBus().subscribe(this, ServerDefineCommandsEvent.class, this::onDefineCommands);
+        //GeyserApi.api().eventBus().subscribe(this, SessionSkinApplyEvent.class, this::onSkinApplyEvent);
+        //GeyserApi.api().eventBus().subscribe(this, GeyserDefineCustomItemsEvent.class, this::onDefineCustomItems);
+        //GeyserApi.api().eventBus().subscribe(this, GeyserDefineCustomBlocksEvent.class, this::onDefineCustomBlocks);
     }
 
     @Subscribe
@@ -62,11 +68,20 @@ public class GeyserManager implements EventRegistrar {
 
     @Subscribe
     public void onDefineCustomItems(GeyserDefineCustomItemsEvent event) {
-
+        RavelInstance.getLogger().info("Defining GeyserMC custom items");
+        for (RavelItemRegistry itemEntry : RavelItemRegistry.values()) {
+            GeyserItemRegistrar.register(event, itemEntry.descriptor());
+        }
+        for (RavelBlockRegistry blockEntry : RavelBlockRegistry.values()) {
+            GeyserItemRegistrar.register(event, blockEntry.descriptor());
+        }
     }
 
     @Subscribe
     public void onDefineCustomBlocks(GeyserDefineCustomBlocksEvent event) {
-
+        RavelInstance.getLogger().info("Defining GeyserMC custom blocks");
+        for (RavelBlockRegistry blockEntry : RavelBlockRegistry.values()) {
+            GeyserBlockRegistrar.register(event, blockEntry.descriptor());
+        }
     }
 }

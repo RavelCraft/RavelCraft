@@ -2,11 +2,11 @@ package com.connexal.ravelcraft.mod.server.commands;
 
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
 import com.connexal.ravelcraft.mod.server.util.gui.PlayerInvGui;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.commands.RavelCommand;
-import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommand;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommandSender;
+import com.connexal.ravelcraft.shared.server.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import com.google.auto.service.AutoService;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -39,7 +39,7 @@ public class OpenInvCommand extends RavelCommand {
     @Override
     protected boolean run(RavelCommandSender sender, String[] args) {
         if (!sender.isPlayer()) {
-            sender.sendMessage(Text.COMMAND_MUST_BE_PLAYER);
+            sender.sendMessage(RavelText.COMMAND_MUST_BE_PLAYER);
             return true;
         }
         if (args.length != 1) {
@@ -49,7 +49,7 @@ public class OpenInvCommand extends RavelCommand {
         this.completeAsync(() -> {
             UUID uuid = RavelInstance.getUUIDTools().getUUID(args[0]);
             if (uuid == null) {
-                sender.sendMessage(Text.COMMAND_PLAYER_NOT_FOUND);
+                sender.sendMessage(RavelText.COMMAND_PLAYER_NOT_FOUND);
                 return;
             }
 

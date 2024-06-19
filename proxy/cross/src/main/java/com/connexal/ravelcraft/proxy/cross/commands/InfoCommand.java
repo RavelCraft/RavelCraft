@@ -1,10 +1,10 @@
 package com.connexal.ravelcraft.proxy.cross.commands;
 
-import com.connexal.ravelcraft.shared.BuildConstants;
-import com.connexal.ravelcraft.shared.commands.RavelCommand;
-import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.all.Ravel;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommand;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommandSender;
+import com.connexal.ravelcraft.shared.server.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import com.google.auto.service.AutoService;
 
 @AutoService(RavelCommand.class)
@@ -35,7 +35,7 @@ public class InfoCommand extends RavelCommand {
             return false;
         }
 
-        sender.sendMessage(Text.COMMAND_INFO, BuildConstants.SERVER_IP, BuildConstants.VERSION);
+        sender.sendMessage(RavelText.COMMAND_INFO, Ravel.SERVER_IP, Ravel.VERSION);
         return true;
     }
 }

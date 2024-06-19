@@ -2,10 +2,10 @@ package com.connexal.ravelcraft.mod.server.commands.tpa;
 
 import com.connexal.ravelcraft.mod.server.RavelModServer;
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
-import com.connexal.ravelcraft.shared.commands.RavelCommand;
-import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommand;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommandSender;
+import com.connexal.ravelcraft.shared.server.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import com.google.auto.service.AutoService;
 
 @AutoService(RavelCommand.class)
@@ -33,7 +33,7 @@ public class TpdenyCommand extends RavelCommand {
     @Override
     protected boolean run(RavelCommandSender sender, String[] args) {
         if (!sender.isPlayer()) {
-            sender.sendMessage(Text.COMMAND_MUST_BE_PLAYER);
+            sender.sendMessage(RavelText.COMMAND_MUST_BE_PLAYER);
             return true;
         }
         if (args.length != 0) {

@@ -7,15 +7,19 @@ import com.connexal.ravelcraft.proxy.bedrock.servers.WaterdogServerManager;
 import com.connexal.ravelcraft.proxy.bedrock.util.WaterdogRavelLogger;
 import com.connexal.ravelcraft.proxy.bedrock.xbox.XboxBroadcaster;
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.RavelMain;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.all.RavelMain;
+import com.connexal.ravelcraft.shared.all.util.RavelLogger;
 import dev.waterdog.waterdogpe.ProxyServer;
 import dev.waterdog.waterdogpe.plugin.Plugin;
 
 import java.io.InputStream;
+import java.nio.file.Path;
 
 public class BeProxy extends Plugin implements RavelMain {
     private static ProxyServer server = null;
+    private static RavelLogger logger = null;
+    private static Path dataPath = null;
 
     private static SkinUploader skinUploader = null;
     private static XboxBroadcaster xboxBroadcaster = null;
@@ -23,9 +27,11 @@ public class BeProxy extends Plugin implements RavelMain {
     @Override
     public void onEnable() {
         server = this.getProxy();
+        logger = new WaterdogRavelLogger(this.getLogger());
+        dataPath = this.getDataFolder().toPath();
 
-        RavelInstance.setup(this, this.getDataFolder().toPath(), new WaterdogRavelLogger(this.getLogger()));
-        RavelProxyInstance.setup();
+        RavelMain.set(this);
+        RavelInstance.setup();
 
         RavelInstance.init(new WaterdogCommandRegistrar(), new WaterdogPlayerManager());
         RavelProxyInstance.init(new WaterdogServerManager());
@@ -63,6 +69,16 @@ public class BeProxy extends Plugin implements RavelMain {
     @Override
     public void scheduleRepeatingTask(Runnable runnable, int secondsInterval) {
         server.getScheduler().scheduleRepeating(runnable, secondsInterval * 20, true);
+    }
+
+    @Override
+    public RavelLogger getRavelLogger() {
+        return logger;
+    }
+
+    @Override
+    public Path getDataPath() {
+        return dataPath;
     }
 
     public static ProxyServer getServer() {

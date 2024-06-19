@@ -2,11 +2,11 @@ package com.connexal.ravelcraft.proxy.bedrock.players;
 
 import com.connexal.ravelcraft.proxy.bedrock.BeProxy;
 import com.connexal.ravelcraft.proxy.cross.players.ProxyPlayerManager;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.players.RavelRank;
-import com.connexal.ravelcraft.shared.util.ChatColor;
-import com.connexal.ravelcraft.shared.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.server.players.RavelRank;
+import com.connexal.ravelcraft.shared.all.util.ChatColor;
+import com.connexal.ravelcraft.shared.server.util.server.RavelServer;
 import dev.waterdog.waterdogpe.network.serverinfo.ServerInfo;
 import dev.waterdog.waterdogpe.player.ProxiedPlayer;
 

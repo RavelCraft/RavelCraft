@@ -1,13 +1,13 @@
 package com.connexal.ravelcraft.proxy.java.players;
 
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
-import com.connexal.ravelcraft.shared.players.PlayerManager;
-import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.players.RavelRank;
-import com.connexal.ravelcraft.shared.util.server.RavelServer;
-import com.connexal.ravelcraft.shared.util.text.Language;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.messaging.MessagingCommand;
+import com.connexal.ravelcraft.shared.server.players.PlayerManager;
+import com.connexal.ravelcraft.shared.server.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.server.players.RavelRank;
+import com.connexal.ravelcraft.shared.server.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.all.text.Language;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 
 import java.util.UUID;
 
@@ -32,7 +32,7 @@ public class VelocityBedrockRavelPlayer implements RavelPlayer {
     }
 
     @Override
-    public void sendMessage(Text message, String... values) {
+    public void sendMessage(RavelText message, String... values) {
         String[] args = new String[values.length + 2];
         args[0] = this.uuid.toString();
         args[1] = message.name();

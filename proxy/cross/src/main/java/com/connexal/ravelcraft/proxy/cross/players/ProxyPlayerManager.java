@@ -1,12 +1,12 @@
 package com.connexal.ravelcraft.proxy.cross.players;
 
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
-import com.connexal.ravelcraft.shared.messaging.MessagingConstants;
-import com.connexal.ravelcraft.shared.players.PlayerManager;
-import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.util.server.RavelServer;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.messaging.MessagingCommand;
+import com.connexal.ravelcraft.shared.server.messaging.MessagingConstants;
+import com.connexal.ravelcraft.shared.server.players.PlayerManager;
+import com.connexal.ravelcraft.shared.server.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.server.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 
 import java.util.UUID;
 
@@ -147,9 +147,9 @@ public abstract class ProxyPlayerManager extends PlayerManager {
             return null;
         }
 
-        Text message;
+        RavelText message;
         try {
-            message = Text.valueOf(args[1]);
+            message = RavelText.valueOf(args[1]);
         } catch (Exception e) {
             RavelInstance.getLogger().error("Unable to send unknown message to player! (Requested by " + source + ")");
             return null;

@@ -1,11 +1,11 @@
 package com.connexal.ravelcraft.proxy.cross.commands;
 
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.commands.RavelCommand;
-import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
-import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommand;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommandSender;
+import com.connexal.ravelcraft.shared.server.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.server.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import com.google.auto.service.AutoService;
 
 @AutoService(RavelCommand.class)
@@ -42,7 +42,7 @@ public class KickCommand extends RavelCommand {
 
         RavelPlayer player = RavelInstance.getPlayerManager().getPlayer(args[0]);
         if (player == null) {
-            sender.sendMessage(Text.COMMAND_PLAYER_NOT_FOUND);
+            sender.sendMessage(RavelText.COMMAND_PLAYER_NOT_FOUND);
             return true;
         }
 
@@ -50,9 +50,9 @@ public class KickCommand extends RavelCommand {
         this.completeAsync(() -> {
             boolean success = RavelInstance.getPlayerManager().kick(player, reason, args[1].equalsIgnoreCase("network"));
             if (success) {
-                sender.sendMessage(Text.COMMAND_KICK_SUCCESS, player.getName());
+                sender.sendMessage(RavelText.COMMAND_KICK_SUCCESS, player.getName());
             } else {
-                sender.sendMessage(Text.COMMAND_KICK_FAIL, player.getName());
+                sender.sendMessage(RavelText.COMMAND_KICK_FAIL, player.getName());
             }
         });
 

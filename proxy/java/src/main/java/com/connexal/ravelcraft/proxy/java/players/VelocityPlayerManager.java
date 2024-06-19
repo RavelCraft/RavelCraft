@@ -2,11 +2,11 @@ package com.connexal.ravelcraft.proxy.java.players;
 
 import com.connexal.ravelcraft.proxy.cross.players.ProxyPlayerManager;
 import com.connexal.ravelcraft.proxy.java.JeProxy;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.players.RavelRank;
-import com.connexal.ravelcraft.shared.util.ChatColor;
-import com.connexal.ravelcraft.shared.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.server.players.RavelRank;
+import com.connexal.ravelcraft.shared.all.util.ChatColor;
+import com.connexal.ravelcraft.shared.server.util.server.RavelServer;
 import com.velocitypowered.api.proxy.ConnectionRequestBuilder;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;

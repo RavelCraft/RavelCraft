@@ -64,7 +64,7 @@ public class MenuGui extends SimpleGui {
         //Add navigation buttons
         if (this.currentPage > 0) {
             this.setSlot(37, new GuiElementBuilder(Items.ARROW)
-                    .setName(net.minecraft.text.Text.literal("Previous"))
+                    .setName(Text.literal("Previous"))
                     .setCallback((index, type, action) -> {
                         this.previousPage();
                     })
@@ -72,14 +72,14 @@ public class MenuGui extends SimpleGui {
             );
         }
         this.setSlot(40, new GuiElementBuilder(Items.BARRIER)
-                .setName(net.minecraft.text.Text.literal("Close"))
+                .setName(Text.literal("Close"))
                 .setCallback((index, type, action) -> {
                     this.close();
                 })
         );
         if (this.currentPage < this.totalPages) {
             this.setSlot(43, new GuiElementBuilder(Items.ARROW)
-                    .setName(net.minecraft.text.Text.literal("Next"))
+                    .setName(Text.literal("Next"))
                     .setCallback((index, type, action) -> {
                         this.nextPage();
                     })

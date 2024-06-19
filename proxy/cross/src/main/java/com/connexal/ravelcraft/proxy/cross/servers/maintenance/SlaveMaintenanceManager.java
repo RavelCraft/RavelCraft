@@ -1,9 +1,9 @@
 package com.connexal.ravelcraft.proxy.cross.servers.maintenance;
 
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
-import com.connexal.ravelcraft.shared.messaging.MessagingConstants;
-import com.connexal.ravelcraft.shared.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.messaging.MessagingCommand;
+import com.connexal.ravelcraft.shared.server.messaging.MessagingConstants;
+import com.connexal.ravelcraft.shared.server.util.server.RavelServer;
 
 import java.util.ArrayList;
 import java.util.Locale;

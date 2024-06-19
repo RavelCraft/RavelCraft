@@ -1,6 +1,6 @@
 package com.connexal.ravelcraft.mod.server.listeners;
 
-import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
 
 public class Listeners {
     //The order in which these are registered is probably important

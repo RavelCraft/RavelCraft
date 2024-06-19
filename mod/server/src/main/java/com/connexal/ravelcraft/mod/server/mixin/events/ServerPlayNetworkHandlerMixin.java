@@ -2,7 +2,7 @@ package com.connexal.ravelcraft.mod.server.mixin.events;
 
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
 import com.connexal.ravelcraft.mod.server.util.events.PlayerEvents;
-import com.connexal.ravelcraft.shared.RavelInstance;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.DisconnectionInfo;
 import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;

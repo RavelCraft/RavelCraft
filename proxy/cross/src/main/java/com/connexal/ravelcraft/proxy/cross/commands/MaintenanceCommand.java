@@ -1,11 +1,11 @@
 package com.connexal.ravelcraft.proxy.cross.commands;
 
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
-import com.connexal.ravelcraft.shared.commands.RavelCommand;
-import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
-import com.connexal.ravelcraft.shared.util.server.RavelServer;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommand;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommandSender;
+import com.connexal.ravelcraft.shared.server.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.server.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import com.google.auto.service.AutoService;
 
 import java.util.Locale;
@@ -51,7 +51,7 @@ public class MaintenanceCommand extends RavelCommand {
                 try {
                     server = RavelServer.valueOf(args[1].toUpperCase(Locale.ROOT));
                 } catch (IllegalArgumentException e) {
-                    sender.sendMessage(Text.COMMAND_MAINTENANCE_INVALID_SERVER);
+                    sender.sendMessage(RavelText.COMMAND_MAINTENANCE_INVALID_SERVER);
                     return;
                 }
             }
@@ -59,15 +59,15 @@ public class MaintenanceCommand extends RavelCommand {
             RavelProxyInstance.getMaintenanceManager().setEnabled(server, enabled);
             if (enabled) {
                 if (server == null) {
-                    sender.sendMessage(Text.COMMAND_MAINTENANCE_GLOBAL_ENABLED);
+                    sender.sendMessage(RavelText.COMMAND_MAINTENANCE_GLOBAL_ENABLED);
                 } else {
-                    sender.sendMessage(Text.COMMAND_MAINTENANCE_BACKEND_ENABLED, server.getName());
+                    sender.sendMessage(RavelText.COMMAND_MAINTENANCE_BACKEND_ENABLED, server.getName());
                 }
             } else {
                 if (server == null) {
-                    sender.sendMessage(Text.COMMAND_MAINTENANCE_GLOBAL_DISABLED);
+                    sender.sendMessage(RavelText.COMMAND_MAINTENANCE_GLOBAL_DISABLED);
                 } else {
-                    sender.sendMessage(Text.COMMAND_MAINTENANCE_BACKEND_DISABLED, server.getName());
+                    sender.sendMessage(RavelText.COMMAND_MAINTENANCE_BACKEND_DISABLED, server.getName());
                 }
             }
         });

@@ -2,8 +2,8 @@ package com.connexal.ravelcraft.proxy.java.website.endpoints.api;
 
 import com.connexal.ravelcraft.proxy.java.website.*;
 import com.connexal.ravelcraft.proxy.java.website.endpoints.AbstractEndpoint;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.util.RavelConfig;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.all.util.RavelConfig;
 import com.velocitypowered.api.util.GameProfile;
 
 import java.util.*;

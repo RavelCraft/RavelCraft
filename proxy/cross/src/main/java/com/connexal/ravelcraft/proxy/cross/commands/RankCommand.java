@@ -1,12 +1,12 @@
 package com.connexal.ravelcraft.proxy.cross.commands;
 
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.commands.RavelCommand;
-import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
-import com.connexal.ravelcraft.shared.players.PlayerManager;
-import com.connexal.ravelcraft.shared.players.RavelRank;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommand;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommandSender;
+import com.connexal.ravelcraft.shared.server.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.server.players.PlayerManager;
+import com.connexal.ravelcraft.shared.server.players.RavelRank;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import com.google.auto.service.AutoService;
 
 import java.util.Locale;
@@ -58,12 +58,12 @@ public class RankCommand extends RavelCommand {
             this.completeAsync(() -> {
                 UUID uuid = RavelInstance.getUUIDTools().getUUID(args[1]);
                 if (uuid == null) {
-                    sender.sendMessage(Text.COMMAND_PLAYER_NOT_FOUND);
+                    sender.sendMessage(RavelText.COMMAND_PLAYER_NOT_FOUND);
                     return;
                 }
 
                 PlayerManager.PlayerSettings settings = this.playerManager.getPlayerSettings(uuid, false);
-                sender.sendMessage(Text.COMMAND_RANK_GET, args[1], settings.rank().getName());
+                sender.sendMessage(RavelText.COMMAND_RANK_GET, args[1], settings.rank().getName());
             });
         } else if (args[0].equalsIgnoreCase("set")) {
             if (args.length != 3) {
@@ -73,7 +73,7 @@ public class RankCommand extends RavelCommand {
             this.completeAsync(() -> {
                 UUID uuid = RavelInstance.getUUIDTools().getUUID(args[1]);
                 if (uuid == null) {
-                    sender.sendMessage(Text.COMMAND_PLAYER_NOT_FOUND);
+                    sender.sendMessage(RavelText.COMMAND_PLAYER_NOT_FOUND);
                     return;
                 }
 
@@ -81,12 +81,12 @@ public class RankCommand extends RavelCommand {
                 try {
                     rank = RavelRank.valueOf(args[2].toUpperCase(Locale.ROOT));
                 } catch (IllegalArgumentException e) {
-                    sender.sendMessage(Text.COMMAND_RANK_INVALID);
+                    sender.sendMessage(RavelText.COMMAND_RANK_INVALID);
                     return;
                 }
 
                 RavelInstance.getPlayerManager().rankUpdate(uuid, rank);
-                sender.sendMessage(Text.COMMAND_RANK_SET, args[1], rank.getName());
+                sender.sendMessage(RavelText.COMMAND_RANK_SET, args[1], rank.getName());
             });
         } else if (args[0].equalsIgnoreCase("list")) {
             if (args.length != 1) {
@@ -106,7 +106,7 @@ public class RankCommand extends RavelCommand {
                     }
                 }
 
-                sender.sendMessage(Text.COMMAND_RANK_LIST, builder.toString());
+                sender.sendMessage(RavelText.COMMAND_RANK_LIST, builder.toString());
             });
         } else {
             return false;

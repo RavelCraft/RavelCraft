@@ -3,7 +3,7 @@ package com.connexal.ravelcraft.mod.server.managers.npc;
 import com.connexal.ravelcraft.mod.server.util.Location;
 import com.connexal.ravelcraft.mod.server.util.gui.NpcGui;
 import com.connexal.ravelcraft.mod.server.util.registry.RegistrySyncUtils;
-import com.connexal.ravelcraft.shared.BuildConstants;
+import com.connexal.ravelcraft.shared.all.Ravel;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -19,7 +19,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public class NpcManager {
-    public static final Identifier NPC_ID = Identifier.of(BuildConstants.ID, "npc");
+    public static final Identifier NPC_ID = Identifier.of(Ravel.ID, "npc");
     public static Supplier<EntityType<NpcEntity>> NPC_TYPE;
 
     private static final Map<UUID, Long> lastInteract = new HashMap<>();

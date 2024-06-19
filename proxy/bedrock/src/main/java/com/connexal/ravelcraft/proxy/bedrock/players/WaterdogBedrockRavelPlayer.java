@@ -1,13 +1,13 @@
 package com.connexal.ravelcraft.proxy.bedrock.players;
 
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.players.PlayerManager;
-import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.players.RavelRank;
-import com.connexal.ravelcraft.shared.util.server.RavelServer;
-import com.connexal.ravelcraft.shared.util.text.Language;
-import com.connexal.ravelcraft.shared.util.text.Text;
-import com.connexal.ravelcraft.shared.util.uuid.UUIDTools;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.players.PlayerManager;
+import com.connexal.ravelcraft.shared.server.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.server.players.RavelRank;
+import com.connexal.ravelcraft.shared.server.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.all.text.Language;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
+import com.connexal.ravelcraft.shared.server.util.uuid.UUIDTools;
 import dev.waterdog.waterdogpe.player.ProxiedPlayer;
 
 import java.util.UUID;
@@ -37,7 +37,7 @@ public class WaterdogBedrockRavelPlayer implements RavelPlayer {
     }
 
     @Override
-    public void sendMessage(Text message, String... values) {
+    public void sendMessage(RavelText message, String... values) {
         String messageString = message.getMessage(this.getLanguage(), values);
         this.player.sendMessage(messageString);
     }

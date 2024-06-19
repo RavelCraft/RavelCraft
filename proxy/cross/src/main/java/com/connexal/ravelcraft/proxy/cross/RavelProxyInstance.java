@@ -5,9 +5,9 @@ import com.connexal.ravelcraft.proxy.cross.servers.ServerManager;
 import com.connexal.ravelcraft.proxy.cross.servers.ban.BanManager;
 import com.connexal.ravelcraft.proxy.cross.servers.maintenance.MaintenanceManager;
 import com.connexal.ravelcraft.proxy.cross.servers.whitelist.WhitelistManager;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.util.server.ProxyType;
-import com.connexal.ravelcraft.shared.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.util.server.ProxyType;
+import com.connexal.ravelcraft.shared.server.util.server.RavelServer;
 
 public class RavelProxyInstance {
     private static ServerManager serverManager;
@@ -18,10 +18,6 @@ public class RavelProxyInstance {
 
     private static ProxyType proxyType;
     private static RavelServer otherProxy;
-
-    public static void setup() {
-        //No-op
-    }
 
     public static void init(ServerManager serverManager) {
         RavelProxyInstance.serverManager = serverManager;

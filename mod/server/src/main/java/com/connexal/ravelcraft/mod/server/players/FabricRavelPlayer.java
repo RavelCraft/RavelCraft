@@ -2,15 +2,16 @@ package com.connexal.ravelcraft.mod.server.players;
 
 import com.connexal.ravelcraft.mod.server.RavelModServer;
 import com.connexal.ravelcraft.mod.server.util.Location;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.players.PlayerManager;
-import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.players.RavelRank;
-import com.connexal.ravelcraft.shared.util.server.RavelServer;
-import com.connexal.ravelcraft.shared.util.text.Language;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.players.PlayerManager;
+import com.connexal.ravelcraft.shared.server.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.server.players.RavelRank;
+import com.connexal.ravelcraft.shared.server.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.all.text.Language;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import org.geysermc.geyser.api.GeyserApi;
 
 import java.util.UUID;
@@ -73,9 +74,9 @@ public class FabricRavelPlayer implements RavelPlayer {
     // --- Global ---
 
     @Override
-    public void sendMessage(Text message, String... values) {
+    public void sendMessage(RavelText message, String... values) {
         String messageString = message.getMessage(this.getLanguage(), values);
-        this.player.sendMessage(net.minecraft.text.Text.literal(messageString));
+        this.player.sendMessage(Text.literal(messageString));
     }
 
     @Override
@@ -90,7 +91,7 @@ public class FabricRavelPlayer implements RavelPlayer {
 
     @Override
     public void updateDisplayName() {
-        this.player.setCustomName(net.minecraft.text.Text.literal(this.buildDisplayName()));
+        this.player.setCustomName(Text.literal(this.buildDisplayName()));
         this.player.setCustomNameVisible(true);
     }
 

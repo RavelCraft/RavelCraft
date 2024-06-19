@@ -6,15 +6,15 @@ import com.connexal.ravelcraft.proxy.cross.servers.maintenance.MaintenanceManage
 import com.connexal.ravelcraft.proxy.cross.servers.whitelist.WhitelistManager;
 import com.connexal.ravelcraft.proxy.java.players.VelocityJavaRavelPlayer;
 import com.connexal.ravelcraft.proxy.java.website.endpoints.api.AuthEndpoint;
-import com.connexal.ravelcraft.shared.BuildConstants;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.messaging.Messager;
-import com.connexal.ravelcraft.shared.messaging.MessagingCommand;
-import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.util.ChatColor;
-import com.connexal.ravelcraft.shared.util.server.RavelServer;
-import com.connexal.ravelcraft.shared.util.text.InitText;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.all.Ravel;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.messaging.Messager;
+import com.connexal.ravelcraft.shared.server.messaging.MessagingCommand;
+import com.connexal.ravelcraft.shared.server.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.all.util.ChatColor;
+import com.connexal.ravelcraft.shared.server.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.all.text.RavelTextHardcoded;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.event.Subscribe;
@@ -60,7 +60,7 @@ public class JeEventListener {
         }
 
         samplePlayers = new ServerPing.SamplePlayer[5];
-        samplePlayers[0] = new ServerPing.SamplePlayer(ChatColor.GREEN + "---------- " + BuildConstants.NAME + " ----------", emptyUUID);
+        samplePlayers[0] = new ServerPing.SamplePlayer(ChatColor.GREEN + "---------- " + Ravel.NAME + " ----------", emptyUUID);
         samplePlayers[1] = new ServerPing.SamplePlayer(ChatColor.YELLOW + "          A friendly community server!", emptyUUID);
         samplePlayers[2] = new ServerPing.SamplePlayer("", emptyUUID);
         samplePlayers[3] = new ServerPing.SamplePlayer(ChatColor.YELLOW + "            Maintained with " + ChatColor.RED + "❤" + ChatColor.YELLOW + " by Alex!", emptyUUID);
@@ -70,7 +70,7 @@ public class JeEventListener {
     @Subscribe(order = PostOrder.FIRST)
     public void onPreLoginEvent(PreLoginEvent event) {
         InetSocketAddress connectSocket = event.getConnection().getVirtualHost().orElse(null);
-        String joinAddress = connectSocket == null ? BuildConstants.SERVER_IP : connectSocket.getHostString();
+        String joinAddress = connectSocket == null ? Ravel.SERVER_IP : connectSocket.getHostString();
 
         RavelServer selectedServer = RavelServer.getServerByAddress(joinAddress);
         if (selectedServer == null) {
@@ -115,7 +115,7 @@ public class JeEventListener {
 
         //Whitelist check first
         if (!RavelProxyInstance.getWhitelistManager().isWhitelisted(player.getUniqueID())) {
-            event.setResult(ResultedEvent.ComponentResult.denied(Component.text(InitText.NOT_WHITELISTED)));
+            event.setResult(ResultedEvent.ComponentResult.denied(Component.text(RavelTextHardcoded.NOT_WHITELISTED)));
             return;
         }
 
@@ -130,14 +130,14 @@ public class JeEventListener {
         //And a maintenance check
         if (RavelProxyInstance.getMaintenanceManager().isEnabled()) {
             if (!RavelProxyInstance.getMaintenanceManager().canBypass(player)) {
-                event.setResult(ResultedEvent.ComponentResult.denied(Component.text(InitText.MAINTENANCE)));
+                event.setResult(ResultedEvent.ComponentResult.denied(Component.text(RavelTextHardcoded.MAINTENANCE)));
                 return;
             }
         }
 
         //Finally, check if the server is full
-        if (RavelInstance.getPlayerManager().getOnlineCount() >= BuildConstants.MAX_PLAYERS) {
-            event.setResult(ResultedEvent.ComponentResult.denied(Component.text(InitText.SERVER_FULL)));
+        if (RavelInstance.getPlayerManager().getOnlineCount() >= Ravel.MAX_PLAYERS) {
+            event.setResult(ResultedEvent.ComponentResult.denied(Component.text(RavelTextHardcoded.SERVER_FULL)));
             return;
         }
 
@@ -203,7 +203,7 @@ public class JeEventListener {
             if (!whitelistManager.isWhitelisted(event.getPlayer().getUniqueId(), server)) {
                 event.setResult(ServerPreConnectEvent.ServerResult.denied());
                 RavelPlayer player = RavelInstance.getPlayerManager().getPlayer(event.getPlayer().getUniqueId());
-                player.sendMessage(Text.PLAYERS_NOT_WHITELISTED_BACKEND, server.getName());
+                player.sendMessage(RavelText.PLAYERS_NOT_WHITELISTED_BACKEND, server.getName());
                 return;
             }
         }
@@ -214,7 +214,7 @@ public class JeEventListener {
 
             if (!maintenanceManager.canBypass(player)) {
                 event.setResult(ServerPreConnectEvent.ServerResult.denied());
-                player.sendMessage(Text.PLAYERS_MAINTENANCE);
+                player.sendMessage(RavelText.PLAYERS_MAINTENANCE);
             }
         }
     }
@@ -250,7 +250,7 @@ public class JeEventListener {
         }
 
         boolean isTestServer = false;
-        for (String server : BuildConstants.TEST_IPS) {
+        for (String server : Ravel.TEST_IPS) {
             if (host.equals(server)) {
                 isTestServer = true;
                 break;
@@ -275,7 +275,7 @@ public class JeEventListener {
         if (RavelProxyInstance.getMaintenanceManager().isEnabled()) {
             ServerPing.Builder serverPing = ServerPing.builder()
                     .onlinePlayers(RavelInstance.getPlayerManager().getOnlineCount())
-                    .maximumPlayers(BuildConstants.MAX_PLAYERS)
+                    .maximumPlayers(Ravel.MAX_PLAYERS)
                     .samplePlayers(samplePlayers)
                     .version(new ServerPing.Version(0, ChatColor.RED + "You need permissions to join!"))
                     .favicon(serverFavicon)
@@ -287,17 +287,17 @@ public class JeEventListener {
 
         ServerPing.Builder serverPing = ServerPing.builder()
                 .onlinePlayers(RavelInstance.getPlayerManager().getOnlineCount())
-                .maximumPlayers(BuildConstants.MAX_PLAYERS)
+                .maximumPlayers(Ravel.MAX_PLAYERS)
                 .version(new ServerPing.Version(event.getPing().getVersion().getProtocol(), ChatColor.RED + "1.8.9 to 1.20.x+"))
                 .favicon(serverFavicon)
                 .samplePlayers(samplePlayers);
 
         if (isTestServer) {
-            serverPing.description(Component.text(ChatColor.AQUA + "RavelCraft test instance!\n" + ChatColor.YELLOW + "v" + BuildConstants.VERSION + " @" + host));
+            serverPing.description(Component.text(ChatColor.AQUA + "RavelCraft test instance!\n" + ChatColor.YELLOW + "v" + Ravel.VERSION + " @" + host));
         } else if (pingedServer.isProxy()) {
-            serverPing.description(Component.text(ChatColor.GREEN + "Welcome to the " + ChatColor.RED + BuildConstants.NAME + "!\n" + ChatColor.YELLOW + RavelProxyInstance.getMotdManager().getMotd()));
+            serverPing.description(Component.text(ChatColor.GREEN + "Welcome to the " + ChatColor.RED + Ravel.NAME + "!\n" + ChatColor.YELLOW + RavelProxyInstance.getMotdManager().getMotd()));
         } else {
-            serverPing.description(Component.text(ChatColor.GREEN + BuildConstants.NAME + " " + ChatColor.RED + pingedServer.getName() + " server!\n" + ChatColor.YELLOW + RavelProxyInstance.getMotdManager().getMotd()));
+            serverPing.description(Component.text(ChatColor.GREEN + Ravel.NAME + " " + ChatColor.RED + pingedServer.getName() + " server!\n" + ChatColor.YELLOW + RavelProxyInstance.getMotdManager().getMotd()));
         }
 
         event.setPing(serverPing.build());

@@ -1,7 +1,7 @@
 package com.connexal.ravelcraft.mod.client;
 
-import com.connexal.ravelcraft.mod.cross.BuildConstants;
 import com.connexal.ravelcraft.mod.cross.RavelModInstance;
+import com.connexal.ravelcraft.shared.all.Ravel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -29,9 +29,9 @@ public class RavelModClient implements ModInitializer {
 				URL url = new URL("https://ravelcraft.fr/api/version");
 				String version = new String(url.openStream().readAllBytes());
 
-				if (!version.equals(BuildConstants.VERSION)) {
-					String message = "Your version of RavelCraft is outdated. Please update to v" + version + " at https://" + BuildConstants.SERVER_IP + "/. You can also click this message.";
-					client.inGameHud.getChatHud().addMessage(Text.literal(message).setStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://" + BuildConstants.SERVER_IP + "/"))));
+				if (!version.equals(Ravel.VERSION)) {
+					String message = "Your version of RavelCraft is outdated. Please update to v" + version + " at https://" + Ravel.SERVER_IP + "/. You can also click this message.";
+					client.inGameHud.getChatHud().addMessage(Text.literal(message).setStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://" + Ravel.SERVER_IP + "/"))));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -3,11 +3,11 @@ package com.connexal.ravelcraft.mod.server.commands;
 import com.connexal.ravelcraft.mod.server.RavelModServer;
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
 import com.connexal.ravelcraft.mod.server.util.map.MapUtils;
-import com.connexal.ravelcraft.shared.BuildConstants;
-import com.connexal.ravelcraft.shared.commands.RavelCommand;
-import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.all.Ravel;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommand;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommandSender;
+import com.connexal.ravelcraft.shared.server.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import com.google.auto.service.AutoService;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.MapIdComponent;
@@ -51,7 +51,7 @@ public class MapCommand extends RavelCommand {
     @Override
     protected boolean run(RavelCommandSender sender, String[] args) {
         if (!sender.isPlayer()) {
-            sender.sendMessage(Text.COMMAND_MUST_BE_PLAYER);
+            sender.sendMessage(RavelText.COMMAND_MUST_BE_PLAYER);
             return true;
         }
 
@@ -74,14 +74,14 @@ public class MapCommand extends RavelCommand {
                 try {
                     image = ImageIO.read(new URL(mapUrl));
                 } catch (Exception e) {
-                    sender.sendMessage(Text.COMMAND_MAP_INVALID_URL);
+                    sender.sendMessage(RavelText.COMMAND_MAP_INVALID_URL);
                     return;
                 }
 
                 //Create map
                 ServerWorld world = RavelModServer.getServer().getOverworld();
                 mapIdComponent = world.increaseAndGetMapId();
-                MapState mapState = MapState.of(0, 0, (byte) 0, false, false, RegistryKey.of(RegistryKeys.WORLD, Identifier.of(BuildConstants.ID, "custom_map")));
+                MapState mapState = MapState.of(0, 0, (byte) 0, false, false, RegistryKey.of(RegistryKeys.WORLD, Identifier.of(Ravel.ID, "custom_map")));
 
                 MapUtils.applyImageToMap(mapState, image, true);
                 world.putMapState(mapIdComponent, mapState);
@@ -89,14 +89,14 @@ public class MapCommand extends RavelCommand {
                 try {
                     mapIdComponent = new MapIdComponent(Integer.parseInt(args[1]));
                 } catch (NumberFormatException e) {
-                    sender.sendMessage(Text.COMMAND_MAP_NAN);
+                    sender.sendMessage(RavelText.COMMAND_MAP_NAN);
                     return;
                 }
 
                 //Check if map exists
                 ServerWorld world = RavelModServer.getServer().getOverworld();
                 if (world.getMapState(mapIdComponent) == null) {
-                    sender.sendMessage(Text.COMMAND_MAP_INVALID_ID);
+                    sender.sendMessage(RavelText.COMMAND_MAP_INVALID_ID);
                     return;
                 }
             }
@@ -106,7 +106,7 @@ public class MapCommand extends RavelCommand {
             map.set(DataComponentTypes.MAP_ID, mapIdComponent);
 
             ((FabricRavelPlayer) sender).getPlayer().giveItemStack(map);
-            sender.sendMessage(Text.COMMAND_MAP_DONE);
+            sender.sendMessage(RavelText.COMMAND_MAP_DONE);
         });
 
         return true;

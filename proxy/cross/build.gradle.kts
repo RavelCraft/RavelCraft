@@ -16,7 +16,8 @@ dependencies {
     implementation("com.google.auto.service:auto-service:${autoServiceVersion}")
     annotationProcessor("com.google.auto.service:auto-service:${autoServiceVersion}")
 
-    shadow(project(":shared"))
+    shadow(project(":shared-all"))
+    shadow(project(":shared-server"))
 }
 
 tasks {

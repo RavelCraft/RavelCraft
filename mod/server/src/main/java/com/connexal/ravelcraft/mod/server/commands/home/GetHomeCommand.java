@@ -2,11 +2,11 @@ package com.connexal.ravelcraft.mod.server.commands.home;
 
 import com.connexal.ravelcraft.mod.server.RavelModServer;
 import com.connexal.ravelcraft.mod.server.util.Location;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.commands.RavelCommand;
-import com.connexal.ravelcraft.shared.commands.RavelCommandSender;
-import com.connexal.ravelcraft.shared.commands.arguments.CommandOption;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommand;
+import com.connexal.ravelcraft.shared.server.commands.RavelCommandSender;
+import com.connexal.ravelcraft.shared.server.commands.arguments.CommandOption;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import com.google.auto.service.AutoService;
 
 import java.util.UUID;
@@ -44,7 +44,7 @@ public class GetHomeCommand extends RavelCommand {
         this.completeAsync(() -> {
             UUID uuid = RavelInstance.getUUIDTools().getUUID(args[0]);
             if (uuid == null) {
-                sender.sendMessage(Text.COMMAND_PLAYER_NOT_FOUND);
+                sender.sendMessage(RavelText.COMMAND_PLAYER_NOT_FOUND);
                 return;
             }
 
@@ -52,23 +52,23 @@ public class GetHomeCommand extends RavelCommand {
             try {
                 number = Integer.parseInt(args[1]);
             } catch (NumberFormatException e) {
-                sender.sendMessage(Text.COMMAND_HOME_INVALID_NUMBER);
+                sender.sendMessage(RavelText.COMMAND_HOME_INVALID_NUMBER);
                 return;
             }
 
             int max = RavelModServer.getHomeManager().getMaxHomes();
             if (number <= 0 || number > max) {
-                sender.sendMessage(Text.COMMAND_HOME_OUT_OF_BOUNDS, Integer.toString(max));
+                sender.sendMessage(RavelText.COMMAND_HOME_OUT_OF_BOUNDS, Integer.toString(max));
                 return;
             }
 
             Location location = RavelModServer.getHomeManager().getHome(uuid, number);
             if (location == null) {
-                sender.sendMessage(Text.COMMAND_HOME_NOT_SET);
+                sender.sendMessage(RavelText.COMMAND_HOME_NOT_SET);
                 return;
             }
 
-            sender.sendMessage(Text.COMMAND_HOME_GET, args[0], Integer.toString(number), location.chatFormat());
+            sender.sendMessage(RavelText.COMMAND_HOME_GET, args[0], Integer.toString(number), location.chatFormat());
         });
 
         return true;

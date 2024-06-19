@@ -1,11 +1,12 @@
 package com.connexal.ravelcraft.mod.server.listeners;
 
 import com.connexal.ravelcraft.mod.server.util.events.PlayerEvents;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.players.RavelPlayer;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.server.players.RavelPlayer;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 
 import java.util.Random;
 
@@ -18,7 +19,7 @@ class ConnectionListener {
 
     private static boolean onPlayerPreJoin(ServerPlayerEntity player, ClientConnection connection) {
         if (!RavelInstance.getMessager().attemptConnect()) {
-            connection.disconnect(net.minecraft.text.Text.of("Network IPC connection establishment failed. Contact the server administrator."));
+            connection.disconnect(Text.of("Network IPC connection establishment failed. Contact the server administrator."));
             return false;
         }
 
@@ -33,13 +34,13 @@ class ConnectionListener {
         Random random = new Random();
         if (random.nextBoolean())  {
             switch (random.nextInt(3)) {
-                case 0 -> player.sendMessage(Text.JOIN_INFO_RULES);
-                case 1 -> player.sendMessage(Text.JOIN_INFO_ANNOUNCEMENTS);
-                case 2 -> player.sendMessage(Text.JOIN_INFO_LANGUAGES);
+                case 0 -> player.sendMessage(RavelText.JOIN_INFO_RULES);
+                case 1 -> player.sendMessage(RavelText.JOIN_INFO_ANNOUNCEMENTS);
+                case 2 -> player.sendMessage(RavelText.JOIN_INFO_LANGUAGES);
             }
         }
 
-        player.sendMessage(Text.PLAYER_DISPLAY_SERVER_NAME, RavelInstance.getServer().getName());
+        player.sendMessage(RavelText.PLAYER_DISPLAY_SERVER_NAME, RavelInstance.getServer().getName());
     }
 
     private static void onPlayerLeft(RavelPlayer player, String reason) {

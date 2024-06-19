@@ -3,9 +3,10 @@ package com.connexal.ravelcraft.proxy.bedrock.xbox;
 import com.connexal.ravelcraft.proxy.bedrock.BeProxy;
 import com.connexal.ravelcraft.proxy.bedrock.util.Motd;
 import com.connexal.ravelcraft.proxy.cross.RavelProxyInstance;
-import com.connexal.ravelcraft.shared.BuildConstants;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.util.server.RavelServer;
+import com.connexal.ravelcraft.shared.all.Ravel;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.all.RavelMain;
+import com.connexal.ravelcraft.shared.server.util.server.RavelServer;
 import com.rtm516.mcxboxbroadcast.core.Logger;
 import com.rtm516.mcxboxbroadcast.core.SessionInfo;
 import com.rtm516.mcxboxbroadcast.core.SessionManager;
@@ -23,7 +24,7 @@ public class XboxBroadcaster {
     private SessionInfo sessionInfo;
 
     public XboxBroadcaster() {
-        Path dataPath = RavelInstance.getDataPath().resolve("xbox");
+        Path dataPath = RavelMain.get().getDataPath().resolve("xbox");
         if (!Files.exists(dataPath)) {
             try {
                 Files.createDirectories(dataPath);
@@ -44,7 +45,7 @@ public class XboxBroadcaster {
             this.sessionInfo.setVersion(ProtocolVersion.latest().getMinecraftVersion());
             this.sessionInfo.setProtocol(ProtocolVersion.latest().getProtocol());
             this.sessionInfo.setPlayers(RavelInstance.getPlayerManager().getOnlineCount());
-            this.sessionInfo.setMaxPlayers(BuildConstants.MAX_PLAYERS);
+            this.sessionInfo.setMaxPlayers(Ravel.MAX_PLAYERS);
 
             this.sessionInfo.setIp(RavelServer.BE_PROXY.getAddress());
             this.sessionInfo.setPort(RavelServer.BE_PROXY.getPort());

@@ -1,6 +1,6 @@
 package com.connexal.ravelcraft.proxy.bedrock.util;
 
-import com.connexal.ravelcraft.shared.util.RavelLogger;
+import com.connexal.ravelcraft.shared.all.util.RavelLogger;
 import org.apache.logging.log4j.Logger;
 
 public class WaterdogRavelLogger implements RavelLogger {

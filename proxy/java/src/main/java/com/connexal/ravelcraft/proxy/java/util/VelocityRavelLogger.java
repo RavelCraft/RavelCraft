@@ -1,6 +1,6 @@
 package com.connexal.ravelcraft.proxy.java.util;
 
-import com.connexal.ravelcraft.shared.util.RavelLogger;
+import com.connexal.ravelcraft.shared.all.util.RavelLogger;
 import org.slf4j.Logger;
 
 public class VelocityRavelLogger implements RavelLogger {

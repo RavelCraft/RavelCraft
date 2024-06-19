@@ -1,8 +1,8 @@
 package com.connexal.ravelcraft.mod.server.managers;
 
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
-import com.connexal.ravelcraft.shared.RavelInstance;
-import com.connexal.ravelcraft.shared.util.text.Text;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
+import com.connexal.ravelcraft.shared.all.text.RavelText;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,11 +13,11 @@ public class TpaManager {
 
     public void queueRequest(FabricRavelPlayer sender, FabricRavelPlayer receiver, TpaType type) {
         if (sender.getUniqueID() == receiver.getUniqueID()) {
-            sender.sendMessage(Text.COMMAND_TPA_SELF);
+            sender.sendMessage(RavelText.COMMAND_TPA_SELF);
             return;
         }
         if (this.requests.get(receiver.getUniqueID()) != null) {
-            sender.sendMessage(Text.COMMAND_TPA_REQUEST_PENDING, receiver.getName());
+            sender.sendMessage(RavelText.COMMAND_TPA_REQUEST_PENDING, receiver.getName());
             return;
         }
 
@@ -31,24 +31,24 @@ public class TpaManager {
                 return;
             }
 
-            expiredReq.sender.sendMessage(Text.COMMAND_TPA_EXPIRED_SENDER, expiredReq.receiver.getName());
-            expiredReq.receiver.sendMessage(Text.COMMAND_TPA_EXPIRED_RECEIVER, expiredReq.sender.getName());
+            expiredReq.sender.sendMessage(RavelText.COMMAND_TPA_EXPIRED_SENDER, expiredReq.receiver.getName());
+            expiredReq.receiver.sendMessage(RavelText.COMMAND_TPA_EXPIRED_RECEIVER, expiredReq.sender.getName());
             this.requests.remove(receiver.getUniqueID());
         }, timeout);
 
         if (type == TpaType.SENDER_TO_RECEIVER) {
-            request.sender.sendMessage(Text.COMMAND_TPA_STR_SENT, request.receiver.getName());
-            request.receiver.sendMessage(Text.COMMAND_TPA_STR_RECEIVED, request.sender.getName(), Integer.toString(timeout));
+            request.sender.sendMessage(RavelText.COMMAND_TPA_STR_SENT, request.receiver.getName());
+            request.receiver.sendMessage(RavelText.COMMAND_TPA_STR_RECEIVED, request.sender.getName(), Integer.toString(timeout));
         } else {
-            request.sender.sendMessage(Text.COMMAND_TPA_RTS_SENT, request.receiver.getName());
-            request.receiver.sendMessage(Text.COMMAND_TPA_RTS_RECEIVED, request.sender.getName(), Integer.toString(timeout));
+            request.sender.sendMessage(RavelText.COMMAND_TPA_RTS_SENT, request.receiver.getName());
+            request.receiver.sendMessage(RavelText.COMMAND_TPA_RTS_RECEIVED, request.sender.getName(), Integer.toString(timeout));
         }
     }
 
     public void acceptRequest(FabricRavelPlayer receiver) {
         TpaRequest request = this.requests.get(receiver.getUniqueID());
         if (request == null) {
-            receiver.sendMessage(Text.COMMAND_TPA_NO_REQUESTS);
+            receiver.sendMessage(RavelText.COMMAND_TPA_NO_REQUESTS);
             return;
         }
 
@@ -58,8 +58,8 @@ public class TpaManager {
             request.receiver.teleport(request.sender);
         }
 
-        request.sender.sendMessage(Text.COMMAND_TPA_ACCEPT_RECEIVED, request.receiver.getName());
-        request.receiver.sendMessage(Text.COMMAND_TPA_ACCEPT_SENT);
+        request.sender.sendMessage(RavelText.COMMAND_TPA_ACCEPT_RECEIVED, request.receiver.getName());
+        request.receiver.sendMessage(RavelText.COMMAND_TPA_ACCEPT_SENT);
 
         this.requests.remove(receiver.getUniqueID());
     }
@@ -67,12 +67,12 @@ public class TpaManager {
     public void denyRequest(FabricRavelPlayer receiver) {
         TpaRequest request = this.requests.get(receiver.getUniqueID());
         if (request == null) {
-            receiver.sendMessage(Text.COMMAND_TPA_NO_REQUESTS);
+            receiver.sendMessage(RavelText.COMMAND_TPA_NO_REQUESTS);
             return;
         }
 
-        request.sender.sendMessage(Text.COMMAND_TPA_DENY_RECEIVED, request.receiver.getName());
-        request.receiver.sendMessage(Text.COMMAND_TPA_DENY_SENT);
+        request.sender.sendMessage(RavelText.COMMAND_TPA_DENY_RECEIVED, request.receiver.getName());
+        request.receiver.sendMessage(RavelText.COMMAND_TPA_DENY_SENT);
 
         this.requests.remove(receiver.getUniqueID());
     }
