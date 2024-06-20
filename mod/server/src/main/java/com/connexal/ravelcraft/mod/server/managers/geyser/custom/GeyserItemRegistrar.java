@@ -6,7 +6,6 @@ import com.connexal.ravelcraft.mod.cross.types.items.ItemDescriptor;
 import com.connexal.ravelcraft.mod.cross.types.items.sets.ArmorSetDescriptor;
 import com.connexal.ravelcraft.mod.cross.types.items.sets.ItemSetDescriptor;
 import com.connexal.ravelcraft.mod.cross.types.items.sets.ToolSetDescriptor;
-import com.connexal.ravelcraft.shared.server.RavelInstance;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -23,7 +22,7 @@ public class GeyserItemRegistrar {
         switch (descriptor) {
             case ItemDescriptor itemDescriptor -> event.register(itemBuilder(itemDescriptor).build());
             case ItemSetDescriptor<?> setDescriptor -> registerSet(event, setDescriptor);
-            case BlockDescriptor blockDescriptor -> registerBlock(event, blockDescriptor);
+            case BlockDescriptor ignored -> throw new IllegalStateException("Bedrock has no concept of a block item, simply register the block itself");
             case null, default -> throw new IllegalStateException("This does not refer to a block or item");
         }
     }
@@ -35,6 +34,7 @@ public class GeyserItemRegistrar {
         //TODO: Set translationString, repairMaterials, edible, canAlwaysEat, isChargable
 
         return NonVanillaCustomItemData.builder()
+                .icon(descriptor.displayItem().toString().substring(descriptor.displayItem().toString().indexOf(":") + 1))
                 .name(descriptor.identifier().getPath())
                 .displayName(descriptor.displayName())
                 .javaId(Registries.ITEM.getRawId(item))
@@ -68,19 +68,7 @@ public class GeyserItemRegistrar {
                 builder.attackDamage((int) toolDescriptor.getAttackDamage());
             }
 
-            NonVanillaCustomItemData data = builder.build();
-            RavelInstance.getLogger().info("Registering item: " + data.displayName());
-            event.register(data);
+            event.register(builder.build());
         }
-    }
-
-    private static void registerBlock(GeyserDefineCustomItemsEvent event, BlockDescriptor descriptor) {
-        ItemDescriptor itemDescriptor = ItemDescriptor.builder(descriptor.identifier()).item(descriptor.blockItem()).build();
-
-        NonVanillaCustomItemData data = itemBuilder(itemDescriptor)
-                .block(descriptor.identifier().toString())
-                .build();
-        RavelInstance.getLogger().info("Registering block item: " + data.displayName() + " for " + descriptor.identifier());
-        event.register(data);
     }
 }

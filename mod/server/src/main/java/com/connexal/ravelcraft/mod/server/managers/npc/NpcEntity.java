@@ -1,12 +1,13 @@
 package com.connexal.ravelcraft.mod.server.managers.npc;
 
-import com.connexal.ravelcraft.mod.server.mixin.accessors.EntitySpawnS2CPacketAccessor;
 import com.connexal.ravelcraft.mod.server.mixin.accessors.EntityTrackerAccessor;
 import com.connexal.ravelcraft.mod.server.mixin.accessors.PlayerEntityAccessor;
 import com.connexal.ravelcraft.mod.server.mixin.accessors.ServerChunkLoadingManagerAccessor;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
+import eu.pb4.polymer.core.api.entity.PolymerEntity;
+import eu.pb4.polymer.core.api.entity.PolymerEntityUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
@@ -16,25 +17,25 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.c2s.common.SyncedClientOptions;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.server.network.EntityTrackerEntry;
+import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerChunkLoadingManager;
 import net.minecraft.server.world.ServerChunkManager;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
 
+import java.util.EnumSet;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Consumer;
 
-public class NpcEntity extends MobEntity {
+public class NpcEntity extends MobEntity implements PolymerEntity {
     private GameProfile gameProfile = null;
-    private ServerPlayerEntity fakePlayer = null;
+    private byte skinLayers = 127;
 
     private int interactionType = -1;
     private String interactionData = null;
@@ -44,17 +45,16 @@ public class NpcEntity extends MobEntity {
 
         this.setCanPickUpLoot(false);
         this.setCustomNameVisible(true);
-        this.setCustomName(this.getName());
+        this.setCustomName(Text.of(this.getName())); //No idea why this is needed
         this.setInvulnerable(true);
         this.setPersistent();
         this.experiencePoints = 0;
 
         this.gameProfile = new GameProfile(this.getUuid(), "ravel.npc");
-        this.constructFakePlayer();
     }
 
     public NpcEntity(World world) {
-        this(NpcManager.NPC_TYPE.get(), world);
+        this(NpcManager.NPC_TYPE, world);
     }
 
     public static DefaultAttributeContainer.Builder createNpcAttributes() {
@@ -62,33 +62,15 @@ public class NpcEntity extends MobEntity {
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 35);
     }
 
-    private void constructFakePlayer() {
-        if (this.fakePlayer != null) {
-            return;
-        }
-
-        this.fakePlayer = new ServerPlayerEntity(this.getServer(), (ServerWorld) this.getWorld(), this.gameProfile, SyncedClientOptions.createDefault());
-        this.fakePlayer.getDataTracker().set(PlayerEntityAccessor.getPLAYER_MODEL_PARTS(), (byte) 0x7f);
-        this.fakePlayer.setPos(this.getX(), this.getY(), this.getZ());
-        this.fakePlayer.setYaw(this.getYaw());
-        this.fakePlayer.setHeadYaw(this.getHeadYaw());
-        this.fakePlayer.setPitch(this.getPitch());
-        this.fakePlayer.setCustomNameVisible(true);
-        this.fakePlayer.setCustomName(Text.of(this.getDisplayName().getLiteralString()));
-    }
-
-    public void sendRotationUpdate() {
-        this.fakePlayer.setYaw(this.getYaw());
-        this.fakePlayer.setHeadYaw(this.getHeadYaw());
-        this.fakePlayer.setPitch(this.getPitch());
-    }
-
     private void sendProfileUpdates() {
         ServerChunkManager manager = (ServerChunkManager) this.getWorld().getChunkManager();
         ServerChunkLoadingManager storage = manager.chunkLoadingManager;
         EntityTrackerAccessor trackerEntry = ((ServerChunkLoadingManagerAccessor) storage).getEntityTrackers().get(this.getId());
         if (trackerEntry != null) {
-            trackerEntry.getListeners().forEach(tracking -> trackerEntry.getEntry().startTracking(tracking.getPlayer()));
+            trackerEntry.getListeners().forEach(tracking -> {
+                trackerEntry.getEntry().stopTracking(tracking.getPlayer());
+                trackerEntry.getEntry().startTracking(tracking.getPlayer());
+            });
         }
     }
 
@@ -159,19 +141,11 @@ public class NpcEntity extends MobEntity {
     }
 
     public void setSkinLayers(Byte skinLayers) {
-        this.fakePlayer.getDataTracker().set(PlayerEntityAccessor.getPLAYER_MODEL_PARTS(), skinLayers);
+        this.skinLayers = skinLayers;
     }
 
     public GameProfile getGameProfile() {
         return this.gameProfile;
-    }
-
-    public ServerPlayerEntity getFakePlayer() {
-        return this.fakePlayer;
-    }
-
-    public Text getTabListName() {
-        return this.getName();
     }
 
     @Override
@@ -180,40 +154,6 @@ public class NpcEntity extends MobEntity {
     }
 
     //Entity data
-    @Override
-    public DataTracker getDataTracker() {
-        this.constructFakePlayer();
-        return this.fakePlayer.getDataTracker();
-    }
-
-    @Override
-    public void setSneaking(boolean sneaking) {
-        this.fakePlayer.setSneaking(sneaking);
-        super.setSneaking(sneaking);
-    }
-
-    @Override
-    public void setPose(EntityPose pose) {
-        this.fakePlayer.setPose(pose);
-        super.setPose(pose);
-    }
-
-    @Override
-    public Packet<ClientPlayPacketListener> createSpawnPacket(EntityTrackerEntry entry) {
-        EntitySpawnS2CPacket packet = new EntitySpawnS2CPacket(this.fakePlayer, entry);
-
-        EntitySpawnS2CPacketAccessor packetAccessor = (EntitySpawnS2CPacketAccessor) packet;
-        packetAccessor.setId(this.getId());
-        packetAccessor.setUuid(this.getUuid());
-        packetAccessor.setX(this.getX());
-        packetAccessor.setY(this.getY());
-        packetAccessor.setZ(this.getZ());
-        packetAccessor.setPitch((byte) ((int) (this.getPitch() * 256.0F / 360.0F)));
-        packetAccessor.setYaw((byte) ((int) (this.getHeadYaw() * 256.0F / 360.0F)));
-
-        return packet;
-    }
-
     @Override
     public void setCustomName(Text name) {
         super.setCustomName(name);
@@ -274,7 +214,7 @@ public class NpcEntity extends MobEntity {
 
         super.setCustomNameVisible(innbt.contains("CustomNameVisible"));
 
-        npcTag.putByte("SkinLayers", this.fakePlayer.getDataTracker().get(PlayerEntityAccessor.getPLAYER_MODEL_PARTS()));
+        npcTag.putByte("SkinLayers", this.skinLayers);
 
         npcTag.put("Skin", this.writeSkinToTag(this.gameProfile));
 
@@ -318,12 +258,6 @@ public class NpcEntity extends MobEntity {
         //Disable pushing
     }
 
-    @Override
-    public void remove(RemovalReason reason) {
-        super.remove(reason);
-        this.fakePlayer.remove(reason);
-    }
-
     public void setInteraction(int type, String data) {
         this.interactionType = type;
         this.interactionData = data;
@@ -344,5 +278,26 @@ public class NpcEntity extends MobEntity {
                 break;
             }
         }
+    }
+
+    @Override
+    public EntityType<?> getPolymerEntityType(ServerPlayerEntity player) {
+        return EntityType.PLAYER;
+    }
+
+    @Override
+    public void modifyRawTrackedData(List<DataTracker.SerializedEntry<?>> data, ServerPlayerEntity player, boolean initial) {
+        // Skin layer settings
+        data.removeIf(value -> value.id() == PlayerEntityAccessor.getPLAYER_MODEL_PARTS().id());
+
+        DataTracker.SerializedEntry<Byte> skinLayerTag = DataTracker.SerializedEntry.of(PlayerEntityAccessor.getPLAYER_MODEL_PARTS(), this.skinLayers);
+        data.add(skinLayerTag);
+    }
+
+    @Override
+    public void onBeforeSpawnPacket(ServerPlayerEntity player, Consumer<Packet<?>> packetConsumer) {
+        var packet = PolymerEntityUtils.createMutablePlayerListPacket(EnumSet.of(PlayerListS2CPacket.Action.ADD_PLAYER, PlayerListS2CPacket.Action.UPDATE_LISTED));
+        packet.getEntries().add(new PlayerListS2CPacket.Entry(this.uuid, this.gameProfile, false, 0, GameMode.SURVIVAL, null, null));
+        packetConsumer.accept(packet);
     }
 }

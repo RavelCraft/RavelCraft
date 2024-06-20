@@ -2,11 +2,10 @@ package com.connexal.ravelcraft.mod.cross.registry;
 
 import com.connexal.ravelcraft.mod.cross.types.Descriptor;
 import com.connexal.ravelcraft.mod.cross.types.blocks.BlockDescriptor;
-import com.connexal.ravelcraft.mod.cross.types.items.ItemDescriptor;
+import com.connexal.ravelcraft.mod.cross.types.blocks.polymer.SimpleRavelPolymerBlock;
 import com.google.common.collect.ImmutableList;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
@@ -16,7 +15,7 @@ import java.util.List;
 
 public enum RavelBlockRegistry {
     MAGIC_BLOCK(BlockDescriptor.builder("magic_block")
-            .block(new Block(AbstractBlock.Settings.create()
+            .block(new SimpleRavelPolymerBlock(Blocks.STONE, AbstractBlock.Settings.create()
                     .sounds(BlockSoundGroup.AMETHYST_BLOCK)))
             .build());
 
@@ -56,11 +55,5 @@ public enum RavelBlockRegistry {
         return ImmutableList.copyOf(list);
     }
 
-    public static void initialize() {
-        ItemGroupEvents.modifyEntriesEvent(RavelTabRegistry.RAVEL_TAB.wrapper().getRegistryKey()).register(itemGroup -> {
-            for (BlockDescriptor descriptor : BLOCK_LIST) {
-                itemGroup.add(descriptor.blockItem());
-            }
-        });
-    }
+    public static void initialize() {}
 }

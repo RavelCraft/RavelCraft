@@ -2,10 +2,13 @@ package com.connexal.ravelcraft.mod.cross.types.items.sets;
 
 import com.connexal.ravelcraft.mod.cross.types.items.ItemDescriptor;
 import com.connexal.ravelcraft.mod.cross.types.items.MiningLevel;
+import com.connexal.ravelcraft.mod.cross.types.items.polymer.tools.*;
 import com.connexal.ravelcraft.shared.all.Ravel;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.Block;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
+import net.minecraft.item.ToolMaterial;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
@@ -35,27 +38,27 @@ public class ToolSetDescriptor implements ToolMaterial, ItemSetDescriptor<ToolSe
 
         Map<Type, ItemDescriptor> items = new HashMap<>();
         if (axe) {
-            AxeItem item = new AxeItem(this, new Item.Settings());
+            PolymerAxeItem item = new PolymerAxeItem(this, Items.WOODEN_AXE, new Item.Settings());
             Identifier axeId = Identifier.of(identifier.getNamespace(), identifier.getPath() + "_axe");
             items.put(Type.AXE, ItemDescriptor.builder(axeId).item(item).build());
         }
         if (hoe) {
-            HoeItem item = new HoeItem(this, new Item.Settings());
+            PolymerHoeItem item = new PolymerHoeItem(this, Items.WOODEN_HOE, new Item.Settings());
             Identifier hoeId = Identifier.of(identifier.getNamespace(), identifier.getPath() + "_hoe");
             items.put(Type.HOE, ItemDescriptor.builder(hoeId).item(item).build());
         }
         if (pickaxe) {
-            PickaxeItem item = new PickaxeItem(this, new Item.Settings());
+            PolymerPickaxeItem item = new PolymerPickaxeItem(this, Items.WOODEN_PICKAXE, new Item.Settings());
             Identifier pickaxeId = Identifier.of(identifier.getNamespace(), identifier.getPath() + "_pickaxe");
             items.put(Type.PICKAXE, ItemDescriptor.builder(pickaxeId).item(item).build());
         }
         if (shovel) {
-            ShovelItem item = new ShovelItem(this, new Item.Settings());
+            PolymerShovelItem item = new PolymerShovelItem(this, Items.WOODEN_SHOVEL, new Item.Settings());
             Identifier shovelId = Identifier.of(identifier.getNamespace(), identifier.getPath() + "_shovel");
             items.put(Type.SHOVEL, ItemDescriptor.builder(shovelId).item(item).build());
         }
         if (sword) {
-            SwordItem item = new SwordItem(this, new Item.Settings());
+            PolymerSwordItem item = new PolymerSwordItem(this, Items.WOODEN_SWORD, new Item.Settings());
             Identifier swordId = Identifier.of(identifier.getNamespace(), identifier.getPath() + "_sword");
             items.put(Type.SWORD, ItemDescriptor.builder(swordId).item(item).build());
         }

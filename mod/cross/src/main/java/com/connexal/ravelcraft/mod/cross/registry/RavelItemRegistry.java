@@ -8,7 +8,7 @@ import com.connexal.ravelcraft.mod.cross.types.items.sets.ArmorSetDescriptor;
 import com.connexal.ravelcraft.mod.cross.types.items.sets.ItemSetDescriptor;
 import com.connexal.ravelcraft.mod.cross.types.items.sets.ToolSetDescriptor;
 import com.google.common.collect.ImmutableList;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvents;
@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum RavelItemRegistry {
-    MAGIC_INGOT(ItemDescriptor.builder("magic_ingot").build()),
+    MAGIC_INGOT(ItemDescriptor.builder("magic_ingot")
+            .displayItem(Items.NETHERITE_INGOT)
+            .build()),
 
     MAGIC_TOOLS(ToolSetDescriptor.builder("magic")
             .durability(2000)
@@ -38,6 +40,7 @@ public enum RavelItemRegistry {
             .repairIngredient(RavelItemRegistry.MAGIC_INGOT.itemDescriptor().item())
             .toughness(3.0f)
             .knockbackResistance(0.0f)
+            .color(206, 0, 255)
             .build());
 
     private final Descriptor descriptor;
@@ -95,11 +98,5 @@ public enum RavelItemRegistry {
         return ImmutableList.copyOf(list);
     }
 
-    public static void initialize() {
-        ItemGroupEvents.modifyEntriesEvent(RavelTabRegistry.RAVEL_TAB.wrapper().getRegistryKey()).register(itemGroup -> {
-            for (ItemDescriptor item : ITEM_LIST) {
-                itemGroup.add(item.item());
-            }
-        });
-    }
+    public static void initialize() {}
 }

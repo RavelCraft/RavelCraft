@@ -2,7 +2,6 @@ package com.connexal.ravelcraft.mod.server.managers.geyser;
 
 import com.connexal.ravelcraft.mod.cross.registry.RavelBlockRegistry;
 import com.connexal.ravelcraft.mod.cross.registry.RavelItemRegistry;
-import com.connexal.ravelcraft.mod.cross.types.blocks.BlockDescriptor;
 import com.connexal.ravelcraft.mod.server.managers.geyser.capes.CapeFetcher;
 import com.connexal.ravelcraft.mod.server.managers.geyser.capes.CapeProvider;
 import com.connexal.ravelcraft.mod.server.managers.geyser.custom.GeyserBlockRegistrar;
@@ -68,18 +67,14 @@ public class GeyserManager implements EventRegistrar {
 
     @Subscribe
     public void onDefineCustomItems(GeyserDefineCustomItemsEvent event) {
-        RavelInstance.getLogger().info("Defining GeyserMC custom items");
         for (RavelItemRegistry itemEntry : RavelItemRegistry.values()) {
             GeyserItemRegistrar.register(event, itemEntry.descriptor());
         }
-        for (RavelBlockRegistry blockEntry : RavelBlockRegistry.values()) {
-            GeyserItemRegistrar.register(event, blockEntry.descriptor());
-        }
+        //Bedrock doesn't use block items
     }
 
     @Subscribe
     public void onDefineCustomBlocks(GeyserDefineCustomBlocksEvent event) {
-        RavelInstance.getLogger().info("Defining GeyserMC custom blocks");
         for (RavelBlockRegistry blockEntry : RavelBlockRegistry.values()) {
             GeyserBlockRegistrar.register(event, blockEntry.descriptor());
         }

@@ -7,6 +7,7 @@ import com.connexal.ravelcraft.mod.cross.util.FabricRavelLogger;
 import com.connexal.ravelcraft.shared.all.Ravel;
 import com.connexal.ravelcraft.shared.all.RavelMain;
 import com.connexal.ravelcraft.shared.all.util.RavelLogger;
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 
@@ -34,10 +35,12 @@ public class RavelModInstance implements RavelMain {
     }
 
     public static void init() {
-        RavelTabRegistry.initialize();
+        PolymerResourcePackUtils.addModAssets(Ravel.ID);
+        //PolymerResourcePackUtils.markAsRequired();
 
         RavelItemRegistry.initialize();
         RavelBlockRegistry.initialize();
+        RavelTabRegistry.initialize();
 
         logger.info("Modded components loaded!");
     }

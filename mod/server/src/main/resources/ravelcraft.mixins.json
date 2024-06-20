@@ -7,9 +7,7 @@
     "accessors.EntityAccessor",
     "accessors.EntitySpawnS2CPacketAccessor",
     "accessors.EntityTrackerAccessor",
-    "accessors.EntityTrackerUpdateS2CPacketAccessor",
     "accessors.PlayerEntityAccessor",
-    "accessors.PlayerListS2CPacketAccessor",
     "accessors.ServerChunkLoadingManagerAccessor",
     "customisations.ExplosionMixin",
     "customisations.FarmlandBlockMixin",
@@ -21,11 +19,7 @@
     "events.PlayerManagerMixin",
     "events.ServerPlayerEntityMixin",
     "events.ServerPlayerInteractionManagerMixin",
-    "events.ServerPlayNetworkHandlerMixin",
-    "npc.ServerCommonNetworkHandlerMixin",
-    "npc.ServerPlayNetworkHandlerMixin",
-    "registry.RegistrySyncManagerMixin",
-    "registry.SimpleRegistryMixin"
+    "events.ServerPlayNetworkHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

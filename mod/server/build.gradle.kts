@@ -14,6 +14,7 @@ val fabricLoaderVersion = project.property("fabric_loader_version") as String
 val geyserVersion = project.property("geyser_version") as String
 val sguiVersion = project.property("sgui_version") as String
 val autoServiceVersion = project.property("auto_service_version") as String
+val polymerVersion = project.property("polymer_version") as String
 
 val builtJarName = "${projectId}-serverMod-${minecraftVersion}"
 base.archivesName.set(builtJarName)
@@ -30,6 +31,10 @@ dependencies {
 	implementation("org.geysermc.geyser:api:${geyserVersion}")
 
 	modImplementation("eu.pb4:sgui:${sguiVersion}")
+	shadow("eu.pb4:sgui:${sguiVersion}")
+
+	modCompileOnly("eu.pb4:polymer-core:${polymerVersion}")
+	modCompileOnly("eu.pb4:polymer-resource-pack:${polymerVersion}")
 
 	shadow(project(":shared-all"))
 	shadow(project(":shared-server"))

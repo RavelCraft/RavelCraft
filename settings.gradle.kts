@@ -29,7 +29,7 @@ dependencyResolutionManagement {
         // For Adventure snapshots
         maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
 
-        // For SGUI
+        // For sgui & Polymer
         maven("https://maven.nucleoid.xyz")
     }
 }

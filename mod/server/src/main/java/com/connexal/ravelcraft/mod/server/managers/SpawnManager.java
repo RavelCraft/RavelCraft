@@ -1,8 +1,8 @@
 package com.connexal.ravelcraft.mod.server.managers;
 
 import com.connexal.ravelcraft.mod.server.util.Location;
-import com.connexal.ravelcraft.shared.server.RavelInstance;
 import com.connexal.ravelcraft.shared.all.util.RavelConfig;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;

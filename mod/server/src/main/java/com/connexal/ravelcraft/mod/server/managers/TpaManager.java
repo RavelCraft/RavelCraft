@@ -1,8 +1,8 @@
 package com.connexal.ravelcraft.mod.server.managers;
 
 import com.connexal.ravelcraft.mod.server.players.FabricRavelPlayer;
-import com.connexal.ravelcraft.shared.server.RavelInstance;
 import com.connexal.ravelcraft.shared.all.text.RavelText;
+import com.connexal.ravelcraft.shared.server.RavelInstance;
 
 import java.util.HashMap;
 import java.util.Map;

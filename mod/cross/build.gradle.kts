@@ -14,12 +14,17 @@ val yarnMappings = project.property("yarn_mappings") as String
 val fabricVersion = project.property("fabric_version") as String
 val fabricLoaderVersion = project.property("fabric_loader_version") as String
 
+val polymerVersion = project.property("polymer_version") as String
+
 val name = "${projectId}-crossMod-${minecraftVersion}"
 base.archivesName.set(name)
 
 dependencies {
     minecraft("com.mojang:minecraft:${minecraftVersion}")
     mappings("net.fabricmc:yarn:${yarnMappings}:v2")
+
+    modImplementation("eu.pb4:polymer-core:${polymerVersion}")
+    modImplementation("eu.pb4:polymer-resource-pack:${polymerVersion}")
 
     shadow(project(":shared-all"))
 

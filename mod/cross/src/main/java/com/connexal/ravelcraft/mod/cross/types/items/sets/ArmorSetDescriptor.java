@@ -1,6 +1,7 @@
 package com.connexal.ravelcraft.mod.cross.types.items.sets;
 
 import com.connexal.ravelcraft.mod.cross.types.items.ItemDescriptor;
+import com.connexal.ravelcraft.mod.cross.types.items.polymer.PolymerArmorItem;
 import com.connexal.ravelcraft.shared.all.Ravel;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.item.ArmorItem;
@@ -22,30 +23,28 @@ import java.util.function.Supplier;
 public class ArmorSetDescriptor implements ItemSetDescriptor<ArmorItem.Type> {
     private final ImmutableMap<ArmorItem.Type, ItemDescriptor> items;
 
-    public ArmorSetDescriptor(Identifier identifier, Map<ArmorItem.Type, Integer> durability, int durabilityMultiplier, Map<ArmorItem.Type, Integer> protection, int enchantability, RegistryEntry<SoundEvent> equipSound, Supplier<Ingredient> repairIngredient, List<ArmorMaterial.Layer> layers, float toughness, float knockbackResistance, boolean helmet, boolean chestplate, boolean leggings, boolean boots) {
-        //TODO: set durability
-
+    public ArmorSetDescriptor(Identifier identifier, int color, Map<ArmorItem.Type, Integer> durability, int durabilityMultiplier, Map<ArmorItem.Type, Integer> protection, int enchantability, RegistryEntry<SoundEvent> equipSound, Supplier<Ingredient> repairIngredient, List<ArmorMaterial.Layer> layers, float toughness, float knockbackResistance, boolean helmet, boolean chestplate, boolean leggings, boolean boots) {
         ArmorMaterial armorMaterial = new ArmorMaterial(protection, enchantability, equipSound, repairIngredient, layers, toughness, knockbackResistance);
         RegistryEntry<ArmorMaterial> armorMaterialRef = Registry.registerReference(Registries.ARMOR_MATERIAL, identifier, armorMaterial);
 
         Map<ArmorItem.Type, ItemDescriptor> items = new HashMap<>();
         if (helmet) {
-            ArmorItem item = new ArmorItem(armorMaterialRef, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
+            PolymerArmorItem item = new PolymerArmorItem(armorMaterialRef, ArmorItem.Type.HELMET, color, new Item.Settings().maxDamage(durability.get(ArmorItem.Type.HELMET) * durabilityMultiplier));
             Identifier helmetId = Identifier.of(identifier.getNamespace(), identifier.getPath() + "_helmet");
             items.put(ArmorItem.Type.HELMET, ItemDescriptor.builder(helmetId).item(item).build());
         }
         if (chestplate) {
-            ArmorItem item = new ArmorItem(armorMaterialRef, ArmorItem.Type.CHESTPLATE, new Item.Settings().maxCount(1));
+            PolymerArmorItem item = new PolymerArmorItem(armorMaterialRef, ArmorItem.Type.CHESTPLATE, color, new Item.Settings().maxDamage(durability.get(ArmorItem.Type.CHESTPLATE) * durabilityMultiplier));
             Identifier chestplateId = Identifier.of(identifier.getNamespace(), identifier.getPath() + "_chestplate");
             items.put(ArmorItem.Type.CHESTPLATE, ItemDescriptor.builder(chestplateId).item(item).build());
         }
         if (leggings) {
-            ArmorItem item = new ArmorItem(armorMaterialRef, ArmorItem.Type.LEGGINGS, new Item.Settings().maxCount(1));
+            PolymerArmorItem item = new PolymerArmorItem(armorMaterialRef, ArmorItem.Type.LEGGINGS, color, new Item.Settings().maxDamage(durability.get(ArmorItem.Type.LEGGINGS) * durabilityMultiplier));
             Identifier leggingsId = Identifier.of(identifier.getNamespace(), identifier.getPath() + "_leggings");
             items.put(ArmorItem.Type.LEGGINGS, ItemDescriptor.builder(leggingsId).item(item).build());
         }
         if (boots) {
-            ArmorItem item = new ArmorItem(armorMaterialRef, ArmorItem.Type.BOOTS, new Item.Settings().maxCount(1));
+            PolymerArmorItem item = new PolymerArmorItem(armorMaterialRef, ArmorItem.Type.BOOTS, color, new Item.Settings().maxDamage(durability.get(ArmorItem.Type.BOOTS) * durabilityMultiplier));
             Identifier bootsId = Identifier.of(identifier.getNamespace(), identifier.getPath() + "_boots");
             items.put(ArmorItem.Type.BOOTS, ItemDescriptor.builder(bootsId).item(item).build());
         }
@@ -83,6 +82,7 @@ public class ArmorSetDescriptor implements ItemSetDescriptor<ArmorItem.Type> {
         private final List<Boolean> layerDyeable = new ArrayList<>();
         private float toughness = 0;
         private float knockbackResistance = 0;
+        private int color = -1;
 
         private Builder(Identifier identifier) {
             this.identifier = identifier;
@@ -139,6 +139,21 @@ public class ArmorSetDescriptor implements ItemSetDescriptor<ArmorItem.Type> {
             return this;
         }
 
+        public Builder color(int r, int g, int b) {
+            //Clamp values
+            r = Math.max(0, Math.min(255, r));
+            g = Math.max(0, Math.min(255, g));
+            b = Math.max(0, Math.min(255, b));
+
+            this.color = (r << 16) + (g << 8) + b;
+            return this;
+        }
+
+        public Builder color(int hex) {
+            this.color = hex;
+            return this;
+        }
+
         public ArmorSetDescriptor build(boolean helmet, boolean chestplate, boolean leggings, boolean boots) {
             if (this.durability == null || this.durabilityMultiplier == null || this.protection == null || this.equipSound == null || this.repairIngredient == null || this.layerSuffixes.isEmpty() || this.layerDyeable.size() != this.layerSuffixes.size()) {
                 throw new IllegalStateException("Missing required parameters");
@@ -155,7 +170,7 @@ public class ArmorSetDescriptor implements ItemSetDescriptor<ArmorItem.Type> {
                 layers.add(new ArmorMaterial.Layer(this.identifier, this.layerSuffixes.get(i), this.layerDyeable.get(i)));
             }
 
-            return new ArmorSetDescriptor(this.identifier, defense, this.durabilityMultiplier, defense, this.enchantability, this.equipSound, this.repairIngredient, layers, this.toughness, this.knockbackResistance, helmet, chestplate, leggings, boots);
+            return new ArmorSetDescriptor(this.identifier, this.color, defense, this.durabilityMultiplier, defense, this.enchantability, this.equipSound, this.repairIngredient, layers, this.toughness, this.knockbackResistance, helmet, chestplate, leggings, boots);
         }
 
         public ArmorSetDescriptor build() {

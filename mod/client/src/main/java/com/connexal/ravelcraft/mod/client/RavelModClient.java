@@ -30,7 +30,7 @@ public class RavelModClient implements ModInitializer {
 				String version = new String(url.openStream().readAllBytes());
 
 				if (!version.equals(Ravel.VERSION)) {
-					String message = "Your version of RavelCraft is outdated. Please update to v" + version + " at https://" + Ravel.SERVER_IP + "/. You can also click this message.";
+					String message = "Your version of the RavelCraft mod is outdated. Please update to v" + version + " at https://" + Ravel.SERVER_IP + "/. You can also click this message.";
 					client.inGameHud.getChatHud().addMessage(Text.literal(message).setStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://" + Ravel.SERVER_IP + "/"))));
 				}
 			} catch (Exception e) {

@@ -51,7 +51,7 @@ public class MessagingClient extends Messager {
             this.socket.setTcpNoDelay(true);
         } catch (IOException e) {
             this.connected = false;
-            RavelInstance.getLogger().error("Unable to connect to plugin messaging server at " + this.serverHostname, e);
+            RavelInstance.getLogger().error("Unable to connect to plugin messaging server at " + this.serverHostname + ": " + e.getMessage());
             return this.attemptConnect(attempts + 1);
         }
 
@@ -76,7 +76,7 @@ public class MessagingClient extends Messager {
             }
         } catch (IOException e) {
             this.connected = false;
-            RavelInstance.getLogger().error("Unable to connect to plugin messaging server at " + this.serverHostname, e);
+            RavelInstance.getLogger().error("Unable to connect to plugin messaging server at " + this.serverHostname + ": " + e.getMessage());
             return this.attemptConnect(attempts + 1);
         }
 
@@ -86,7 +86,7 @@ public class MessagingClient extends Messager {
                     this.readStream(this.input);
                 }
             } catch (IOException e) {
-                RavelInstance.getLogger().error("Got disconnected from plugin messaging server! ", e);
+                RavelInstance.getLogger().error("Got disconnected from plugin messaging server: " + e.getMessage());
             }
 
             this.close();

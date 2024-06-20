@@ -125,6 +125,11 @@ public class MiniBlockManager {
     }
 
     private void addMiniBlock(String name, String texture) {
-        this.miniBlocks.add(SkullUtils.getSkull("http://textures.minecraft.net/texture/" + texture, ChatColor.GREEN + "Mini " + name));
+        String safeName = ChatColor.GREEN + name;
+        if (safeName.length() > 16) {
+            safeName = safeName.substring(0, 16);
+        }
+
+        this.miniBlocks.add(SkullUtils.getSkull("http://textures.minecraft.net/texture/" + texture, safeName));
     }
 }

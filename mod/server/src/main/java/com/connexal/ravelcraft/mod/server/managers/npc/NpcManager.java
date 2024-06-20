@@ -2,8 +2,8 @@ package com.connexal.ravelcraft.mod.server.managers.npc;
 
 import com.connexal.ravelcraft.mod.server.util.Location;
 import com.connexal.ravelcraft.mod.server.util.gui.NpcGui;
-import com.connexal.ravelcraft.mod.server.util.registry.RegistrySyncUtils;
 import com.connexal.ravelcraft.shared.all.Ravel;
+import eu.pb4.polymer.core.api.entity.PolymerEntityUtils;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -16,28 +16,26 @@ import net.minecraft.util.Identifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 public class NpcManager {
     public static final Identifier NPC_ID = Identifier.of(Ravel.ID, "npc");
-    public static Supplier<EntityType<NpcEntity>> NPC_TYPE;
+    public static EntityType<NpcEntity> NPC_TYPE;
 
     private static final Map<UUID, Long> lastInteract = new HashMap<>();
 
     public static void setup() {
         //Register the entity type
-        final EntityType<NpcEntity> type = Registry.register(
+        NPC_TYPE = Registry.register(
                 Registries.ENTITY_TYPE,
                 NPC_ID,
                 EntityType.Builder.<NpcEntity>create(NpcEntity::new, SpawnGroup.MISC)
                         .dimensions(0.6F, 1.8F)
                         .build()
         );
-        NPC_TYPE = () -> type;
 
         //Register it with the server
-        RegistrySyncUtils.setServerEntry(Registries.ENTITY_TYPE, NPC_TYPE.get());
-        FabricDefaultAttributeRegistry.register(NPC_TYPE.get(), NpcEntity.createNpcAttributes());
+        PolymerEntityUtils.registerType(NPC_TYPE);
+        FabricDefaultAttributeRegistry.register(NPC_TYPE, NpcEntity.createNpcAttributes());
     }
 
     public static NpcEntity createNpc(ServerWorld world, Location location) {
@@ -46,7 +44,6 @@ public class NpcManager {
         npc.teleport(location.getX(), location.getY(), location.getZ(), false);
         npc.setPitch(location.getPitch());
         npc.setHeadYaw(location.getYaw());
-        npc.sendRotationUpdate();
 
         world.spawnEntity(npc);
 
